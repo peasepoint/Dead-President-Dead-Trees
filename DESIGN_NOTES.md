@@ -1,10 +1,12 @@
 # Design notes
 
-Every part is defined in `parts.mjs`. The same geometry is written to `stl/` by `log_generator.mjs`, laid out into two test buildings by `assembly.mjs`, checked by `verify.mjs` (results in `VERIFY.md`) and rendered by `make_gif.mjs`. The per-part still and rotating images in the parts table come from `make_part_images.mjs` (in `images/`), shown in assembly orientation.
+Every part is defined in `parts.mjs`. The same geometry is written to `stl/` by `log_generator.mjs`, laid out into three test buildings by `assembly.mjs`, checked by `verify.mjs` (results in `VERIFY.md`) and rendered by `make_gif.mjs`. The per-part still and rotating images in the parts table come from `make_part_images.mjs` (in `images/`), shown in assembly orientation.
 
 ## How the parts were measured
 
 The reference is a Poshmark listing of about 675 original wooden and plastic pieces ([listing](https://poshmark.com/listing/Lincoln-Log-Pieces-697ff0d8e9c77d6090234e27)). Its 11 photos include the seller's inventory sheet (part names, lengths in inches, quantities). I enlarged each photo in the browser and laid a labelled pixel grid over it. Scale came from the cutting mat's 1 in grid and ruler (about 83 px per inch at the mat) and from the known 3 in notch spacing on each log (about 82 to 86 px per inch at a log's top). Readings are good to roughly ±0.03 in. Where the sheet gives a length, I used the sheet's figure. Where the photos and the sheet disagree, I note it below.
+
+A second photo (supplied directly, not from the listing) shows nine orange plastic gables in two sizes and two yellow chimneys, front-on on a plain background. Its scale came from the large gable's known 8 1/2 in width and the 3 in notch spacing, about 126 px per inch. Two parts come from it: the **small two-notch plastic gable** and the **chimney**. It also confirms the large gable's three bottom notches and its symmetry.
 
 ## Shared log geometry
 
@@ -18,7 +20,9 @@ The reference is a Poshmark listing of about 675 original wooden and plastic pie
 | Notch placement | Centred on the listed length | Ends measured 0.33 to 0.44 in, which fits a centred layout within about 1/16 in |
 | Printing flat | 0.8 mm flat on one side | So round logs print lying down with no supports |
 
-## Every listed part
+## Every part
+
+Listing quantities are from the Poshmark sheet. The small plastic gable and the chimney are not on the sheet; they come from the second photo.
 
 | STL | Listing line (qty) | Model | Notes | Still and rotating |
 |---|---|---|---|---|
@@ -34,29 +38,36 @@ The reference is a Poshmark listing of about 675 original wooden and plastic pie
 | `beveled_end_1-1_2` | Beveled End, 1 1/2 x 1 1/4 (19) | 1 1/2 in log, one end cut at 39 deg | The 39 deg is from the photos and matches the wooden triangle. The sheet's "1 1/4" is not explained by the photos | <img src="images/beveled_end_1-1_2.png" width="160" alt="beveled_end_1-1_2"> <img src="images/beveled_end_1-1_2.gif" width="160" alt="beveled_end_1-1_2 rotating"> |
 | `solid_log_1-3_8`, `solid_log_1-5_8` | Solid Log, 1 3/8 (30) and 1 5/8 (15) | Plain 3/4 in cylinders | Purpose unknown; not used in the test buildings | <img src="images/solid_log_1-3_8.png" width="160" alt="solid_log_1-3_8"> <img src="images/solid_log_1-3_8.gif" width="160" alt="solid_log_1-3_8 rotating"><br><img src="images/solid_log_1-5_8.png" width="160" alt="solid_log_1-5_8"> <img src="images/solid_log_1-5_8.gif" width="160" alt="solid_log_1-5_8 rotating"> |
 | `gable_plastic_8-1_2` | Plastic Orange Roof, 2 1/4 x 8 1/2 (1) | Symmetric; 3 bottom notches on 3 in centres; 7 steps per side; eave hook lips | Measured from an enlarged photo; slope 27 deg | <img src="images/gable_plastic_8-1_2.png" width="160" alt="gable_plastic_8-1_2"> <img src="images/gable_plastic_8-1_2.gif" width="160" alt="gable_plastic_8-1_2 rotating"> |
+| `gable_plastic_small_2notch` | Not on the sheet (second photo shows 4) | Symmetric; 2 bottom notches 3 in apart; 5 steps per side; eave hook lips; 5 3/4 x 1.55 in | Photo: about 5.8 in wide and 1.6 in tall, notch centres about 1.4 in from each end. Same lip, riser and pitch (27 deg) as the large gable, so the height follows from the width | <img src="images/gable_plastic_small_2notch.png" width="160" alt="gable_plastic_small_2notch"> <img src="images/gable_plastic_small_2notch.gif" width="160" alt="gable_plastic_small_2notch rotating"> |
+| `chimney` | Not on the sheet (second photo shows 2) | Open-topped block, 1 3/8 in wide x 1.2 in tall x 1 in deep, inverted-V cut in the base | Photo: about 1.39 x 1.2 in; V about 0.36 in deep with 27 deg sides, so it straddles a plastic-gable roof ridge. Modelled V: 0.35 in, matched to the 27.1 deg roof. Depth and the 1/2 in-deep top socket are not visible; my choice | <img src="images/chimney.png" width="160" alt="chimney"> <img src="images/chimney.gif" width="160" alt="chimney rotating"> |
 | `gable_wood_triangle_4x2` | Triangle, 4 x 2 (16) | Straight 39 deg slopes, 2 bottom notches 3 in apart | Listed 4 x 2; measures about 4 7/8 x 2 (notch-to-notch 3 in plus about 0.9 in overhang each side). Decorative log-row grooves not modelled | <img src="images/gable_wood_triangle_4x2.png" width="160" alt="gable_wood_triangle_4x2"> <img src="images/gable_wood_triangle_4x2.gif" width="160" alt="gable_wood_triangle_4x2 rotating"> |
 | `shingle_flat_6`, `_9`, `_11` | Orange/Yellow/Green Flat Shingle, 6, 9, 11 | 0.8 x 1/8 in boards | Width measured about 0.79 to 0.8 in | <img src="images/shingle_flat_6.png" width="160" alt="shingle_flat_6"> <img src="images/shingle_flat_6.gif" width="160" alt="shingle_flat_6 rotating"><br><img src="images/shingle_flat_9.png" width="160" alt="shingle_flat_9"> <img src="images/shingle_flat_9.gif" width="160" alt="shingle_flat_9 rotating"><br><img src="images/shingle_flat_11.png" width="160" alt="shingle_flat_11"> <img src="images/shingle_flat_11.gif" width="160" alt="shingle_flat_11 rotating"> |
 | `shingle_ridge_5-5_8`, `_6`, `_9` | Red/Yellow/Green with Ridge Shingle | 1 1/8 in board with a centre groove | Measured 1.13 to 1.17 in wide. Both halves are lit identically, so it is flat, not folded | <img src="images/shingle_ridge_5-5_8.png" width="160" alt="shingle_ridge_5-5_8"> <img src="images/shingle_ridge_5-5_8.gif" width="160" alt="shingle_ridge_5-5_8 rotating"><br><img src="images/shingle_ridge_6.png" width="160" alt="shingle_ridge_6"> <img src="images/shingle_ridge_6.gif" width="160" alt="shingle_ridge_6 rotating"><br><img src="images/shingle_ridge_9.png" width="160" alt="shingle_ridge_9"> <img src="images/shingle_ridge_9.gif" width="160" alt="shingle_ridge_9 rotating"> |
 
-**Gable thickness** isn't visible in any photo. Both gables are 3/4 in thick so they fill a crossing log's notch slot the way a log does. That locks them sideways.
+**Gable thickness** isn't visible in any photo. All three gables are 3/4 in thick so they fill a crossing log's notch slot the way a log does. That locks them sideways.
 
 **Shingle thickness** is also not visible. I used 1/8 in.
 
+**Chimney depth and socket** are also not visible, since the photo is front-on. I used 1 in deep, 0.12 in walls and a 1/2 in-deep open top.
+
 ## Test buildings (verified)
 
-`assembly.mjs` builds two buildings using only listed parts. It follows the brand's building rules:
+`assembly.mjs` builds three buildings using only parts from the reference photos. It follows the brand's building rules:
 - End walls take the even courses, starting with **half logs**.
 - Side walls take the odd courses.
 - Each gable sits where the next end-wall log would go, with its bottom notches dropped over the crossing side-wall logs.
 
-| | Cabin | Shed |
-|---|---|---|
-| Size between wall centres | 6 x 9 in | 3 x 6 in |
-| Base | `half_log_7-1_2` | `half_log_4-1_2` |
-| End walls | 3-insert logs; doorway (front) and window (back) framed with 1-insert pieces, including the octagonal and round 1 1/2 in ones, and 2-insert logs | 2-insert 4 1/2, 6 and beveled-end 4 3/4 logs |
-| Side walls | 4-insert logs | 3-insert logs |
-| Gables | 2 x plastic gable | 2 x wooden triangle |
-| Shingles per slope | 3 flat 9 in + 1 ridge 9 in | 2 flat 6 in + 1 ridge 6 in |
+| | Cabin | Shed | Cottage |
+|---|---|---|---|
+| Size between wall centres | 6 x 9 in | 3 x 6 in | 3 x 6 in |
+| Base | `half_log_7-1_2` | `half_log_4-1_2` | `half_log_4-1_2` |
+| End walls | 3-insert logs; doorway (front) and window (back) framed with 1-insert pieces, including the octagonal and round 1 1/2 in ones, and 2-insert logs | 2-insert 4 1/2, 6 and beveled-end 4 3/4 logs | 2-insert 4 1/2 logs |
+| Side walls | 4-insert logs | 3-insert logs | 3-insert logs |
+| Gables | 2 x large plastic gable | 2 x wooden triangle | 2 x small plastic gable |
+| Shingles per slope | 3 flat 9 in + 1 ridge 9 in | 2 flat 6 in + 1 ridge 6 in | 3 flat 6 in |
+| Chimney | Yes, on the ridge | No (its 39 deg roof doesn't match the chimney's 27 deg V) | Yes, on the ridge |
+
+**The chimney is placed the same way as a real one would settle.** It is centred on the ridge and lowered until its V-cut base first touches the shingles.
 
 **Shingle positions are computed, not placed by hand.** Each shingle is lowered onto the gable's top edge, the way a real board settles:
 1. Its lower edge starts just clear of the eave lip or the shingle below.
@@ -68,11 +79,12 @@ The layout that reaches closest to the peak without crossing it is kept. On the 
 ### What `verify.mjs` checks
 
 Each placed part is voxelised at 0.5 mm, from the same geometry as the STLs. Then:
-- **Interference:** volume shared between parts. Result: **none, in both buildings**. Parts touch but never overlap.
-- **Support:** each part's centre of mass must lie inside the convex hull of its contacts directly below. Result: **every part supported**. Only the half logs touch the table, so both buildings sit flat.
-- **Interlock:** each part is pushed 1.5 mm in each sideways direction to see whether a neighbour blocks it. Result: **all 35 wall logs are locked in all four directions** by their notches.
+- **Interference:** volume shared between parts; any shared voxel counts. Result: **none, in all three buildings**. Parts touch but never overlap.
+- **Support:** each part's centre of mass must lie inside the convex hull of its contacts below. A contact means another part, or the table, within 1 mm (two voxels) directly below. One voxel isn't enough, because rounding to a 0.5 mm grid can open a false gap at a line contact, such as a shingle corner resting on a step. Result: **every part supported**. Only the half logs touch the table, so every building sits flat.
+- **Interlock:** each part is pushed 1.5 mm in each sideways direction to see whether a neighbour blocks it. Result: **all 51 wall logs are locked in all four directions** by their notches.
   - The gables are locked by their bottom notches.
-  - The lowest cabin shingles are stopped by the eave lip.
+  - The chimneys are held across the ridge by their V.
+  - The lowest shingles on the plastic gables are stopped by the eave lip.
   - Other shingles, and every shingle on the wooden triangle, can slide downhill if pushed. They rely on friction, as the originals do.
 
 Full per-part results are in `VERIFY.md`.
@@ -80,9 +92,14 @@ Full per-part results are in `VERIFY.md`.
 ## Limits
 
 - Nothing has been printed. Clearance (0.2 mm per side) and the 3/16 in notch depth should be checked with a two-log fit test first.
-- Photo measurements carry about ±0.03 in error. Gable thickness, shingle thickness, the 6 in 2-insert's notch layout and the meaning of "1 1/2 x 1 1/4" are assumptions.
+- Photo measurements carry about ±0.03 in error. These are assumptions:
+  - Gable thickness and shingle thickness.
+  - Chimney depth and socket.
+  - The 6 in 2-insert's notch layout.
+  - The meaning of "1 1/2 x 1 1/4".
+  - The small gable's height: derived from the large gable's pitch, 1.55 in, against about 1.6 in measured.
 - One cabin shingle row rests with its centre of mass only about 1 mm inside its supports. It is stable on paper, but a light knock could tip it.
-- The extras `extra_door`, `extra_window` and `extra_chimney` are my own designs, not in the listing, and are not used in the verified buildings.
+- The extras `extra_door` and `extra_window` are my own designs, not in any photo, and are not used in the verified buildings. My earlier invented chimney block has been replaced by the photographed chimney.
 
 ## Printing
 
@@ -90,7 +107,8 @@ Full per-part results are in `VERIFY.md`.
 - **Half logs:** print flat side down, notches up.
 - **Octagonal log:** prints on a flat.
 - **Solid logs:** print standing.
-- **Gables:** print flat on a face.
+- **Gables:** print flat on a face (both plastic sizes and the wooden triangle).
+- **Chimney:** the STL is upside down, open top on the bed and V facing up, so it needs no supports.
 - **Shingles:** print flat.
 - **Settings:** 0.2 mm layers, 3+ perimeters, 20 to 30% infill.
 - **Long parts:** the 4-insert log (270 mm) and 11 in shingle (279 mm) need a large bed or a diagonal layout.

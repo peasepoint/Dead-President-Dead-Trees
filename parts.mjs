@@ -195,20 +195,29 @@ export function makeParts({ clearance = 0.2, flat = 0.8 } = {}) {
     parts[name].print = extrudeShell(poly, 0, T);
   };
   const nw = notchW, nd = NOTCH_D;
-  { // orange plastic gable, measured from the photo
-    const W = 8.5 * IN, H = 2.25 * IN, e0 = 7.5, lipT = 5.4, lipH = 3.6, n = 7, r = 2.9, half_ = W / 2;
-    const ph = (half_ - lipT) / n, tr = (H - e0 - (n - 1) * r) / n;
+  // Orange plastic gables: mirror-symmetric, flat bottom with notches on 3 in centres, stepped slopes, hooked eave lips.
+  // The large one is measured from the listing photo; the small one from a second photo of several gables, which
+  // shows it with two notches, the same step shape and the same pitch. Both share e0, lip and riser sizes.
+  const e0 = 7.5, lipT = 5.4, lipH = 3.6, rr = 2.9;
+  const plasticGable = (name, info, W, n, notchOffsets, Hfixed) => {
+    const half_ = W / 2, ph = (half_ - lipT) / n;
+    // tread rise: from the listed height for the large gable; for others, the same overall nose slope as the large one
+    const tr = Hfixed ? (Hfixed - e0 - (n - 1) * rr) / n : plasticSlope * ph - rr;
+    const H = e0 + n * tr + (n - 1) * rr;
     const Lp = [[0, e0 + lipH], [lipT, e0 + lipH], [lipT, e0]];
-    for (let k = 0; k < n; k++) { const x = lipT + k * ph, y = e0 + k * (tr + r); Lp.push([x + ph, y + tr]); if (k < n - 1) Lp.push([x + ph, y + tr + r]); }
+    for (let k = 0; k < n; k++) { const x = lipT + k * ph, y = e0 + k * (tr + rr); Lp.push([x + ph, y + tr]); if (k < n - 1) Lp.push([x + ph, y + tr + rr]); }
     const bottom = [[0, 0]];
-    for (const cx of [half_ - CENTERS, half_, half_ + CENTERS]) bottom.push([cx - nw / 2, 0], [cx - nw / 2, nd], [cx + nw / 2, nd], [cx + nw / 2, 0]);
+    for (const o of notchOffsets) { const cx = half_ + o; bottom.push([cx - nw / 2, 0], [cx - nw / 2, nd], [cx + nw / 2, nd], [cx + nw / 2, 0]); }
     bottom.push([W, 0]);
     const poly = [...bottom, ...Lp.map((p) => [W - p[0], p[1]]), ...Lp.slice(0, -1).reverse()];
-    const m = (tr + r) / ph, th = Math.atan(m), c = Math.cos(th), s = Math.sin(th);
-    // slat plane through the riser tops; s measured from the inside foot of the eave lip
+    const m = (tr + rr) / ph, th = Math.atan(m), c = Math.cos(th), s = Math.sin(th);
     const plane = (right, sv, hh = 0) => (right ? [W - lipT - sv * c + hh * s, e0 + sv * s + hh * c] : [lipT + sv * c - hh * s, e0 + sv * s + hh * c]);
-    gableAdd('gable_plastic_8-1_2', { listing: 'Plastic Orange Roof, 2 1/4 x 8 1/2', kind: 'gable', W, H, T, notchXs: [half_ - CENTERS, half_, half_ + CENTERS], th, plane, sApex: (half_ - lipT) / c, profile: Lp, startX: lipT }, poly);
-  }
+    gableAdd(name, { ...info, kind: 'gable', W, H, T, steps: n, notchXs: notchOffsets.map((o) => half_ + o), th, plane, sApex: (half_ - lipT) / c, profile: Lp, startX: lipT }, poly);
+    return m;
+  };
+  let plasticSlope = 0;
+  plasticSlope = plasticGable('gable_plastic_8-1_2', { listing: 'Plastic Orange Roof, 2 1/4 x 8 1/2', source: 'listing' }, 8.5 * IN, 7, [-CENTERS, 0, CENTERS], 2.25 * IN);
+  plasticGable('gable_plastic_small_2notch', { listing: 'Small plastic gable, 2 notches (from a second photo; about 5 3/4 x 1 1/2)', source: 'gable photo' }, 5.75 * IN, 5, [-CENTERS / 2, CENTERS / 2], null);
   { // wooden triangle, measured from the photo (listed 4 x 2; measures about 4 7/8 x 2)
     const W = 4.875 * IN, H = 2 * IN, half_ = W / 2;
     const bottom = [[0, 0]];
@@ -235,12 +244,28 @@ export function makeParts({ clearance = 0.2, flat = 0.8 } = {}) {
     parts[name].toModel = (p) => p;
   }
 
-  // ---- extras that are NOT in the listing (kept from the earlier design)
+  // ---- chimney (yellow, from the gable photo): open-topped block with an inverted-V cut in its base that straddles
+  // the ridge. The V's sides are cut at the plastic gables' pitch (photo: about 27 deg).
+  // Model frame: width along x centred on 0, depth along y centred on 0, V apex... bottom prong tips at z = 0.
+  {
+    const Wc = 1.375 * IN, Dc = 1.0 * IN, Hc = 1.2 * IN, wall = 0.12 * IN, pocket = 0.5 * IN;
+    const Vd = (Wc / 2) * plasticSlope;                 // V depth so its sides match the roof pitch (photo: about 0.36 in)
+    const zp = Hc - pocket;
+    const prof = [[0, 0], [Wc / 2, Vd], [Wc, 0], [Wc, zp], [0, zp]];
+    const lower = extrudeShell(prof, 0, Dc).map((t) => t.map(([u, v, w]) => [u, Dc - w, v]));          // V-cut solid base
+    const upper = plate(Wc, Dc, zp, Hc, { x0: wall, x1: Wc - wall, y0: wall, y1: Dc - wall });          // open-topped walls
+    const model = [...lower, ...upper].map((t) => t.map(([x, y, z]) => [x - Wc / 2, y - Dc / 2, z]));
+    // print upside down: open top on the bed, V facing up, so no supports are needed
+    add('chimney', { listing: 'Chimney (from the gable photo; about 1 3/8 x 1.2 in)', source: 'gable photo', kind: 'chimney', W: Wc, D: Dc, H: Hc, Vd },
+      model, ([x, y, z]) => [x + Wc / 2, -y + Dc / 2, Hc - z]);
+    parts.chimney.toModel = ([X, Y, Z]) => [X - Wc / 2, -(Y - Dc / 2), Hc - Z];
+  }
+
+  // ---- extras that are NOT in any reference photo (kept from the earlier design)
   const gap = CENTERS - D - 2 * clearance, wallH = (n) => (n - 1) * PITCH + D;
   const extras = {
     extra_door: plate(gap, wallH(4) - 2 * clearance, 0, IN / 8),
     extra_window: (() => { const w = gap, hh = wallH(3) - 2 * clearance, ow = 1.125 * IN, oh = 0.625 * IN; return plate(w, hh, 0, IN / 8, { x0: (w - ow) / 2, x1: (w + ow) / 2, y0: (hh - oh) / 2, y1: (hh + oh) / 2 }); })(),
-    extra_chimney: plate(D, D, 0, 1.5 * IN),
   };
   for (const [name, m] of Object.entries(extras)) { add(name, { listing: null, kind: 'extra' }, m, (p) => p); parts[name].toModel = (p) => p; }
   return parts;

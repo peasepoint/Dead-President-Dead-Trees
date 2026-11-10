@@ -25,7 +25,8 @@ Gathered with Tavily searches in November 2026. The extraction of four model pag
   - **Shingles:** flat shingles about 0.8 in wide; ridge shingles about 1 1/8 in wide with a centre groove.
   - Full table in `DESIGN_NOTES.md`.
 - Roof pieces in sets: a 371-piece set lists "6 roof eaves, 28 roof slats" ([TTPM review](https://www.youtube.com/watch?v=NlhMvjbtn2k)); some 1970s sets had clips to hold slats together ([Architoys](https://www.architoys.net/toys/toypages/linclogs.html)); a roof-support model on [Printables](https://www.printables.com/model/659905-lincoln-logs-roof-supports-84-variations-different) says the original lip design lets slats fall off.
-- No exact original dimensions found for doors, windows or the chimney.
+- A second photo (supplied directly) shows nine orange plastic gables in two sizes and two yellow chimneys. Scaled from the large gable's 8 1/2 in width: the small gable is about 5.8 x 1.6 in with two bottom notches 3 in apart. The chimney is about 1 3/8 x 1.2 in with an open top and an inverted-V base cut at the roof pitch (about 27 deg), so it sits astride the ridge.
+- No exact original dimensions found for doors or windows.
 
 ## Printing tolerances (general FDM guidance)
 

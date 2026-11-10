@@ -6,8 +6,8 @@ import zlib from 'node:zlib';
 import { makeParts } from './parts.mjs';
 
 const OUT = 'images', W = 320, H = 240, SS = 3, RW = W * SS, RH = H * SS, FRAMES = 24;
-const MATS = { log: [196, 140, 84], half: [150, 100, 58], plastic: [236, 132, 40], wood: [164, 104, 60], shingle: [92, 150, 70] };
-const matFor = (name) => (name.startsWith('half') ? 'half' : name.includes('plastic') ? 'plastic' : name.includes('wood_triangle') ? 'wood' : name.startsWith('shingle') ? 'shingle' : 'log');
+const MATS = { log: [196, 140, 84], half: [150, 100, 58], plastic: [236, 132, 40], wood: [164, 104, 60], shingle: [92, 150, 70], chimney: [240, 204, 40] };
+const matFor = (name) => (name === 'chimney' ? 'chimney' : name.startsWith('half') ? 'half' : name.includes('plastic') ? 'plastic' : name.includes('wood_triangle') ? 'wood' : name.startsWith('shingle') ? 'shingle' : 'log');
 const BG_TOP = [232, 238, 245], BG_BOT = [196, 206, 218];
 
 const norm3 = (v) => { const m = Math.hypot(...v); return v.map((x) => x / m); };
@@ -113,7 +113,22 @@ for (const p of Object.values(P)) {
   const lo = [0, 1, 2].map((i) => Math.min(...pts.map((v) => v[i]))), hi = [0, 1, 2].map((i) => Math.max(...pts.map((v) => v[i])));
   const c = lo.map((v, i) => (v + hi[i]) / 2), rad = Math.hypot(hi[0] - lo[0], hi[1] - lo[1], hi[2] - lo[2]) / 2;
   const tris = p.model.map((t) => t.map((v) => [v[0] - c[0], v[1] - c[1], v[2] - c[2]]));
-  const fov = 30, cam = { el: 24, fov, target: [0, 0, 0], dist: (rad / Math.sin(Math.atan(Math.tan((fov / 2) * Math.PI / 180) * (W / H)))) * 1.02 };
+  // camera distance: smallest that keeps the bounding box inside the frame (8% margin) at every rotation angle
+  const fov = 30, el = 24, corners = [];
+  for (const x of [lo[0], hi[0]]) for (const y of [lo[1], hi[1]]) for (const z of [lo[2], hi[2]]) corners.push([x - c[0], y - c[1], z - c[2]]);
+  const tanV = Math.tan((fov / 2) * Math.PI / 180), tanH = tanV * (W / H);
+  const fits = (dist) => {
+    for (let i = 0; i < FRAMES; i++) {
+      const az = ((-55 + (360 * i) / FRAMES) * Math.PI) / 180, e = (el * Math.PI) / 180;
+      const eye = [dist * Math.cos(e) * Math.cos(az), dist * Math.cos(e) * Math.sin(az), dist * Math.sin(e)];
+      const f = norm3(eye.map((v) => -v)), r = norm3(cross(f, [0, 0, 1])), u = cross(r, f);
+      for (const p of corners) { const d = [p[0] - eye[0], p[1] - eye[1], p[2] - eye[2]], z = dot(d, f); if (Math.abs(dot(d, r) / z) > tanH * 0.92 || Math.abs(dot(d, u) / z) > tanV * 0.92) return false; }
+    }
+    return true;
+  };
+  let dLo = rad, dHi = rad * 20;
+  for (let it = 0; it < 40; it++) { const m = (dLo + dHi) / 2; if (fits(m)) dHi = m; else dLo = m; }
+  const cam = { el, fov, target: [0, 0, 0], dist: dHi };
   const base = MATS[matFor(p.name)];
   fs.writeFileSync(`${OUT}/${p.name}.png`, png(render(tris, base, { ...cam, az: -55 })));
   const g = gifEncoder(base);

@@ -9,11 +9,11 @@ import { buildings } from './assembly.mjs';
 const OUT = process.argv[2] ?? 'cabin_build.gif';
 const W = 400, H = 300, SS = 2, RW = W * SS, RH = H * SS;
 const P = makeParts();
-const { cabin, shed } = buildings(P);
+const { cabin, shed, cottage } = buildings(P);
 
 // ---------- palette ----------
-const MATS = { log: [196, 140, 84], half: [150, 100, 58], plastic: [236, 132, 40], wood: [164, 104, 60], shingle: [92, 150, 70], ground: [118, 128, 112] };
-const MAT_ORDER = Object.keys(MATS), RAMP = 36, palette = [];
+const MATS = { log: [196, 140, 84], half: [150, 100, 58], plastic: [236, 132, 40], wood: [164, 104, 60], shingle: [92, 150, 70], chimney: [240, 204, 40], ground: [118, 128, 112] };
+const MAT_ORDER = Object.keys(MATS), RAMP = 30, palette = [];
 for (const m of MAT_ORDER) for (let i = 0; i < RAMP; i++) { const f = 0.22 + (i / (RAMP - 1)) * 0.95; palette.push(MATS[m].map((c) => Math.min(255, Math.round(c * f)))); }
 const BG_N = 28, BG0 = palette.length;
 for (let i = 0; i < BG_N; i++) { const t = i / (BG_N - 1); palette.push([0, 1, 2].map((k) => Math.round([222, 232, 242][k] * (1 - t) + [168, 186, 206][k] * t))); }
@@ -27,7 +27,7 @@ for (let i = 0; i < 32768; i++) {
   for (let p = 0; p < 255; p++) { const q = palette[p]; const d = (q[0] - r) ** 2 + (q[1] - g) ** 2 + (q[2] - b) ** 2; if (d < bd) { bd = d; best = p; } }
   LUT[i] = best;
 }
-const matFor = (name) => (name.startsWith('half') ? 'half' : name.includes('plastic') ? 'plastic' : name.includes('wood_triangle') ? 'wood' : name.startsWith('shingle') ? 'shingle' : 'log');
+const matFor = (name) => (name === 'chimney' ? 'chimney' : name.startsWith('half') ? 'half' : name.includes('plastic') ? 'plastic' : name.includes('wood_triangle') ? 'wood' : name.startsWith('shingle') ? 'shingle' : 'log');
 
 // ---------- scenes ----------
 const mapT = (tris, f) => tris.map((t) => t.map(f));
@@ -46,7 +46,7 @@ const showItems = [];
     x += w + 14; rowH = Math.max(rowH, d);
   }
 }
-const SHED_DX = 290; // shed placed beside the cabin
+const SHED_DX = 290, COTTAGE_DX = 470; // shed and cottage placed beside the cabin
 const groups = [];
 for (const it of cabin) {
   const g = groups[groups.length - 1];
@@ -54,6 +54,7 @@ for (const it of cabin) {
   if (g && g.cap === it.caption) g.items.push(entry); else groups.push({ cap: it.caption, items: [entry] });
 }
 groups.push({ cap: 'SHED: WOODEN TRIANGLE GABLES', items: shed.map((it) => item(mapT(it.tris, ([x, y, z]) => [x + SHED_DX, y, z]), matFor(it.name))) });
+groups.push({ cap: 'COTTAGE: SMALL GABLES, CHIMNEY', items: cottage.map((it) => item(mapT(it.tris, ([x, y, z]) => [x + COTTAGE_DX, y, z]), matFor(it.name))) });
 
 // ---------- renderer ----------
 const zbuf = new Float32Array(RW * RH), rgb = new Uint8Array(RW * RH * 3);
@@ -156,7 +157,7 @@ const frames = [], FALL = [40, 20, 0, 0];
 for (let i = 0; i < 18; i++) frames.push({ scene: 'show', items: showItems, cap: 'EVERY LISTED PART, AS PRINTED', delay: 9 });
 const placed = [];
 for (const g of groups) {
-  const scene = g.cap.startsWith('SHED') ? 'both' : 'cabin';
+  const scene = /^(SHED|COTTAGE)/.test(g.cap) ? 'both' : 'cabin';
   for (const dz of FALL) frames.push({ scene, items: [...placed, ...g.items.map((it) => ({ ...it, dz }))], cap: g.cap, delay: 8 });
   placed.push(...g.items);
 }
@@ -164,8 +165,8 @@ for (let i = 0; i < 36; i++) frames.push({ scene: 'both', items: placed, cap: 'V
 
 const N = frames.length, dAz = 2.0, az0 = 300 - dAz * (N - 1);
 const ONLY = process.env.ONLY === undefined ? null : +process.env.ONLY;
-const grounds = { show: ground(300, 160, 1600), cabin: ground(76, 114, 1600), both: ground(180, 114, 1800) };
-const cams = { show: { el: 38, dist: 1050, target: [300, 150, 0] }, cabin: { el: 26, dist: 600, target: [76, 114, 50] }, both: { el: 24, dist: 820, target: [185, 114, 45] } };
+const grounds = { show: ground(300, 160, 1600), cabin: ground(76, 114, 1600), both: ground(275, 114, 2000) };
+const cams = { show: { el: 38, dist: 1050, target: [300, 150, 0] }, cabin: { el: 26, dist: 600, target: [76, 114, 50] }, both: { el: 24, dist: 1080, target: [275, 114, 45] } };
 console.log(`${N} frames`);
 frames.forEach((fr, i) => {
   if (ONLY !== null && i !== ONLY) return;

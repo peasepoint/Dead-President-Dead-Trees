@@ -108,6 +108,26 @@ export function buildings(P) {
     return out;
   };
 
+  // chimney straddling the ridge at (xc, yc): lowered until its V-cut base first touches the roof below it
+  const chimney = (roof, xc, yc, cap = 'CHIMNEY') => {
+    const ci = P.chimney.info, half = ci.W / 2, hd = ci.D / 2, step = 0.25;
+    const vprof = (dx) => ci.Vd * (1 - Math.abs(dx) / half); // height of the chimney's underside above its prong tips
+    let z0 = -Infinity;
+    const tris = roof.flatMap((it) => it.tris);
+    for (let dx = -half; dx <= half + 1e-9; dx += step) for (let dy = -hd; dy <= hd + 1e-9; dy += step) {
+      const x = xc + dx, y = yc + dy;
+      for (const [a, b, c] of tris) {
+        const area = (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0]);
+        if (Math.abs(area) < 1e-12) continue;
+        const w0 = ((b[0] - x) * (c[1] - y) - (b[1] - y) * (c[0] - x)) / area, w1 = ((c[0] - x) * (a[1] - y) - (c[1] - y) * (a[0] - x)) / area, w2 = 1 - w0 - w1;
+        if (w0 < -1e-9 || w1 < -1e-9 || w2 < -1e-9) continue;
+        z0 = Math.max(z0, w0 * a[2] + w1 * b[2] + w2 * c[2] - vprof(dx));
+      }
+    }
+    return place('chimney', ([x, y, z]) => [xc + x, yc + y, z0 + 0.05 + z], cap, 'chimney');
+  };
+  const roofOf = (items) => items.filter((it) => it.name.startsWith('shingle'));
+
   // ---------------- CABIN ----------------
   const cabin = [];
   {
@@ -127,6 +147,7 @@ export function buildings(P) {
     const G = 'gable_plastic_8-1_2', xc = WID / 2;
     cabin.push(gable(G, K, front, xc, 'PLASTIC GABLES'), gable(G, K, back, xc, 'PLASTIC GABLES'));
     cabin.push(...roofRows(G, K, xc, 0, 9));
+    cabin.push(chimney(roofOf(cabin), xc, 0.65 * LEN));
   }
 
   // ---------------- SHED ----------------
@@ -143,5 +164,21 @@ export function buildings(P) {
     shed.push(gable(G, K, front, xc), gable(G, K, back, xc));
     shed.push(...roofRows(G, K, xc, 0, 6));
   }
-  return { cabin, shed };
+
+  // ---------------- COTTAGE ----------------
+  // 3 x 6 in like the shed, but with the small two-notch plastic gables and a chimney
+  const cottage = [];
+  {
+    const WID = CENTERS, LEN = 2 * CENTERS, K = 8, front = 0, back = LEN;
+    cottage.push(xLog('half_log_4-1_2', 0, front, 0), xLog('half_log_4-1_2', 0, back, 0));
+    for (let c = 1; c < K; c++) {
+      if (c % 2) cottage.push(yLog('log_3insert_7-3_4', c, 0, 0), yLog('log_3insert_7-3_4', c, WID, 0));
+      else cottage.push(xLog('log_2insert_4-1_2', c, front, 0), xLog('log_2insert_4-1_2', c, back, 0));
+    }
+    const G = 'gable_plastic_small_2notch', xc = WID / 2;
+    cottage.push(gable(G, K, front, xc), gable(G, K, back, xc));
+    cottage.push(...roofRows(G, K, xc, 0, 6));
+    cottage.push(chimney(roofOf(cottage), xc, 0.5 * LEN));
+  }
+  return { cabin, shed, cottage };
 }
