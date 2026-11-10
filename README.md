@@ -14,7 +14,7 @@ Printable versions of every part in a reference listing of original wooden and p
 | `stl/rounded_woodgrain/` | A separate logs-only set: the 7 notched logs with rounded ends, wood grain only (see below) |
 | `parts.mjs` | Geometry for every part (single source of truth), including the optional wood texture on the logs |
 | `log_generator.mjs` | Writes all three `stl/` sets and checks every mesh is watertight and sits on the bed |
-| `fusion/` | The parts as an Autodesk Fusion design: a smooth parametric file and a wood-grain copy (see `fusion/README.md`) |
+| `fusion/` | The parts as Autodesk Fusion designs: a smooth parametric file, a wood-grain copy and a rounded-end logs file (see `fusion/README.md`) |
 | `assembly.mjs` | The three test buildings (cabin 6 x 9 in with chimney, shed 3 x 6 in, cottage 3 x 6 in with small gables and chimney), using photographed parts only |
 | `verify.mjs` | Voxel check of the buildings: interference, support, interlock. Writes `VERIFY.md` |
 | `VERIFY.md`, `VERIFY_smooth.md` | Latest verification results, per part, for the wood-grain and the smooth logs |
@@ -44,7 +44,7 @@ Details are in the "Wood texture" section of `DESIGN_NOTES.md`.
 
 ## Rounded ends
 
-`stl/rounded_woodgrain/` is a third, logs-only set with wood grain only. It holds every notched log (1 5/8, 1 1/2 round and octagonal, 4 1/2, 4 3/4, 7 5/8 and 10 5/8 in) with rounded ends, the shape of the original 4 3/4 in rounded-end log, which now lives only in this set. Lengths and notches match the standard logs. Half logs, the slanted 1 1/2 in beveled end and the solid logs aren't in it. Images are in `images/rounded/`; details are in the "Rounded-end set" section of `DESIGN_NOTES.md`.
+`stl/rounded_woodgrain/` is a third, logs-only set with wood grain only. It holds every notched log (1 5/8, 1 1/2 round and octagonal, 4 1/2, 4 3/4, 7 5/8 and 10 5/8 in) with rounded ends, the shape of the original 4 3/4 in rounded-end log, which now lives only in this set. Lengths and notches match the standard logs. Half logs, the slanted 1 1/2 in beveled end and the solid logs aren't in it. Images are in `images/rounded/`; details are in the "Rounded-end set" section of `DESIGN_NOTES.md`. The Fusion design is `fusion/DeadPresidentTreeSections_rounded_woodgrain.f3d`.
 
 ## Run
 

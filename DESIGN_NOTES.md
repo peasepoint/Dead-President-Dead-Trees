@@ -37,7 +37,7 @@ The sizes are in `TEX` at the top of the texture section of `parts.mjs`. The dep
 
 Both finishes are checked: `node verify.mjs` checks the buildings with wood-grain logs (`VERIFY.md`) and `node verify.mjs --finish smooth` with smooth logs (`VERIFY_smooth.md`). `make_gif.mjs` and `make_part_images.mjs` render the wood-grain geometry.
 
-The parametric Fusion design in `fusion/` is smooth; `fusion/DeadPresidentTreeSections_woodgrain.f3d` is a copy with the textured meshes added.
+The parametric Fusion design in `fusion/` is smooth; `fusion/DeadPresidentTreeSections_woodgrain.f3d` is a copy with the textured meshes added, and `fusion/DeadPresidentTreeSections_rounded_woodgrain.f3d` holds the rounded-end logs.
 
 ## Every part
 
