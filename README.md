@@ -1,5 +1,5 @@
-# Lincoln-Logs
-Files to recreate the classic Lincoln Logs toy with additive manufacturing.
+# Log building toy compatible generated shapes
+Files to augment the classic toy with additive manufacturing.
 
 ![Cabin, shed and cottage built from the printable parts](cabin_build.gif)
 
