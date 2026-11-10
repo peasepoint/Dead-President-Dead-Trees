@@ -20,6 +20,7 @@ Printable versions of every part in a reference listing of original wooden and p
 | `make_part_images.mjs` | Renders a still PNG and a rotating GIF of every photographed part into `images/` (shown in the `DESIGN_NOTES.md` parts table). Run `node make_part_images.mjs` |
 | `DESIGN_NOTES.md` | How each part was measured, what is assumed, printing notes |
 | `RESEARCH.md` | Web research summary |
+| `PARTS_SPEC.md` | Catalog of every commercially sold piece with dimensions, part numbers and confidence |
 
 ## Run
 
