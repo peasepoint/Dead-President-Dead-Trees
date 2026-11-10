@@ -247,7 +247,21 @@ function bevelMesh({ Ltop, base, phi, tex = null }) {
 }
 
 // ---------- the part catalogue ----------
-export function makeParts({ clearance = 0.2, flat = 0.8, texture = true } = {}) {
+// Rounded ends (taken from the old 4 3/4 in "beveled end" log): [distance in from the end (mm), section scale]
+export const ROUNDED_ENDS = [[0, 0.6], [1.5, 0.82], [3.5, 0.95], [5, 1]];
+// The notched logs that make up the rounded-end set: [name, listing, length (in), notches, options]
+const ROUNDED_LOGS = [
+  ['log_1insert_1-5_8_rounded', '1 Insert Log, 1 5/8 (rounded ends)', 1.625, 1],
+  ['log_1insert_1-1_2_round_rounded', '1 Insert Log (Round), 1 1/2 (rounded ends)', 1.5, 1],
+  ['log_1insert_1-1_2_octagonal_rounded', '1 Insert Log (Hex), 1 1/2 (rounded ends)', 1.5, 1, { oct: true }],
+  ['log_2insert_4-1_2_rounded', '2 Insert Log, 4 1/2 (rounded ends)', 4.5, 2],
+  ['log_2insert_4-3_4_rounded', 'Beveled End, 4 3/4 (the original rounded-end log)', 4.75, 2],
+  ['log_3insert_7-5_8_rounded', '3 Insert Log, 7 5/8 (rounded ends)', 7.625, 3],
+  ['log_4insert_10-5_8_rounded', '4 Insert Log, 10 5/8 (rounded ends)', 10.625, 4],
+];
+
+// set: 'standard' (every part, smooth or wood grain) or 'rounded' (only the notched logs, all with rounded ends)
+export function makeParts({ clearance = 0.2, flat = 0.8, texture = true, set = 'standard' } = {}) {
   const notchW = D + 2 * clearance;
   const yf = -R + flat;
   const withCuts = (P) => insertLine(insertLine(P, 1, h), 1, -h);
@@ -271,14 +285,17 @@ export function makeParts({ clearance = 0.2, flat = 0.8, texture = true } = {}) 
     add(name, { listing, length: L, centers, kind: 'log', note: opts.note }, logMesh({ L, centers, base, notchW, chamfer: opts.chamfer, tex: tex(name, opts.oct ? octSmooth : roundSmooth) }), logPrint(yflat));
     parts[name].toModel = logModelFromPrint(yflat);
   };
+  if (set === 'rounded') {
+    for (const [name, listing, Lin, n, opts = {}] of ROUNDED_LOGS) log(name, listing, Lin, n, { ...opts, chamfer: ROUNDED_ENDS });
+    return parts;
+  }
   log('log_1insert_1-5_8', '1 Insert Log, 1 5/8', 1.625, 1);
   log('log_1insert_1-1_2_round', '1 Insert Log (Round), 1 1/2', 1.5, 1);
   log('log_1insert_1-1_2_octagonal', '1 Insert Log (Hex), 1 1/2', 1.5, 1, { oct: true, note: 'listed as hex; photo shows flats top and bottom, modelled as an octagon so it stacks' });
   log('log_2insert_4-1_2', '2 Insert Log, 4 1/2', 4.5, 2);
-  log('log_2insert_6', '2 Insert Log, 6', 6, 2, { note: 'notch layout not visible in the photos; assumed 3 in centres, centred' });
   log('log_3insert_7-5_8', '3 Insert Log, 7 3/4', 7.625, 3, { note: 'sheet says 7 3/4; photo measures about 7.6 and the length rule (3 in centres, 7/16 in shoulders, PARTS_SPEC.md) gives 7 5/8' });
   log('log_4insert_10-5_8', '4 Insert Log, 10 5/8', 10.625, 4);
-  log('beveled_end_4-3_4', 'Beveled End, 4 3/4', 4.75, 2, { chamfer: [[0, 0.6], [1.5, 0.82], [3.5, 0.95], [5, 1]], note: 'a 2-insert log with chamfered ends' });
+  // the 4 3/4 in rounded-end log is in the rounded set (ROUNDED_LOGS above); the 6 in 2-insert log was dropped
 
   const half = (name, listing, Lin, n) => {
     const L = Lin * IN, centers = centersFor(L, n);

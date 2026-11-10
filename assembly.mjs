@@ -155,10 +155,9 @@ export function buildings(P) {
   {
     const WID = CENTERS, LEN = 2 * CENTERS, K = 8, front = 0, back = LEN;
     shed.push(xLog('half_log_4-1_2', 0, front, 0), xLog('half_log_4-1_2', 0, back, 0));
-    const ends = { 2: ['log_2insert_4-1_2', 'log_2insert_4-1_2'], 4: ['beveled_end_4-3_4', 'log_2insert_6'], 6: ['log_2insert_4-1_2', 'log_2insert_4-1_2'] };
     for (let c = 1; c < K; c++) {
       if (c % 2) shed.push(yLog('log_3insert_7-5_8', c, 0, 0), yLog('log_3insert_7-5_8', c, WID, 0));
-      else shed.push(xLog(ends[c][0], c, front, 0), xLog(ends[c][1], c, back, 0));
+      else shed.push(xLog('log_2insert_4-1_2', c, front, 0), xLog('log_2insert_4-1_2', c, back, 0));
     }
     const G = 'gable_wood_triangle_4x2', xc = WID / 2;
     shed.push(gable(G, K, front, xc), gable(G, K, back, xc));

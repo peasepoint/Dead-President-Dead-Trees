@@ -42,10 +42,8 @@ LOGS = [
     ('L1b', 'log_1insert_1-1_2_round', '1.5 in', 1, 'round'),
     ('L1oct', 'log_1insert_1-1_2_octagonal', '1.5 in', 1, 'oct'),
     ('L2a', 'log_2insert_4-1_2', '4.5 in', 2, 'round'),
-    ('L2b', 'log_2insert_6', '6 in', 2, 'round'),
     ('L3', 'log_3insert_7-5_8', '7.625 in', 3, 'round'),
     ('L4', 'log_4insert_10-5_8', '10.625 in', 4, 'round'),
-    ('BevLong', 'beveled_end_4-3_4', '4.75 in', 2, 'rounded_ends'),
     ('Half2', 'half_log_4-1_2', '4.5 in', 2, 'half'),
     ('Half3', 'half_log_7-1_2', '7.5 in', 3, 'half'),
 ]
@@ -56,7 +54,7 @@ RIDGE_SHINGLES = [('ShRidge5', 'shingle_ridge_5-5_8', '5.625 in'), ('ShRidge6', 
 # Where each component sits in the layout (cm), so nothing overlaps.
 LAYOUT = {
     'log_4insert_10-5_8': (0, 0), 'log_3insert_7-5_8': (0, 3.5), 'half_log_7-1_2': (0, 7),
-    'log_2insert_6': (0, 10.5), 'beveled_end_4-3_4': (0, 14), 'log_2insert_4-1_2': (0, 17.5),
+    'log_2insert_4-1_2': (0, 17.5),
     'half_log_4-1_2': (0, 21), 'log_1insert_1-5_8': (0, 24.5), 'log_1insert_1-1_2_round': (6, 24.5),
     'log_1insert_1-1_2_octagonal': (12, 24.5), 'beveled_end_1-1_2': (18, 24.5),
     'solid_log_1-3_8': (1, 28.5), 'solid_log_1-5_8': (5, 28.5), 'chimney': (10, 29),

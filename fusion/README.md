@@ -1,6 +1,8 @@
 # Fusion design
 
-Every part in `parts.mjs` as an editable, parametric Autodesk Fusion design, in two versions that match the two STL sets: smooth (`stl/smooth/`) and wood grain (`stl/woodgrain/`).
+Every part in `parts.mjs` as an editable, parametric Autodesk Fusion design, in two versions that match the two standard STL sets: smooth (`stl/smooth/`) and wood grain (`stl/woodgrain/`). The rounded-end log set (`stl/rounded_woodgrain/`) is not in the Fusion design.
+
+> **Out of date:** the two `.f3d` files still contain `log_2insert_6` and `beveled_end_4-3_4`, which have been removed from the standard sets (the 4 3/4 in rounded-end log moved to `stl/rounded_woodgrain/`). `build_lincoln_logs.py` no longer builds them; delete those two components, or rebuild from the script, and re-export.
 
 | File | What it is |
 |---|---|
@@ -44,8 +46,7 @@ Each part's parameters start with its code.
 | Code | Component | Main parameters |
 |---|---|---|
 | `L1a`, `L1b`, `L1oct` | `log_1insert_1-5_8`, `log_1insert_1-1_2_round`, `log_1insert_1-1_2_octagonal` | `_Length`, `_Notches` |
-| `L2a`, `L2b`, `L3`, `L4` | `log_2insert_4-1_2`, `log_2insert_6`, `log_3insert_7-5_8`, `log_4insert_10-5_8` | `_Length`, `_Notches` |
-| `BevLong` | `beveled_end_4-3_4` | `_Length`, `_Notches`, `_EndRadius` |
+| `L2a`, `L3`, `L4` | `log_2insert_4-1_2`, `log_3insert_7-5_8`, `log_4insert_10-5_8` | `_Length`, `_Notches` |
 | `BevShort` | `beveled_end_1-1_2` | `_Length`, `_Angle` |
 | `Half2`, `Half3` | `half_log_4-1_2`, `half_log_7-1_2` | `_Length`, `_Notches` |
 | `Solid1`, `Solid2` | `solid_log_1-3_8`, `solid_log_1-5_8` | `_Length` |
@@ -64,11 +65,10 @@ Notes:
 
 ## Wood-grain copy
 
-`DeadPresidentTreeSections_woodgrain.f3d` is the same design with one mesh body added to each of the 13 log components (notched logs, half logs, beveled pieces, solid logs), named `<part>_woodgrain`. Each mesh is the textured STL from `stl/woodgrain/`, sitting exactly where the smooth solid is.
+`DeadPresidentTreeSections_woodgrain.f3d` is the same design with one mesh body added to each of the 11 log components (notched logs, half logs, beveled pieces, solid logs), named `<part>_woodgrain`. Each mesh is the textured STL from `stl/woodgrain/`, sitting exactly where the smooth solid is.
 
 - The smooth parametric solids are still there, hidden. Turn on a body's eye icon to see it.
 - The meshes are imported, not parametric: changing `LogDia`, a `_Length` or any other parameter moves the solid but not the mesh. After a change, regenerate the STLs with `node log_generator.mjs` and re-insert the ones from `stl/woodgrain/` (Insert > Insert Mesh).
-- `beveled_end_4-3_4`'s mesh has the STL's tapered ends, not the solid's 4 mm fillet.
 - Gables, shingles, the chimney and the extras have no texture and are unchanged.
 - To print a textured log from here: right-click the mesh body > Save As Mesh. It is the same geometry as the file in `stl/woodgrain/`.
 
@@ -84,6 +84,5 @@ Right-click a component's body > Save As Mesh (3MF or STL). Bodies are already o
 
 ## Differences from the STLs in `stl/smooth/`
 
-Volumes and bounding boxes were compared with every STL. All match, with two expected differences:
+Volumes and bounding boxes were compared with every STL. All match, with one expected difference:
 - Round parts are true cylinders here; the STLs are 144-sided, so the Fusion volumes are about 0.03% larger.
-- `beveled_end_4-3_4` has a 4 mm fillet on each end in place of the STL's three-segment taper (about 1% more volume).

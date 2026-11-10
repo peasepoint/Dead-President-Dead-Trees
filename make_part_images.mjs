@@ -1,4 +1,5 @@
 // Renders, for every listed part in parts.mjs, a still image (images/<name>.png) and a rotating GIF (images/<name>.gif).
+// The rounded-end logs go to images/rounded/<name>.png and .gif.
 // Parts are shown in their assembly orientation (logs lying along their length, gables upright).
 // Software rasteriser, PNG and GIF encoders; no dependencies beyond Node.  Usage: node make_part_images.mjs
 import fs from 'node:fs';
@@ -105,8 +106,9 @@ function gifEncoder(base) {
 }
 
 // ---------- per part ----------
-fs.mkdirSync(OUT, { recursive: true });
-const P = makeParts();
+const jobs = [[OUT, makeParts()], [`${OUT}/rounded`, makeParts({ set: 'rounded' })]];
+for (const [dir, P] of jobs) {
+fs.mkdirSync(dir, { recursive: true });
 for (const p of Object.values(P)) {
   if (!p.info.listing) continue;
   const pts = p.model.flat();
@@ -130,9 +132,10 @@ for (const p of Object.values(P)) {
   for (let it = 0; it < 40; it++) { const m = (dLo + dHi) / 2; if (fits(m)) dHi = m; else dLo = m; }
   const cam = { el, fov, target: [0, 0, 0], dist: dHi };
   const base = MATS[matFor(p.name)];
-  fs.writeFileSync(`${OUT}/${p.name}.png`, png(render(tris, base, { ...cam, az: -55 })));
+  fs.writeFileSync(`${dir}/${p.name}.png`, png(render(tris, base, { ...cam, az: -55 })));
   const g = gifEncoder(base);
   for (let i = 0; i < FRAMES; i++) g.add(render(tris, base, { ...cam, az: -55 + (360 * i) / FRAMES }), 8);
-  fs.writeFileSync(`${OUT}/${p.name}.gif`, g.buffer());
-  console.log(`${p.name}: png ${(fs.statSync(`${OUT}/${p.name}.png`).size / 1024).toFixed(0)} KB, gif ${(fs.statSync(`${OUT}/${p.name}.gif`).size / 1024).toFixed(0)} KB`);
+  fs.writeFileSync(`${dir}/${p.name}.gif`, g.buffer());
+  console.log(`${dir}/${p.name}: png ${(fs.statSync(`${dir}/${p.name}.png`).size / 1024).toFixed(0)} KB, gif ${(fs.statSync(`${dir}/${p.name}.gif`).size / 1024).toFixed(0)} KB`);
+}
 }
