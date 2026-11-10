@@ -1,6 +1,16 @@
 # Design notes
 
-Every part is defined in `parts.mjs`. The same geometry is written to `stl/smooth/`, `stl/woodgrain/` and `stl/rounded_woodgrain/` by `log_generator.mjs`, laid out into three test buildings by `assembly.mjs`, checked by `verify.mjs` (results in `VERIFY.md`) and rendered by `make_gif.mjs`. The per-part still and rotating images in the parts table come from `make_part_images.mjs` (in `images/`, and `images/rounded/` for the rounded-end set), shown in assembly orientation.
+How the parts were measured, what is assumed, and how the test buildings are checked. To print the parts, start with the [README](README.md).
+
+Every part is defined in `parts.mjs`. The same geometry feeds each script:
+
+| Script | What it does |
+|---|---|
+| `log_generator.mjs` | Writes `stl/smooth/`, `stl/woodgrain/` and `stl/rounded_woodgrain/` |
+| `assembly.mjs` | Lays the parts out into three test buildings |
+| `verify.mjs` | Checks the buildings; results in `VERIFY.md` and `VERIFY_smooth.md` |
+| `make_gif.mjs` | Renders `cabin_build.gif` |
+| `make_part_images.mjs` | Renders the still and rotating images in the tables below (`images/`, and `images/rounded/` for the rounded-end set), in assembly orientation |
 
 ## How the parts were measured
 
@@ -153,22 +163,19 @@ Full per-part results are in `VERIFY.md`.
   - The meaning of "1 1/2 x 1 1/4".
   - The small gable's height: derived from the large gable's pitch, 1.56 in, against about 1.6 in measured.
 - One cabin shingle row rests with its centre of mass only about 1 mm inside its supports. It is stable on paper, but a light knock could tip it.
-- The extras `extra_door` and `extra_window` are my own designs, not in any photo, and are not used in the verified buildings. My earlier invented chimney block has been replaced by the photographed chimney.
+- The extras `extra_door` and `extra_window` are my own designs, not in any photo, and are not used in the verified buildings.
 
 ## Printing
 
-- **Round logs and beveled pieces:** STLs lie on the 0.8 mm side flat, notches facing sideways; no supports.
-- **Half logs:** print flat side down, notches up.
-- **Octagonal log:** prints on a flat.
-- **Solid logs:** print standing. The end on the bed has rings too; they are shallow enough to close over in the second layer.
-- **Wood grain (`stl/woodgrain/`):** needs no supports. Finer layers (0.12 to 0.16 mm) show the grain on top of the logs better. Textured log STLs are 1 to 2.5 MB each. For plain logs print from `stl/smooth/`; orientation and settings are the same.
-- **Gables:** print flat on a face (both plastic sizes and the wooden triangle).
-- **Chimney:** the STL is upside down, open top on the bed and V facing up, so it needs no supports.
-- **Shingles:** print flat.
-- **Settings:** 0.2 mm layers, 3+ perimeters, 20 to 30% infill.
-- **Long parts:** the 4-insert log (270 mm) and 11 in shingle (279 mm) need a large bed or a diagonal layout.
-- **Material:** for PETG, regenerate with `--clearance 0.3`.
+Step-by-step instructions, slicer settings and part counts for each building are in the [README](README.md#how-to-print). Notes beyond those:
+
+- **Printing flat:** round logs and the beveled end lie on a 0.8 mm flat with their notches sideways, so nothing overhangs and no supports are needed.
+- **Solid logs** print standing. The end on the bed has rings too; they are shallow enough to close over in the second layer.
+- **Wood grain** needs no supports. Finer layers (0.12 to 0.16 mm) show the grain on top of the logs better. Textured log STLs are 1 to 2.5 MB each.
+- **Chimney:** the STL is upside down, open top on the bed and V facing up.
+- **Long parts:** the 4-insert log (270 mm) and the 11 in shingle (279 mm) need a large bed or a diagonal layout.
+- **PETG:** regenerate with `--clearance 0.3`.
 
 ## Legal
 
-The 1920 patent has expired, so the geometry is free to copy. "Lincoln Logs" is a registered Hasbro trademark ([Justia](https://trademarks.justia.com/715/38/lincoln-logs-71538955.html)). Printing for yourself is low risk. If you share or sell the files, call them "compatible log-cabin logs".
+The 1920 patent has expired, so the geometry is free to copy. "Lincoln Logs" is a registered Hasbro trademark ([Justia](https://trademarks.justia.com/715/38/lincoln-logs-71538955.html)), so the name is not. If you share or sell the files or prints, call them "compatible log-cabin logs".
