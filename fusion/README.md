@@ -4,7 +4,7 @@ Every part in `parts.mjs` as an editable, parametric Autodesk Fusion design.
 
 | File | What it is |
 |---|---|
-| `lincoln_logs.f3d` | The design. In Fusion: File > Open > Open from my computer |
+| `DeadPresidentTreeSections.f3d` | The design, exported from the Fusion document of the same name. In Fusion: File > Open > Open from my computer |
 | `build_lincoln_logs.py` | The script that built it. Run it to rebuild from scratch: Utilities > Add-Ins > Scripts and Add-Ins > + > pick this folder |
 | `layout.png` | Picture of the layout |
 
