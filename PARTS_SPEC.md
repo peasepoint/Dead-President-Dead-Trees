@@ -27,7 +27,7 @@ Confidence: **High** = several independent sources agree. **Medium** = one good 
 
 Both columns appear in listings. The 7/16 column matches more measured originals; the 3/8 column matches most compatible plans and seller "nominal" sizes.
 
-`parts.mjs` already uses `D = 3/4 in`, `NOTCH_D = 3/16 in`, `CENTERS = 3 in`, `PITCH = 3/8 in`, which agrees with this table.
+`parts.mjs` uses `D = 3/4 in`, `NOTCH_D = 3/16 in`, `CENTERS = 3 in`, `PITCH = 3/8 in`, which agrees with this table. Its log lengths follow the reference lot: 3/8 in shoulders on the 1 1/2 and 4 1/2 in logs, 7/16 in on the 1 5/8, 7 5/8 and 10 5/8 in logs (see "Check against `PARTS_SPEC.md`" in `DESIGN_NOTES.md`).
 
 ## 2. Log catalog
 

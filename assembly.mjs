@@ -139,10 +139,10 @@ export function buildings(P) {
       // front wall: doorway in the left bay on courses 2 and 4 (short logs at the corner, 2-insert across the right bay)
       if (c === 2 || c === 4) {
         cabin.push(xLog(c === 2 ? 'log_1insert_1-1_2_octagonal' : 'log_1insert_1-1_2_round', c, front, 0, 0, q(c)), xLog('log_2insert_4-1_2', c, front, CENTERS, 0, q(c)));
-      } else cabin.push(xLog('log_3insert_7-3_4', c, front, 0, 0, q(c)));
+      } else cabin.push(xLog('log_3insert_7-5_8', c, front, 0, 0, q(c)));
       // back wall: window in the left bay on course 4
       if (c === 4) cabin.push(xLog('log_1insert_1-5_8', c, back, 0, 0, q(c)), xLog('log_2insert_4-1_2', c, back, CENTERS, 0, q(c)));
-      else cabin.push(xLog('log_3insert_7-3_4', c, back, 0, 0, q(c)));
+      else cabin.push(xLog('log_3insert_7-5_8', c, back, 0, 0, q(c)));
     }
     const G = 'gable_plastic_8-1_2', xc = WID / 2;
     cabin.push(gable(G, K, front, xc, 'PLASTIC GABLES'), gable(G, K, back, xc, 'PLASTIC GABLES'));
@@ -157,7 +157,7 @@ export function buildings(P) {
     shed.push(xLog('half_log_4-1_2', 0, front, 0), xLog('half_log_4-1_2', 0, back, 0));
     const ends = { 2: ['log_2insert_4-1_2', 'log_2insert_4-1_2'], 4: ['beveled_end_4-3_4', 'log_2insert_6'], 6: ['log_2insert_4-1_2', 'log_2insert_4-1_2'] };
     for (let c = 1; c < K; c++) {
-      if (c % 2) shed.push(yLog('log_3insert_7-3_4', c, 0, 0), yLog('log_3insert_7-3_4', c, WID, 0));
+      if (c % 2) shed.push(yLog('log_3insert_7-5_8', c, 0, 0), yLog('log_3insert_7-5_8', c, WID, 0));
       else shed.push(xLog(ends[c][0], c, front, 0), xLog(ends[c][1], c, back, 0));
     }
     const G = 'gable_wood_triangle_4x2', xc = WID / 2;
@@ -172,7 +172,7 @@ export function buildings(P) {
     const WID = CENTERS, LEN = 2 * CENTERS, K = 8, front = 0, back = LEN;
     cottage.push(xLog('half_log_4-1_2', 0, front, 0), xLog('half_log_4-1_2', 0, back, 0));
     for (let c = 1; c < K; c++) {
-      if (c % 2) cottage.push(yLog('log_3insert_7-3_4', c, 0, 0), yLog('log_3insert_7-3_4', c, WID, 0));
+      if (c % 2) cottage.push(yLog('log_3insert_7-5_8', c, 0, 0), yLog('log_3insert_7-5_8', c, WID, 0));
       else cottage.push(xLog('log_2insert_4-1_2', c, front, 0), xLog('log_2insert_4-1_2', c, back, 0));
     }
     const G = 'gable_plastic_small_2notch', xc = WID / 2;

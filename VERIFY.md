@@ -21,21 +21,21 @@ Checks per part: **interference** (volume shared with another part; any shared v
 | 4 | log_4insert_10-5_8 | 67694 | yes (8.2 mm) | half_log_7-1_2 | +x -x +y -y |
 | 5 | log_1insert_1-1_2_octagonal | 8999 | yes (8.8 mm) | half_log_7-1_2, log_4insert_10-5_8 | +x -x +y -y |
 | 6 | log_2insert_4-1_2 | 27487 | yes (6.3 mm) | half_log_7-1_2, log_4insert_10-5_8 | +x -x +y -y |
-| 7 | log_3insert_7-3_4 | 48814 | yes (8.3 mm) | half_log_7-1_2, log_4insert_10-5_8 | +x -x +y -y |
-| 8 | log_4insert_10-5_8 | 67395 | yes (8.2 mm) | log_4insert_10-5_8, log_1insert_1-1_2_octagonal, log_3insert_7-3_4 | +x -x +y -y |
-| 9 | log_4insert_10-5_8 | 67790 | yes (8.2 mm) | log_4insert_10-5_8, log_2insert_4-1_2, log_3insert_7-3_4 | +x -x +y -y |
+| 7 | log_3insert_7-5_8 | 47832 | yes (8.3 mm) | half_log_7-1_2, log_4insert_10-5_8 | +x -x +y -y |
+| 8 | log_4insert_10-5_8 | 67395 | yes (8.2 mm) | log_4insert_10-5_8, log_1insert_1-1_2_octagonal, log_3insert_7-5_8 | +x -x +y -y |
+| 9 | log_4insert_10-5_8 | 67790 | yes (8.2 mm) | log_4insert_10-5_8, log_2insert_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
 | 10 | log_1insert_1-1_2_round | 8466 | yes (8.4 mm) | log_1insert_1-1_2_octagonal, log_4insert_10-5_8 | +x -x +y -y |
 | 11 | log_2insert_4-1_2 | 27581 | yes (6.3 mm) | log_2insert_4-1_2, log_4insert_10-5_8 | +x -x +y -y |
-| 12 | log_1insert_1-5_8 | 9519 | yes (8.3 mm) | log_3insert_7-3_4, log_4insert_10-5_8 | +x -x +y -y |
-| 13 | log_2insert_4-1_2 | 27780 | yes (6.2 mm) | log_3insert_7-3_4, log_4insert_10-5_8 | +x -x +y -y |
+| 12 | log_1insert_1-5_8 | 9519 | yes (8.3 mm) | log_3insert_7-5_8, log_4insert_10-5_8 | +x -x +y -y |
+| 13 | log_2insert_4-1_2 | 27780 | yes (6.2 mm) | log_3insert_7-5_8, log_4insert_10-5_8 | +x -x +y -y |
 | 14 | log_4insert_10-5_8 | 67376 | yes (8.2 mm) | log_4insert_10-5_8, log_1insert_1-1_2_round, log_1insert_1-5_8 | +x -x +y -y |
 | 15 | log_4insert_10-5_8 | 67578 | yes (8.2 mm) | log_4insert_10-5_8, log_2insert_4-1_2 | +x -x +y -y |
-| 16 | log_3insert_7-3_4 | 48741 | yes (8.4 mm) | log_1insert_1-1_2_round, log_4insert_10-5_8, log_2insert_4-1_2 | +x -x +y -y |
-| 17 | log_3insert_7-3_4 | 49037 | yes (8.3 mm) | log_1insert_1-5_8, log_4insert_10-5_8, log_2insert_4-1_2 | +x -x +y -y |
-| 18 | log_4insert_10-5_8 | 67568 | yes (8.2 mm) | log_4insert_10-5_8, log_3insert_7-3_4 | +x -x +y -y |
-| 19 | log_4insert_10-5_8 | 67578 | yes (8.2 mm) | log_4insert_10-5_8, log_3insert_7-3_4 | +x -x +y -y |
-| 20 | gable_plastic_8-1_2 | 123016 | yes (9.3 mm) | log_3insert_7-3_4, log_4insert_10-5_8 | +x -x +y -y |
-| 21 | gable_plastic_8-1_2 | 123016 | yes (9.3 mm) | log_3insert_7-3_4, log_4insert_10-5_8 | +x -x +y -y |
+| 16 | log_3insert_7-5_8 | 47759 | yes (8.4 mm) | log_1insert_1-1_2_round, log_4insert_10-5_8, log_2insert_4-1_2 | +x -x +y -y |
+| 17 | log_3insert_7-5_8 | 48049 | yes (8.3 mm) | log_1insert_1-5_8, log_4insert_10-5_8, log_2insert_4-1_2 | +x -x +y -y |
+| 18 | log_4insert_10-5_8 | 67568 | yes (8.2 mm) | log_4insert_10-5_8, log_3insert_7-5_8 | +x -x +y -y |
+| 19 | log_4insert_10-5_8 | 67578 | yes (8.2 mm) | log_4insert_10-5_8, log_3insert_7-5_8 | +x -x +y -y |
+| 20 | gable_plastic_8-1_2 | 123016 | yes (9.3 mm) | log_3insert_7-5_8, log_4insert_10-5_8 | +x -x +y -y |
+| 21 | gable_plastic_8-1_2 | 123016 | yes (9.3 mm) | log_3insert_7-5_8, log_4insert_10-5_8 | +x -x +y -y |
 | 22 | shingle_flat_9 | 14771 | yes (7.7 mm) | gable_plastic_8-1_2 | +x -x |
 | 23 | shingle_flat_9 | 14713 | yes (7.5 mm) | gable_plastic_8-1_2 | +x -x |
 | 24 | shingle_flat_9 | 14828 | yes (1.1 mm) | gable_plastic_8-1_2 | +x |
@@ -59,22 +59,22 @@ Checks per part: **interference** (volume shared with another part; any shared v
 |---|---|---|---|---|---|
 | 1 | half_log_4-1_2 | 23979 | yes (7.9 mm) | table | +x -x +y -y |
 | 2 | half_log_4-1_2 | 24113 | yes (8.2 mm) | table | +x -x +y -y |
-| 3 | log_3insert_7-3_4 | 48997 | yes (8.3 mm) | half_log_4-1_2 | +x -x +y -y |
-| 4 | log_3insert_7-3_4 | 48470 | yes (8.4 mm) | half_log_4-1_2 | +x -x +y -y |
-| 5 | log_2insert_4-1_2 | 27626 | yes (8.4 mm) | half_log_4-1_2, log_3insert_7-3_4 | +x -x +y -y |
-| 6 | log_2insert_4-1_2 | 27654 | yes (8.0 mm) | half_log_4-1_2, log_3insert_7-3_4 | +x -x +y -y |
-| 7 | log_3insert_7-3_4 | 48997 | yes (8.2 mm) | log_3insert_7-3_4, log_2insert_4-1_2 | +x -x +y -y |
-| 8 | log_3insert_7-3_4 | 48553 | yes (8.4 mm) | log_3insert_7-3_4, log_2insert_4-1_2 | +x -x +y -y |
-| 9 | beveled_end_4-3_4 | 28735 | yes (8.4 mm) | log_2insert_4-1_2, log_3insert_7-3_4 | +x -x +y -y |
-| 10 | log_2insert_6 | 38247 | yes (8.0 mm) | log_2insert_4-1_2, log_3insert_7-3_4 | +x -x +y -y |
-| 11 | log_3insert_7-3_4 | 48982 | yes (8.2 mm) | log_3insert_7-3_4, beveled_end_4-3_4, log_2insert_6 | +x -x +y -y |
-| 12 | log_3insert_7-3_4 | 48573 | yes (7.9 mm) | log_3insert_7-3_4, beveled_end_4-3_4, log_2insert_6 | +x -x +y -y |
-| 13 | log_2insert_4-1_2 | 27768 | yes (8.4 mm) | beveled_end_4-3_4, log_3insert_7-3_4 | +x -x +y -y |
-| 14 | log_2insert_4-1_2 | 27663 | yes (8.0 mm) | log_2insert_6, log_3insert_7-3_4 | +x -x +y -y |
-| 15 | log_3insert_7-3_4 | 49121 | yes (8.2 mm) | log_3insert_7-3_4, log_2insert_4-1_2 | +x -x +y -y |
-| 16 | log_3insert_7-3_4 | 48727 | yes (7.9 mm) | log_3insert_7-3_4, log_2insert_4-1_2 | +x -x +y -y |
-| 17 | gable_wood_triangle_4x2 | 56278 | yes (9.3 mm) | log_2insert_4-1_2, log_3insert_7-3_4 | +x -x +y -y |
-| 18 | gable_wood_triangle_4x2 | 56278 | yes (9.3 mm) | log_2insert_4-1_2, log_3insert_7-3_4 | +x -x +y -y |
+| 3 | log_3insert_7-5_8 | 48011 | yes (8.3 mm) | half_log_4-1_2 | +x -x +y -y |
+| 4 | log_3insert_7-5_8 | 47493 | yes (8.4 mm) | half_log_4-1_2 | +x -x +y -y |
+| 5 | log_2insert_4-1_2 | 27626 | yes (8.4 mm) | half_log_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
+| 6 | log_2insert_4-1_2 | 27654 | yes (8.0 mm) | half_log_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
+| 7 | log_3insert_7-5_8 | 48011 | yes (8.2 mm) | log_3insert_7-5_8, log_2insert_4-1_2 | +x -x +y -y |
+| 8 | log_3insert_7-5_8 | 47575 | yes (8.4 mm) | log_3insert_7-5_8, log_2insert_4-1_2 | +x -x +y -y |
+| 9 | beveled_end_4-3_4 | 28735 | yes (8.4 mm) | log_2insert_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
+| 10 | log_2insert_6 | 38247 | yes (8.0 mm) | log_2insert_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
+| 11 | log_3insert_7-5_8 | 47996 | yes (8.2 mm) | log_3insert_7-5_8, beveled_end_4-3_4, log_2insert_6 | +x -x +y -y |
+| 12 | log_3insert_7-5_8 | 47594 | yes (7.9 mm) | log_3insert_7-5_8, beveled_end_4-3_4, log_2insert_6 | +x -x +y -y |
+| 13 | log_2insert_4-1_2 | 27768 | yes (8.4 mm) | beveled_end_4-3_4, log_3insert_7-5_8 | +x -x +y -y |
+| 14 | log_2insert_4-1_2 | 27663 | yes (8.0 mm) | log_2insert_6, log_3insert_7-5_8 | +x -x +y -y |
+| 15 | log_3insert_7-5_8 | 48131 | yes (8.2 mm) | log_3insert_7-5_8, log_2insert_4-1_2 | +x -x +y -y |
+| 16 | log_3insert_7-5_8 | 47744 | yes (7.9 mm) | log_3insert_7-5_8, log_2insert_4-1_2 | +x -x +y -y |
+| 17 | gable_wood_triangle_4x2 | 56278 | yes (9.3 mm) | log_2insert_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
+| 18 | gable_wood_triangle_4x2 | 56278 | yes (9.3 mm) | log_2insert_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
 | 19 | shingle_flat_6 | 9874 | yes (6.4 mm) | gable_wood_triangle_4x2 | +x |
 | 20 | shingle_flat_6 | 9798 | yes (6.5 mm) | gable_wood_triangle_4x2 | -x |
 | 21 | shingle_flat_6 | 9836 | yes (6.6 mm) | gable_wood_triangle_4x2 | +x |
@@ -95,27 +95,27 @@ Checks per part: **interference** (volume shared with another part; any shared v
 |---|---|---|---|---|---|
 | 1 | half_log_4-1_2 | 23979 | yes (7.9 mm) | table | +x -x +y -y |
 | 2 | half_log_4-1_2 | 24113 | yes (8.2 mm) | table | +x -x +y -y |
-| 3 | log_3insert_7-3_4 | 48997 | yes (8.3 mm) | half_log_4-1_2 | +x -x +y -y |
-| 4 | log_3insert_7-3_4 | 48470 | yes (8.4 mm) | half_log_4-1_2 | +x -x +y -y |
-| 5 | log_2insert_4-1_2 | 27626 | yes (8.4 mm) | half_log_4-1_2, log_3insert_7-3_4 | +x -x +y -y |
-| 6 | log_2insert_4-1_2 | 27654 | yes (8.0 mm) | half_log_4-1_2, log_3insert_7-3_4 | +x -x +y -y |
-| 7 | log_3insert_7-3_4 | 48997 | yes (8.2 mm) | log_3insert_7-3_4, log_2insert_4-1_2 | +x -x +y -y |
-| 8 | log_3insert_7-3_4 | 48553 | yes (8.4 mm) | log_3insert_7-3_4, log_2insert_4-1_2 | +x -x +y -y |
-| 9 | log_2insert_4-1_2 | 27721 | yes (8.4 mm) | log_2insert_4-1_2, log_3insert_7-3_4 | +x -x +y -y |
-| 10 | log_2insert_4-1_2 | 27635 | yes (8.0 mm) | log_2insert_4-1_2, log_3insert_7-3_4 | +x -x +y -y |
-| 11 | log_3insert_7-3_4 | 48982 | yes (8.2 mm) | log_3insert_7-3_4, log_2insert_4-1_2 | +x -x +y -y |
-| 12 | log_3insert_7-3_4 | 48573 | yes (7.9 mm) | log_3insert_7-3_4, log_2insert_4-1_2 | +x -x +y -y |
-| 13 | log_2insert_4-1_2 | 27768 | yes (8.4 mm) | log_2insert_4-1_2, log_3insert_7-3_4 | +x -x +y -y |
-| 14 | log_2insert_4-1_2 | 27663 | yes (8.0 mm) | log_2insert_4-1_2, log_3insert_7-3_4 | +x -x +y -y |
-| 15 | log_3insert_7-3_4 | 49121 | yes (8.2 mm) | log_3insert_7-3_4, log_2insert_4-1_2 | +x -x +y -y |
-| 16 | log_3insert_7-3_4 | 48727 | yes (7.9 mm) | log_3insert_7-3_4, log_2insert_4-1_2 | +x -x +y -y |
-| 17 | gable_plastic_small_2notch | 58990 | yes (9.3 mm) | log_2insert_4-1_2, log_3insert_7-3_4 | +x -x +y -y |
-| 18 | gable_plastic_small_2notch | 58990 | yes (9.3 mm) | log_2insert_4-1_2, log_3insert_7-3_4 | +x -x +y -y |
-| 19 | shingle_flat_6 | 9836 | yes (6.5 mm) | gable_plastic_small_2notch | +x -x |
-| 20 | shingle_flat_6 | 9836 | yes (6.5 mm) | gable_plastic_small_2notch | +x -x |
-| 21 | shingle_flat_6 | 9874 | yes (0.3 mm) | gable_plastic_small_2notch | +x |
-| 22 | shingle_flat_6 | 9836 | yes (0.4 mm) | gable_plastic_small_2notch | -x |
-| 23 | shingle_flat_6 | 9798 | yes (6.5 mm) | gable_plastic_small_2notch | +x -x |
-| 24 | shingle_flat_6 | 9874 | yes (6.5 mm) | gable_plastic_small_2notch | +x -x |
-| 25 | chimney | 15911 | yes (12.4 mm) | shingle_flat_6 | +x -x |
+| 3 | log_3insert_7-5_8 | 48011 | yes (8.3 mm) | half_log_4-1_2 | +x -x +y -y |
+| 4 | log_3insert_7-5_8 | 47493 | yes (8.4 mm) | half_log_4-1_2 | +x -x +y -y |
+| 5 | log_2insert_4-1_2 | 27626 | yes (8.4 mm) | half_log_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
+| 6 | log_2insert_4-1_2 | 27654 | yes (8.0 mm) | half_log_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
+| 7 | log_3insert_7-5_8 | 48011 | yes (8.2 mm) | log_3insert_7-5_8, log_2insert_4-1_2 | +x -x +y -y |
+| 8 | log_3insert_7-5_8 | 47575 | yes (8.4 mm) | log_3insert_7-5_8, log_2insert_4-1_2 | +x -x +y -y |
+| 9 | log_2insert_4-1_2 | 27721 | yes (8.4 mm) | log_2insert_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
+| 10 | log_2insert_4-1_2 | 27635 | yes (8.0 mm) | log_2insert_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
+| 11 | log_3insert_7-5_8 | 47996 | yes (8.2 mm) | log_3insert_7-5_8, log_2insert_4-1_2 | +x -x +y -y |
+| 12 | log_3insert_7-5_8 | 47594 | yes (7.9 mm) | log_3insert_7-5_8, log_2insert_4-1_2 | +x -x +y -y |
+| 13 | log_2insert_4-1_2 | 27768 | yes (8.4 mm) | log_2insert_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
+| 14 | log_2insert_4-1_2 | 27663 | yes (8.0 mm) | log_2insert_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
+| 15 | log_3insert_7-5_8 | 48131 | yes (8.2 mm) | log_3insert_7-5_8, log_2insert_4-1_2 | +x -x +y -y |
+| 16 | log_3insert_7-5_8 | 47744 | yes (7.9 mm) | log_3insert_7-5_8, log_2insert_4-1_2 | +x -x +y -y |
+| 17 | gable_plastic_small_2notch | 59883 | yes (9.3 mm) | log_2insert_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
+| 18 | gable_plastic_small_2notch | 59883 | yes (9.3 mm) | log_2insert_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
+| 19 | shingle_flat_6 | 9874 | yes (6.6 mm) | gable_plastic_small_2notch | +x -x |
+| 20 | shingle_flat_6 | 9874 | yes (6.6 mm) | gable_plastic_small_2notch | +x -x |
+| 21 | shingle_flat_6 | 9836 | yes (2.7 mm) | gable_plastic_small_2notch | +x |
+| 22 | shingle_flat_6 | 9798 | yes (2.8 mm) | gable_plastic_small_2notch | -x |
+| 23 | shingle_flat_6 | 9874 | yes (6.9 mm) | gable_plastic_small_2notch | +x -x |
+| 24 | shingle_flat_6 | 9874 | yes (6.9 mm) | gable_plastic_small_2notch | +x -x |
+| 25 | chimney | 16000 | yes (12.4 mm) | shingle_flat_6 | +x -x |
 
