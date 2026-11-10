@@ -65,12 +65,12 @@ Checks per part: **interference** (volume shared with another part; any shared v
 | 6 | log_2insert_4-1_2 | 27495 | yes (8.0 mm) | half_log_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
 | 7 | log_3insert_7-5_8 | 47793 | yes (8.2 mm) | log_3insert_7-5_8, log_2insert_4-1_2 | +x -x +y -y |
 | 8 | log_3insert_7-5_8 | 47414 | yes (8.4 mm) | log_3insert_7-5_8, log_2insert_4-1_2 | +x -x +y -y |
-| 9 | beveled_end_4-3_4 | 28624 | yes (8.4 mm) | log_2insert_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
-| 10 | log_2insert_6 | 38113 | yes (8.0 mm) | log_2insert_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
-| 11 | log_3insert_7-5_8 | 47828 | yes (8.2 mm) | log_3insert_7-5_8, beveled_end_4-3_4, log_2insert_6 | +x -x +y -y |
-| 12 | log_3insert_7-5_8 | 47471 | yes (7.9 mm) | log_3insert_7-5_8, beveled_end_4-3_4, log_2insert_6 | +x -x +y -y |
-| 13 | log_2insert_4-1_2 | 27657 | yes (8.4 mm) | beveled_end_4-3_4, log_3insert_7-5_8 | +x -x +y -y |
-| 14 | log_2insert_4-1_2 | 27539 | yes (8.0 mm) | log_2insert_6, log_3insert_7-5_8 | +x -x +y -y |
+| 9 | log_2insert_4-1_2 | 27585 | yes (8.4 mm) | log_2insert_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
+| 10 | log_2insert_4-1_2 | 27506 | yes (8.0 mm) | log_2insert_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
+| 11 | log_3insert_7-5_8 | 47828 | yes (8.2 mm) | log_3insert_7-5_8, log_2insert_4-1_2 | +x -x +y -y |
+| 12 | log_3insert_7-5_8 | 47471 | yes (7.9 mm) | log_3insert_7-5_8, log_2insert_4-1_2 | +x -x +y -y |
+| 13 | log_2insert_4-1_2 | 27657 | yes (8.4 mm) | log_2insert_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
+| 14 | log_2insert_4-1_2 | 27539 | yes (8.0 mm) | log_2insert_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
 | 15 | log_3insert_7-5_8 | 47914 | yes (8.2 mm) | log_3insert_7-5_8, log_2insert_4-1_2 | +x -x +y -y |
 | 16 | log_3insert_7-5_8 | 47543 | yes (7.9 mm) | log_3insert_7-5_8, log_2insert_4-1_2 | +x -x +y -y |
 | 17 | gable_wood_triangle_4x2 | 56278 | yes (9.3 mm) | log_2insert_4-1_2, log_3insert_7-5_8 | +x -x +y -y |

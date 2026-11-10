@@ -2,6 +2,7 @@
 #
 # Run it from Fusion: Utilities > Add-Ins > Scripts and Add-Ins > "+" > pick this folder > Run.
 # It opens a new design, creates the user parameters, then one component per part.
+# Set PART_SET below to 'rounded' to build the rounded-end log set (stl/rounded_woodgrain/) instead.
 #
 # How the design is organised (see fusion/README.md for the full parameter list):
 #   - Shared sizes (LogDia, NotchDepth, NotchCenters, Clearance, PrintFlat ...) are user parameters.
@@ -11,6 +12,8 @@
 import adsk.core
 import adsk.fusion
 import traceback
+
+PART_SET = 'standard'  # 'standard': every part (DeadPresidentTreeSections.f3d); 'rounded': the rounded-end logs only
 
 P3 = adsk.core.Point3D.create
 VI = adsk.core.ValueInput.createByString
@@ -42,12 +45,20 @@ LOGS = [
     ('L1b', 'log_1insert_1-1_2_round', '1.5 in', 1, 'round'),
     ('L1oct', 'log_1insert_1-1_2_octagonal', '1.5 in', 1, 'oct'),
     ('L2a', 'log_2insert_4-1_2', '4.5 in', 2, 'round'),
-    ('L2b', 'log_2insert_6', '6 in', 2, 'round'),
     ('L3', 'log_3insert_7-5_8', '7.625 in', 3, 'round'),
     ('L4', 'log_4insert_10-5_8', '10.625 in', 4, 'round'),
-    ('BevLong', 'beveled_end_4-3_4', '4.75 in', 2, 'rounded_ends'),
     ('Half2', 'half_log_4-1_2', '4.5 in', 2, 'half'),
     ('Half3', 'half_log_7-1_2', '7.5 in', 3, 'half'),
+]
+# The rounded-end set: every notched log with rounded ends. code, component name, length, notch count, octagonal
+ROUNDED = [
+    ('R1a', 'log_1insert_1-5_8_rounded', '1.625 in', 1, False),
+    ('R1b', 'log_1insert_1-1_2_round_rounded', '1.5 in', 1, False),
+    ('R1oct', 'log_1insert_1-1_2_octagonal_rounded', '1.5 in', 1, True),
+    ('R2a', 'log_2insert_4-1_2_rounded', '4.5 in', 2, False),
+    ('R2c', 'log_2insert_4-3_4_rounded', '4.75 in', 2, False),
+    ('R3', 'log_3insert_7-5_8_rounded', '7.625 in', 3, False),
+    ('R4', 'log_4insert_10-5_8_rounded', '10.625 in', 4, False),
 ]
 SOLIDS = [('Solid1', 'solid_log_1-3_8', '1.375 in'), ('Solid2', 'solid_log_1-5_8', '1.625 in')]
 FLAT_SHINGLES = [('ShFlat6', 'shingle_flat_6', '6 in'), ('ShFlat9', 'shingle_flat_9', '9 in'), ('ShFlat11', 'shingle_flat_11', '11 in')]
@@ -56,13 +67,16 @@ RIDGE_SHINGLES = [('ShRidge5', 'shingle_ridge_5-5_8', '5.625 in'), ('ShRidge6', 
 # Where each component sits in the layout (cm), so nothing overlaps.
 LAYOUT = {
     'log_4insert_10-5_8': (0, 0), 'log_3insert_7-5_8': (0, 3.5), 'half_log_7-1_2': (0, 7),
-    'log_2insert_6': (0, 10.5), 'beveled_end_4-3_4': (0, 14), 'log_2insert_4-1_2': (0, 17.5),
+    'log_2insert_4-1_2': (0, 17.5),
     'half_log_4-1_2': (0, 21), 'log_1insert_1-5_8': (0, 24.5), 'log_1insert_1-1_2_round': (6, 24.5),
     'log_1insert_1-1_2_octagonal': (12, 24.5), 'beveled_end_1-1_2': (18, 24.5),
     'solid_log_1-3_8': (1, 28.5), 'solid_log_1-5_8': (5, 28.5), 'chimney': (10, 29),
     'extra_door': (16, 30), 'extra_window': (24, 30),
     'shingle_flat_11': (32, 0), 'shingle_flat_9': (32, 3.5), 'shingle_flat_6': (32, 7),
     'shingle_ridge_9': (32, 11), 'shingle_ridge_6': (32, 15), 'shingle_ridge_5-5_8': (48, 15),
+    'log_4insert_10-5_8_rounded': (0, 0), 'log_3insert_7-5_8_rounded': (0, 3.5), 'log_2insert_4-3_4_rounded': (0, 7),
+    'log_2insert_4-1_2_rounded': (0, 10.5), 'log_1insert_1-5_8_rounded': (0, 14), 'log_1insert_1-1_2_round_rounded': (6, 14),
+    'log_1insert_1-1_2_octagonal_rounded': (12, 14),
     'gable_plastic_8-1_2': (32, 18.5), 'gable_plastic_small_2notch': (32, 26), 'gable_wood_triangle_4x2': (48, 26),
 }
 
@@ -366,6 +380,70 @@ class Builder:
 
         self.part(name, build)
 
+    def rounded_log(self, code, name, length, notches, octagonal):
+        """A notched log with both ends rounded over by the shared EndRadius fillet."""
+        self.notch_params(code, length, notches)
+        L = f'{code}_Length'
+
+        def end_edges(body, x_len):
+            # every edge lying in one of the two end faces (x = 0 or x = length)
+            edges = adsk.core.ObjectCollection.create()
+            for e in body.edges:
+                a, b = e.startVertex, e.endVertex
+                xs = [v.geometry.x for v in (a, b) if v] or [e.pointOnEdge.x]
+                if all(abs(x) < 1e-6 for x in xs) or all(abs(x - x_len) < 1e-6 for x in xs):
+                    edges.add(e)
+            return edges
+
+        def build(comp):
+            s = Sk(self, comp, 'yz', 'Section')
+            if octagonal:
+                s.rect((neg('LogDia / 2'), 0), ('LogDia / 2', 'LogDia'))
+                ext = self.extrude(comp, s.profiles(), L, NEW, 'Log')
+                body = ext.bodies.item(0)
+                edges = adsk.core.ObjectCollection.create()
+                for e in body.edges:
+                    a, b = e.startVertex.geometry, e.endVertex.geometry
+                    if abs(a.y - b.y) < 1e-6 and abs(a.z - b.z) < 1e-6:
+                        edges.add(e)
+                ch = comp.features.chamferFeatures
+                ci = ch.createInput2()
+                ci.chamferEdgeSets.addEqualDistanceChamferEdgeSet(edges, VI('LogDia * (1 - sqrt(2) / 2)'), False)
+                ch.add(ci).name = 'Octagon corners'
+            else:
+                # round the ends on the full cylinder first, then cut the printing flat
+                s.circle_on_bed('LogDia / 2 - PrintFlat')
+                ext = self.extrude(comp, s.profiles(), L, NEW, 'Log')
+                body = ext.bodies.item(0)
+            fl = comp.features.filletFeatures
+            fi = fl.createInput()
+            fi.edgeSetInputs.addConstantRadiusEdgeSet(end_edges(body, self.ev(L)), VI('EndRadius'), True)
+            fl.add(fi).name = 'Rounded ends'
+            if not octagonal:
+                self.extrude(comp, [s.smallest()], L, CUT, 'Printing flat')
+            self.side_notches(comp, code)
+
+        self.part(name, build)
+
+    def build_rounded(self):
+        for name, expr, units, comment in SHARED[:7]:  # the log sizes only
+            self.param(name, expr, units, comment, True)
+        self.param('EndRadius', '4 mm', 'mm', 'Radius of the rounded log ends', True)
+        for args in ROUNDED:
+            self.rounded_log(*args)
+        self.group_and_fit()
+        return self.errors
+
+    def group_and_fit(self):
+        # One timeline group per part, added last-to-first so earlier indices stay valid.
+        try:
+            tg = self.design.timeline.timelineGroups
+            for name, a, b in reversed(self.groups):
+                tg.add(a, b).name = name
+        except Exception:
+            self.errors.append(('timeline groups', traceback.format_exc()))
+        self.app.activeViewport.fit()
+
     # ---------- everything ----------
     def build_all(self):
         for name, expr, units, comment in SHARED:
@@ -392,15 +470,7 @@ class Builder:
         self.chimney()
         self.panel('Door', 'extra_door', 4, False)
         self.panel('Window', 'extra_window', 3, True)
-
-        # One timeline group per part, added last-to-first so earlier indices stay valid.
-        try:
-            tg = self.design.timeline.timelineGroups
-            for name, a, b in reversed(self.groups):
-                tg.add(a, b).name = name
-        except Exception:
-            self.errors.append(('timeline groups', traceback.format_exc()))
-        self.app.activeViewport.fit()
+        self.group_and_fit()
         return self.errors
 
 
@@ -536,7 +606,8 @@ class Sk:
 
 
 def build(app):
-    return Builder(app).build_all()
+    b = Builder(app)
+    return b.build_rounded() if PART_SET == 'rounded' else b.build_all()
 
 
 def run(context):
