@@ -164,7 +164,7 @@ export function makeParts({ clearance = 0.2, flat = 0.8 } = {}) {
   log('log_1insert_1-1_2_octagonal', '1 Insert Log (Hex), 1 1/2', 1.5, 1, { oct: true, note: 'listed as hex; photo shows flats top and bottom, modelled as an octagon so it stacks' });
   log('log_2insert_4-1_2', '2 Insert Log, 4 1/2', 4.5, 2);
   log('log_2insert_6', '2 Insert Log, 6', 6, 2, { note: 'notch layout not visible in the photos; assumed 3 in centres, centred' });
-  log('log_3insert_7-3_4', '3 Insert Log, 7 3/4', 7.75, 3);
+  log('log_3insert_7-5_8', '3 Insert Log, 7 3/4', 7.625, 3, { note: 'sheet says 7 3/4; photo measures about 7.6 and the length rule (3 in centres, 7/16 in shoulders, PARTS_SPEC.md) gives 7 5/8' });
   log('log_4insert_10-5_8', '4 Insert Log, 10 5/8', 10.625, 4);
   log('beveled_end_4-3_4', 'Beveled End, 4 3/4', 4.75, 2, { chamfer: [[0, 0.6], [1.5, 0.82], [3.5, 0.95], [5, 1]], note: 'a 2-insert log with chamfered ends' });
 
@@ -217,7 +217,7 @@ export function makeParts({ clearance = 0.2, flat = 0.8 } = {}) {
   };
   let plasticSlope = 0;
   plasticSlope = plasticGable('gable_plastic_8-1_2', { listing: 'Plastic Orange Roof, 2 1/4 x 8 1/2', source: 'listing' }, 8.5 * IN, 7, [-CENTERS, 0, CENTERS], 2.25 * IN);
-  plasticGable('gable_plastic_small_2notch', { listing: 'Small plastic gable, 2 notches (from a second photo; about 5 3/4 x 1 1/2)', source: 'gable photo' }, 5.75 * IN, 5, [-CENTERS / 2, CENTERS / 2], null);
+  plasticGable('gable_plastic_small_2notch', { listing: 'Small plastic gable, 2 notches (from a second photo; about 5.8 x 1.6)', source: 'gable photo' }, 5.8 * IN, 5, [-CENTERS / 2, CENTERS / 2], null);
   { // wooden triangle, measured from the photo (listed 4 x 2; measures about 4 7/8 x 2)
     const W = 4.875 * IN, H = 2 * IN, half_ = W / 2;
     const bottom = [[0, 0]];
