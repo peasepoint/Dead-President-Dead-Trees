@@ -1,12 +1,17 @@
-// Writes every part in parts.mjs to ./stl as binary STL, in printing orientation, and checks each mesh.
-// Usage: node log_generator.mjs [--clearance 0.2] [--flat 0.8] [--out stl]
+// Writes every part in parts.mjs as binary STL, in printing orientation, and checks each mesh.
+// Two complete sets are written: <out>/smooth (plain logs) and <out>/woodgrain (logs with grain and end rings).
+// Only the logs differ between the sets; the other parts are the same in both.
+// Usage: node log_generator.mjs [--clearance 0.2] [--flat 0.8] [--finish both|smooth|woodgrain] [--out stl]
 import fs from 'node:fs';
 import path from 'node:path';
 import { makeParts } from './parts.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((a, v, i, arr) => (v.startsWith('--') ? [...a, [v.slice(2), arr[i + 1]]] : a), []));
 const opts = { clearance: +(args.clearance ?? 0.2), flat: +(args.flat ?? 0.8) };
-const outDir = args.out ?? 'stl';
+const outRoot = args.out ?? 'stl';
+const FINISHES = { smooth: false, woodgrain: true }; // folder name -> texture option of makeParts
+const finish = args.finish ?? 'both';
+if (finish !== 'both' && !(finish in FINISHES)) { console.error(`--finish must be both, smooth or woodgrain (got ${finish})`); process.exit(2); }
 
 export function checkMesh(t) {
   const key = (v) => v.map((n) => n.toFixed(5)).join(',');
@@ -19,8 +24,9 @@ export function checkMesh(t) {
     }
     vol += (a[0] * (b[1] * c[2] - b[2] * c[1]) - a[1] * (b[0] * c[2] - b[2] * c[0]) + a[2] * (b[0] * c[1] - b[1] * c[0])) / 6;
   }
-  const lo = [0, 1, 2].map((i) => Math.min(...t.map((tr) => Math.min(tr[0][i], tr[1][i], tr[2][i]))));
-  const hi = [0, 1, 2].map((i) => Math.max(...t.map((tr) => Math.max(tr[0][i], tr[1][i], tr[2][i]))));
+  // reduce, not Math.min(...array): textured meshes have too many triangles to spread into arguments
+  const lo = [0, 1, 2].map((i) => t.reduce((m, tr) => Math.min(m, tr[0][i], tr[1][i], tr[2][i]), Infinity));
+  const hi = [0, 1, 2].map((i) => t.reduce((m, tr) => Math.max(m, tr[0][i], tr[1][i], tr[2][i]), -Infinity));
   return { open: [...edges.values()].filter((v) => v !== 0).length, vol, lo, size: hi.map((v, i) => v - lo[i]) };
 }
 function writeSTL(file, t) {
@@ -38,16 +44,21 @@ function writeSTL(file, t) {
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const parts = makeParts(opts);
-  fs.mkdirSync(outDir, { recursive: true });
-  for (const f of fs.readdirSync(outDir)) if (f.endsWith('.stl')) fs.unlinkSync(path.join(outDir, f));
   console.log('options (mm):', JSON.stringify(opts));
   let bad = 0;
-  for (const p of Object.values(parts)) {
-    const { open, vol, lo, size } = checkMesh(p.print);
-    if (open || vol <= 0 || Math.abs(lo[2]) > 1e-6) bad++;
-    writeSTL(path.join(outDir, `${p.name}.stl`), p.print);
-    console.log(`${p.name.padEnd(30)} ${size.map((s) => s.toFixed(1)).join(' x ').padEnd(22)} mm  open edges ${open}  vol ${vol.toFixed(0)} mm3  bed z ${lo[2].toFixed(3)}  ${p.info.listing ?? '(extra, not in listing)'}`);
+  for (const [name, texture] of Object.entries(FINISHES)) {
+    if (finish !== 'both' && finish !== name) continue;
+    const parts = makeParts({ ...opts, texture }), outDir = path.join(outRoot, name);
+    fs.mkdirSync(outDir, { recursive: true });
+    for (const f of fs.readdirSync(outDir)) if (f.endsWith('.stl')) fs.unlinkSync(path.join(outDir, f));
+    console.log(`\n${outDir}/`);
+    for (const p of Object.values(parts)) {
+      const { open, vol, lo, size } = checkMesh(p.print);
+      if (open || vol <= 0 || Math.abs(lo[2]) > 1e-6) bad++;
+      writeSTL(path.join(outDir, `${p.name}.stl`), p.print);
+      console.log(`${p.name.padEnd(30)} ${size.map((s) => s.toFixed(1)).join(' x ').padEnd(22)} mm  open edges ${open}  vol ${vol.toFixed(0)} mm3  bed z ${lo[2].toFixed(3)}  ${p.info.listing ?? '(extra, not in listing)'}`);
+    }
   }
-  console.log(bad ? `${bad} part(s) FAILED mesh checks` : 'all parts watertight, positive volume, resting on z = 0');
+  console.log(bad ? `\n${bad} part(s) FAILED mesh checks` : '\nall parts watertight, positive volume, resting on z = 0');
+  process.exit(bad ? 1 : 0);
 }

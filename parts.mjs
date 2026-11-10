@@ -92,61 +92,173 @@ function arc(P, pred) {
   return out;
 }
 
+// ---------- wood texture ----------
+// Shallow grooves cut INTO the surface (never raised), so the fit of every part is unchanged.
+//  - grain: wandering lengthwise streaks on the outside of a log, like the stained wooden originals
+//  - rings: concentric growth rings on the cut ends
+// Notch floors and walls, and the face a part prints on, stay smooth.
+export const TEX = {
+  grainDepth: 0.25, // mm, deepest grain streak
+  ringDepth: 0.2,   // mm, end-grain rings
+  step: 2,          // mm between cross-sections along a log
+  ringStep: 0.3,    // mm between the loops that make up an end face
+  edge: 0.6,        // mm, rings fade out this close to the rim
+  facet: 0.6,       // mm, longest edge on a flat face that carries texture
+};
+const TAU = 2 * Math.PI;
+const hash = (s) => { let x = 2166136261; for (const c of s) x = Math.imul(x ^ c.charCodeAt(0), 16777619); return x >>> 0; };
+const rng = (seed) => () => { seed = (seed + 0x6d2b79f5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+const bump = (u) => (u >= 1 ? 0 : 0.5 + 0.5 * Math.cos(Math.PI * u)); // smooth groove profile, at most about 35 deg steep
+// depth (mm) of the grain at angle theta round the log and distance x along it
+function makeGrain(seed) {
+  const r = rng(seed), C = TAU * R, lines = [];
+  const drift = { a: 0.5, k: TAU / (70 + 50 * r()), p: TAU * r() }; // all streaks lean together
+  for (let s = 2 * r(); s < C - 1.2; s += 1.5 + 2 * r()) {
+    lines.push({ s, w: 0.55 + 0.35 * r(), d: 0.5 + 0.5 * r(), a1: 0.2 + 0.5 * r(), k1: TAU / (30 + 40 * r()), p1: TAU * r(),
+      a2: 0.05 + 0.12 * r(), k2: TAU / (11 + 12 * r()), p2: TAU * r(), ke: TAU / (25 + 45 * r()), pe: TAU * r(), bias: 0.15 + 0.5 * r() });
+  }
+  return (theta, x) => {
+    const s = (((theta % TAU) + TAU) % TAU) * R, lean = drift.a * Math.sin(drift.k * x + drift.p);
+    let best = 0;
+    for (const g of lines) {
+      let ds = Math.abs(s - (g.s + lean + g.a1 * Math.sin(g.k1 * x + g.p1) + g.a2 * Math.sin(g.k2 * x + g.p2))) % C;
+      if (ds > C / 2) ds = C - ds;
+      if (ds >= g.w) continue;
+      const env = Math.min(1, Math.max(0, 1.5 * (g.bias + Math.sin(g.ke * x + g.pe)))); // streaks fade in and out
+      best = Math.max(best, g.d * env * bump(ds / g.w));
+    }
+    return TEX.grainDepth * best;
+  };
+}
+// depth (mm) of the growth rings at (y, z) on an end face: slightly uneven circles round an off-centre pith
+function makeRings(seed) {
+  const r = rng(seed), pith = [(r() - 0.5) * 1.4, (r() - 0.5) * 1.4], radii = [];
+  for (let q = 0.9 + 0.6 * r(), gap = 1.7; q < R + 1.5; q += gap * (0.85 + 0.3 * r()), gap = Math.max(1.2, gap * 0.9)) radii.push(q);
+  const a2 = 0.04 * r(), p2 = TAU * r(), a3 = 0.03 * r(), p3 = TAU * r(), w = 0.42;
+  return (y, z) => {
+    const dy = y - pith[0], dz = z - pith[1], phi = Math.atan2(dz, dy);
+    const rho = Math.hypot(dy, dz) * (1 + a2 * Math.sin(2 * phi + p2) + a3 * Math.sin(3 * phi + p3));
+    let best = 0;
+    for (const q of radii) best = Math.max(best, bump(Math.abs(rho - q) / w));
+    return TEX.ringDepth * best;
+  };
+}
+const texFor = (name, smooth) => ({ grain: makeGrain(hash(name)), rings: [makeRings(hash(name + '/a')), makeRings(hash(name + '/b'))], smooth });
+// split long straight edges so a flat face has enough vertices to carry texture
+function subdivide(P, pred, maxLen = TEX.facet) {
+  const out = [];
+  P.forEach((a, i) => {
+    const b = P[(i + 1) % P.length]; out.push(a);
+    if (!pred(a, b)) return;
+    const n = Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / maxLen);
+    for (let k = 1; k < n; k++) out.push([a[0] + ((b[0] - a[0]) * k) / n, a[1] + ((b[1] - a[1]) * k) / n]);
+  });
+  return out;
+}
+// move one cross-section vertex inwards by the grain depth. Vertices on the notch-floor lines slide sideways only,
+// so the notch floors stay flat and at their exact height.
+function displace(p, x, tex) {
+  if (!tex || (tex.smooth && tex.smooth(p))) return p;
+  const d = tex.grain(Math.atan2(p[1], p[0]), x);
+  if (!d) return p;
+  const r = Math.hypot(p[0], p[1]);
+  if (Math.abs(Math.abs(p[1]) - h) < 1e-7) return [p[0] - (Math.sign(p[0]) * d * r) / Math.abs(p[0]), p[1]];
+  return [(p[0] * (r - d)) / r, (p[1] * (r - d)) / r];
+}
+// end face: loops of the rim shrunk towards the log axis, each vertex sunk by the ring depth.
+// rim = [y, z] (CCW), xOf(y, z) = the face, inward = +1 / -1 (direction into the solid), flip = face looks towards -x
+function endCap(T, rim, xOf, inward, flip, ring) {
+  const tri = (a, b, c) => T.push(flip ? [c, b, a] : [a, b, c]);
+  const m = ring ? Math.max(2, Math.ceil(Math.max(...rim.map((p) => Math.hypot(p[0], p[1]))) / TEX.ringStep)) : 1;
+  const pt = (p, t) => {
+    const y = p[0] * t, z = p[1] * t;
+    const d = ring ? ring(y, z) * Math.min(1, ((1 - t) * Math.hypot(p[0], p[1])) / TEX.edge) : 0;
+    return [xOf(y, z) + inward * d, y, z];
+  };
+  let outer = rim.map((p) => pt(p, 1));
+  const n = rim.length;
+  for (let j = 1; j < m; j++) {
+    const inner = rim.map((p) => pt(p, 1 - j / m));
+    for (let i = 0; i < n; i++) { const k = (i + 1) % n; tri(outer[i], outer[k], inner[k]); tri(outer[i], inner[k], inner[i]); }
+    outer = inner;
+  }
+  const c = pt([0, 0], 0);
+  for (let i = 0; i < n; i++) tri(c, outer[i], outer[(i + 1) % n]);
+}
+
 // ---------- notched log solid ----------
 // base: CCW cross-section (y, z) already containing exact vertices on z = +/-h.
-function logMesh({ L, centers, base, notchW, top = true, bottom = true, chamfer = null }) {
-  const notched = base.filter((p) => (!top || p[1] <= h + EPS) && (!bottom || p[1] >= -h - EPS));
+// tex (optional): { grain, rings: [end at 0, end at L], smooth(p) } from texFor
+function logMesh({ L, centers, base, notchW, top = true, bottom = true, chamfer = null, tex = null }) {
+  const idx = base.map((_, i) => i);
+  const keep = idx.filter((i) => (!top || base[i][1] <= h + EPS) && (!bottom || base[i][1] >= -h - EPS));
   const caps = [];
-  if (top) caps.push(arc(base, (p) => p[1] >= h - EPS));
-  if (bottom) caps.push(arc(base, (p) => p[1] <= -h + EPS));
-  const T = [], V = (x, [y, z]) => [x, y, z];
-  const seg = (x0, x1, A, B) => { const n = A.length; for (let i = 0; i < n; i++) { const j = (i + 1) % n; const a = V(x0, A[i]), b = V(x0, A[j]), c = V(x1, B[j]), d = V(x1, B[i]); T.push([a, b, c], [a, c, d]); } };
-  const fan = (x, P, flip) => { const p = flip ? [...P].reverse() : P; for (let i = 1; i < p.length - 1; i++) T.push([V(x, p[0]), V(x, p[i]), V(x, p[i + 1])]); };
-  const scaled = (s) => base.map(([y, z]) => [y * s, z * s]);
-  let x0 = 0, x1 = L;
-  if (chamfer) {
-    const st = chamfer; // [[dx, scale], ...] from the end inwards, last scale = 1
-    fan(0, scaled(st[0][1]), true); fan(L, scaled(st[0][1]), false);
-    for (let k = 0; k < st.length - 1; k++) {
-      seg(st[k][0], st[k + 1][0], scaled(st[k][1]), scaled(st[k + 1][1]));
-      seg(L - st[k + 1][0], L - st[k][0], scaled(st[k + 1][1]), scaled(st[k][1]));
-    }
-    x0 = st[st.length - 1][0]; x1 = L - x0;
-  } else { fan(0, base, true); fan(L, base, false); }
+  if (top) caps.push(arc(idx, (i) => base[i][1] >= h - EPS));
+  if (bottom) caps.push(arc(idx, (i) => base[i][1] <= -h + EPS));
+  const T = [];
+  const section = (x, s) => base.map((p) => { const q = displace(p, x, tex); return [x, q[0] * s, q[1] * s]; });
+  const skin = (A, B, sel) => { const n = sel.length; for (let i = 0; i < n; i++) { const u = sel[i], v = sel[(i + 1) % n]; T.push([A[u], A[v], B[v]], [A[u], B[v], B[u]]); } };
+  const wall = (S, cap, flip) => { // notch wall: the part of the section above (below) the notch floor
+    const pts = cap.map((i) => S[i]);
+    for (const [a, b, c] of earClip(pts.map((p) => [p[1], p[2]]))) T.push(flip ? [pts[c], pts[b], pts[a]] : [pts[a], pts[b], pts[c]]);
+  };
+  // spans along x: [x from, scale from, x to, scale to, is a notch, is a body span]
+  const spans = [], st = chamfer ?? [[0, 1]]; // chamfer: [[dx, scale], ...] from the end inwards, last scale = 1
+  const x0 = st[st.length - 1][0], x1 = L - x0;
+  for (let k = 0; k < st.length - 1; k++) spans.push([st[k][0], st[k][1], st[k + 1][0], st[k + 1][1], false, false]);
   const bounds = [x0];
   for (const c of centers) bounds.push(c - notchW / 2, c + notchW / 2);
   bounds.push(x1);
-  for (let i = 0; i < bounds.length - 1; i++) {
-    const isNotch = i % 2 === 1;
-    seg(bounds[i], bounds[i + 1], isNotch ? notched : base, isNotch ? notched : base);
-    if (i > 0) for (const cap of caps) fan(bounds[i], cap, !isNotch);
-  }
+  for (let i = 0; i < bounds.length - 1; i++) spans.push([bounds[i], 1, bounds[i + 1], 1, i % 2 === 1, i > 0]);
+  for (let k = st.length - 2; k >= 0; k--) spans.push([L - st[k + 1][0], st[k + 1][1], L - st[k][0], st[k][1], false, false]);
+  let last = null;
+  spans.forEach(([xa, sa, xb, sb, isNotch, capped], si) => {
+    const n = tex ? Math.max(1, Math.ceil((xb - xa) / TEX.step)) : 1;
+    let A = section(xa, sa);
+    if (si === 0) endCap(T, A.map((p) => [p[1], p[2]]), () => xa, 1, true, tex?.rings[0]);
+    if (capped) for (const cap of caps) wall(A, cap, !isNotch);
+    for (let k = 1; k <= n; k++) {
+      const B = k === n ? section(xb, sb) : section(xa + ((xb - xa) * k) / n, sa + ((sb - sa) * k) / n);
+      skin(A, B, isNotch ? keep : idx);
+      A = B;
+    }
+    last = A;
+  });
+  endCap(T, last.map((p) => [p[1], p[2]]), () => L, -1, false, tex?.rings[1]);
   return T;
 }
 // log with one end cut on a slant (top edge longest)
-function bevelMesh({ Ltop, base, phi }) {
+function bevelMesh({ Ltop, base, phi, tex = null }) {
   const zmax = Math.max(...base.map((p) => p[1]));
-  const xe = (p) => Ltop - (zmax - p[1]) / Math.tan(phi);
+  const xe = (z) => Ltop - (zmax - z) / Math.tan(phi);
   const T = [], n = base.length;
-  for (let i = 0; i < n; i++) {
-    const p = base[i], q = base[(i + 1) % n];
-    const a = [0, ...p], b = [0, ...q], c = [xe(q), ...q], d = [xe(p), ...p];
-    T.push([a, b, c], [a, c, d]);
+  const end = base.map((p) => { const q = displace(p, xe(p[1]), tex); return [xe(q[1]), q[0], q[1]]; }); // on the slanted cut
+  const m = tex ? Math.ceil(Ltop / TEX.step) : 1;
+  const row = (j) => (j === m ? end : base.map((p, i) => { const x = (end[i][0] * j) / m, q = displace(p, x, tex); return [x, q[0], q[1]]; }));
+  let A = row(0);
+  endCap(T, A.map((p) => [p[1], p[2]]), () => 0, 1, true, tex?.rings[0]);
+  for (let j = 1; j <= m; j++) {
+    const B = row(j);
+    for (let i = 0; i < n; i++) { const k = (i + 1) % n; T.push([A[i], A[k], B[k]], [A[i], B[k], B[i]]); }
+    A = B;
   }
-  const rev = [...base].reverse();
-  for (let i = 1; i < n - 1; i++) T.push([[0, ...rev[0]], [0, ...rev[i]], [0, ...rev[i + 1]]]);
-  for (let i = 1; i < n - 1; i++) T.push([[xe(base[0]), ...base[0]], [xe(base[i]), ...base[i]], [xe(base[i + 1]), ...base[i + 1]]]);
+  endCap(T, end.map((p) => [p[1], p[2]]), (y, z) => xe(z), -1, false, tex?.rings[1]);
   return T;
 }
 
 // ---------- the part catalogue ----------
-export function makeParts({ clearance = 0.2, flat = 0.8 } = {}) {
+export function makeParts({ clearance = 0.2, flat = 0.8, texture = true } = {}) {
   const notchW = D + 2 * clearance;
   const yf = -R + flat;
   const withCuts = (P) => insertLine(insertLine(P, 1, h), 1, -h);
-  const roundBase = withCuts(clipPoly(circle(96, R), 0, yf, true));      // round log with a printing flat on one side
-  const octBase = withCuts(octagon(D));                                  // flats top, bottom and sides
-  const halfBase = insertLine(clipPoly(circle(96, R), 1, -h, true), 1, h); // flat bottom at the bottom-notch floor
+  const NC = 144; // facets round a log: 0.4 mm apart, with vertices exactly on the notch-floor lines (30 deg)
+  const onFlat = (a, b) => a[0] <= yf + 1e-6 && b[0] <= yf + 1e-6, onBottom = (a, b) => a[1] <= -h + 1e-6 && b[1] <= -h + 1e-6;
+  const roundBase = subdivide(withCuts(clipPoly(circle(NC, R), 0, yf, true)), onFlat);       // round log with a printing flat on one side
+  const octBase = subdivide(withCuts(octagon(D)), () => true);                              // flats top, bottom and sides
+  const halfBase = subdivide(insertLine(clipPoly(circle(NC, R), 1, -h, true), 1, h), onBottom); // flat bottom at the bottom-notch floor
+  // wood texture: grain on the outside, rings on the ends; the face on the print bed stays smooth
+  const tex = (name, smooth) => (texture ? texFor(name, smooth) : null);
+  const roundSmooth = (p) => p[0] <= yf + 1e-6, octSmooth = (p) => p[0] <= -R + 1e-6, halfSmooth = (p) => p[1] <= -h + 1e-6;
   const centersFor = (L, n) => Array.from({ length: n }, (_, k) => L / 2 + (k - (n - 1) / 2) * CENTERS);
   const parts = {};
   const add = (name, info, model, toPrint) => { parts[name] = { name, info, model, print: model.map((t) => t.map(toPrint)) }; };
@@ -156,7 +268,7 @@ export function makeParts({ clearance = 0.2, flat = 0.8 } = {}) {
   const log = (name, listing, Lin, n, opts = {}) => {
     const L = Lin * IN, centers = centersFor(L, n);
     const base = opts.oct ? octBase : roundBase, yflat = opts.oct ? -R : yf;
-    add(name, { listing, length: L, centers, kind: 'log', note: opts.note }, logMesh({ L, centers, base, notchW, chamfer: opts.chamfer }), logPrint(yflat));
+    add(name, { listing, length: L, centers, kind: 'log', note: opts.note }, logMesh({ L, centers, base, notchW, chamfer: opts.chamfer, tex: tex(name, opts.oct ? octSmooth : roundSmooth) }), logPrint(yflat));
     parts[name].toModel = logModelFromPrint(yflat);
   };
   log('log_1insert_1-5_8', '1 Insert Log, 1 5/8', 1.625, 1);
@@ -170,7 +282,7 @@ export function makeParts({ clearance = 0.2, flat = 0.8 } = {}) {
 
   const half = (name, listing, Lin, n) => {
     const L = Lin * IN, centers = centersFor(L, n);
-    add(name, { listing, length: L, centers, kind: 'half' }, logMesh({ L, centers, base: halfBase, notchW, bottom: false }), ([x, y, z]) => [x, y, z + h]);
+    add(name, { listing, length: L, centers, kind: 'half' }, logMesh({ L, centers, base: halfBase, notchW, bottom: false, tex: tex(name, halfSmooth) }), ([x, y, z]) => [x, y, z + h]);
     parts[name].toModel = ([X, Y, Z]) => [X, Y, Z - h];
   };
   half('half_log_4-1_2', 'Half Log, 4 1/2', 4.5, 2);
@@ -178,11 +290,12 @@ export function makeParts({ clearance = 0.2, flat = 0.8 } = {}) {
 
   // short log with one end cut at the roof angle of the wooden triangle (about 39 deg in the photos)
   add('beveled_end_1-1_2', { listing: 'Beveled End, 1 1/2 x 1 1/4', kind: 'bevel', note: 'top edge 1 1/2 in, end cut at 39 deg; the listed "1 1/4" is not explained by the photos' },
-    bevelMesh({ Ltop: 1.5 * IN, base: roundBase, phi: (39 * Math.PI) / 180 }), logPrint(yf));
+    bevelMesh({ Ltop: 1.5 * IN, base: roundBase, phi: (39 * Math.PI) / 180, tex: tex('beveled_end_1-1_2', roundSmooth) }), logPrint(yf));
   parts['beveled_end_1-1_2'].toModel = logModelFromPrint(yf);
 
   for (const [name, Lin, listing] of [['solid_log_1-3_8', 1.375, 'Solid Log, 1 3/8'], ['solid_log_1-5_8', 1.625, 'Solid Log, 1 5/8']]) {
-    const m = extrudeShell(circle(96, R).map(([x, y]) => [x + R, y + R]), 0, Lin * IN);
+    // a plain cylinder standing on end: built along x like the other logs, then stood up
+    const m = logMesh({ L: Lin * IN, centers: [], base: circle(NC, R), notchW, top: false, bottom: false, tex: tex(name, null) }).map((t) => t.map(([x, y, z]) => [y + R, z + R, x]));
     add(name, { listing, kind: 'solid' }, m, (p) => p);
     parts[name].toModel = (p) => p;
   }
