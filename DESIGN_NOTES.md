@@ -1,6 +1,6 @@
 # Design notes
 
-Every part is defined in `parts.mjs`. The same geometry is written to `stl/` by `log_generator.mjs`, laid out into three test buildings by `assembly.mjs`, checked by `verify.mjs` (results in `VERIFY.md`) and rendered by `make_gif.mjs`. The per-part still and rotating images in the parts table come from `make_part_images.mjs` (in `images/`), shown in assembly orientation.
+Every part is defined in `parts.mjs`. The same geometry is written to `stl/smooth/` and `stl/woodgrain/` by `log_generator.mjs`, laid out into three test buildings by `assembly.mjs`, checked by `verify.mjs` (results in `VERIFY.md`) and rendered by `make_gif.mjs`. The per-part still and rotating images in the parts table come from `make_part_images.mjs` (in `images/`), shown in assembly orientation.
 
 ## How the parts were measured
 
@@ -22,20 +22,22 @@ A second photo (supplied directly, not from the listing) shows nine orange plast
 
 ## Wood texture
 
-Every log (notched logs, half logs, beveled pieces, solid logs) carries a shallow wood texture, built into the mesh by `parts.mjs`. The gables, shingles, chimney and extras are smooth.
+The logs come in two finishes: smooth (`stl/smooth/`) and wood grain (`stl/woodgrain/`). In the wood-grain set every log (notched logs, half logs, beveled pieces, solid logs) carries a shallow texture, built into the mesh by `parts.mjs` (`makeParts({ texture: true })`, the default; `texture: false` gives the smooth logs). The gables, shingles, chimney and extras are smooth and identical in both sets.
 
 | Feature | Value | Why |
 |---|---|---|
 | Side grain | Lengthwise streaks, up to 0.25 mm deep and 1.1 to 1.8 mm wide, that wander slightly and fade in and out | The wooden originals are stained dowels with the grain running along the log |
 | End grain | Growth rings, 0.2 mm deep, about 1.2 to 1.7 mm apart, round a slightly off-centre pith; they fade out 0.6 mm from the rim | The originals show ring arcs on their sawn ends |
-| Direction | Grooves only, never raised | The outside diameter, length and notch fit are unchanged, so `verify.mjs` results still hold |
+| Direction | Grooves only, never raised | The outside diameter, length and notch fit are unchanged, so the two finishes can be mixed |
 | Left smooth | Notch floors and walls; the face each log prints on (side flat, half-log underside, one octagon face) | Mating surfaces and bed adhesion |
 | Slopes | Smooth groove profile, about 35 deg at its steepest | Prints without supports in any orientation |
 | Variation | Each part name seeds its own pattern; the two ends of a log differ | Same output on every run |
 
-The sizes are in `TEX` at the top of the texture section of `parts.mjs`. The depths are a judgement for a 0.4 mm nozzle at 0.2 mm layers, not a measurement of an original log, and nothing has been test-printed. `node log_generator.mjs --texture 0` writes smooth logs.
+The sizes are in `TEX` at the top of the texture section of `parts.mjs`. The depths are a judgement for a 0.4 mm nozzle at 0.2 mm layers, not a measurement of an original log, and nothing has been test-printed. `node log_generator.mjs` writes both sets; `--finish smooth` or `--finish woodgrain` writes one.
 
-The Fusion design in `fusion/` is not textured.
+Both finishes are checked: `node verify.mjs` checks the buildings with wood-grain logs (`VERIFY.md`) and `node verify.mjs --finish smooth` with smooth logs (`VERIFY_smooth.md`). `make_gif.mjs` and `make_part_images.mjs` render the wood-grain geometry.
+
+The parametric Fusion design in `fusion/` is smooth; `fusion/DeadPresidentTreeSections_woodgrain.f3d` is a copy with the textured meshes added.
 
 ## Every part
 
@@ -140,7 +142,7 @@ Full per-part results are in `VERIFY.md`.
 - **Half logs:** print flat side down, notches up.
 - **Octagonal log:** prints on a flat.
 - **Solid logs:** print standing. The end on the bed has rings too; they are shallow enough to close over in the second layer.
-- **Wood texture:** needs no supports. Finer layers (0.12 to 0.16 mm) show the grain on top of the logs better. Textured log STLs are 1 to 2.5 MB each.
+- **Wood grain (`stl/woodgrain/`):** needs no supports. Finer layers (0.12 to 0.16 mm) show the grain on top of the logs better. Textured log STLs are 1 to 2.5 MB each. For plain logs print from `stl/smooth/`; orientation and settings are the same.
 - **Gables:** print flat on a face (both plastic sizes and the wooden triangle).
 - **Chimney:** the STL is upside down, open top on the bed and V facing up, so it needs no supports.
 - **Shingles:** print flat.
