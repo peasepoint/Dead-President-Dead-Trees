@@ -1,83 +1,175 @@
-# Log building toy compatible generated shapes
-Files to augment the classic toy with additive manufacturing.
+# Printable logs for the classic log building toy
+
+3D-printable logs, gables, shingles and a chimney, sized to match the original wooden and plastic pieces. Print replacements, extend a set you own, or print a whole building.
 
 ![Cabin, shed and cottage built from the printable parts](cabin_build.gif)
 
-Printable versions of every part in a reference listing of original wooden and plastic pieces: logs, half logs, beveled pieces, solid logs, the wooden triangle and two sizes of plastic gable, the chimney and the shingles. Three test buildings are assembled from them and checked for fit, support and interlocking. Nothing has been test-printed yet.
+> **Not yet test-printed.** The three buildings above are checked in software for overlap, support and interlocking, but nobody has printed these parts yet. Do the [fit test](#2-print-the-fit-test) before printing a full set.
 
-## Contents
+## The parts
 
-| Path | What it is |
+Every STL is in millimetres and already lies in its printing orientation.
+
+| Logs | Half logs | Gables | Shingles | Chimney |
+|:---:|:---:|:---:|:---:|:---:|
+| <img src="images/log_3insert_7-5_8.png" width="150" alt="3-notch log"> | <img src="images/half_log_7-1_2.png" width="150" alt="Half log"> | <img src="images/gable_plastic_8-1_2.png" width="150" alt="Large plastic-style gable"> | <img src="images/shingle_ridge_9.png" width="150" alt="Ridge shingle"> | <img src="images/chimney.png" width="150" alt="Chimney"> |
+| 1 to 4 notches, 1 1/2 to 10 5/8 in | 4 1/2 and 7 1/2 in; the base course | Two stepped sizes and a plain triangle | Flat and ridge, 5 5/8 to 11 in | Sits astride the roof ridge |
+
+Also included: two solid logs, a short beveled end, and a door and window of my own design (not copies of an original). Pictures and measurements of every part are in [DESIGN_NOTES.md](DESIGN_NOTES.md#every-part).
+
+The files come in three sets:
+
+| Folder | Contents | Looks like |
+|---|---|:---:|
+| [`stl/smooth/`](stl/smooth) | All 23 parts, plain logs. Small files (about 1 MB in total) | |
+| [`stl/woodgrain/`](stl/woodgrain) | The same 23 parts, with grain along the logs and growth rings on their ends (about 15 MB in total) | <img src="images/log_2insert_4-1_2.gif" width="150" alt="Wood-grain log, rotating"> |
+| [`stl/rounded_woodgrain/`](stl/rounded_woodgrain) | The 7 notched logs only, with rounded ends and wood grain | <img src="images/rounded/log_2insert_4-3_4_rounded.gif" width="150" alt="Rounded-end log, rotating"> |
+
+All three sets fit together and can be mixed in one building. The grain is cut into the surface, never raised, so sizes and notch fit don't change. Only the 11 logs differ between `smooth` and `woodgrain`; the gables, shingles, chimney, door and window are the same files in both.
+
+## How to print
+
+### 1. Get the files
+
+On GitHub, choose **Code > Download ZIP** and unzip it, or clone the repository. You only need the `stl/` folder. Pick one of the three sets above.
+
+### 2. Print the fit test
+
+Printers and filaments vary, so check the notch fit before printing a building. Print:
+
+- 2 x `log_1insert_1-5_8`
+- 1 x `half_log_4-1_2`
+
+Cross the two logs at their notches, then seat one in a half-log notch. A log should seat fully and lift out freely, without rattling.
+
+- **Too tight or too loose:** the notches have 0.2 mm clearance per side. Change it in 0.05 mm steps with `--clearance` (see [Regenerating the files](#regenerating-the-files)) or the `Clearance` parameter in the [Fusion design](fusion/README.md).
+- **PETG:** start at 0.3 mm.
+
+### 3. Slice
+
+Load the STLs as they are: no rotation and no supports.
+
+| Setting | Value |
 |---|---|
-| `stl/smooth/` | 23 ready-to-print STLs with plain logs: 21 parts from the reference photos (19 from the listing, plus the small plastic gable and the chimney from a second photo) and 2 extras (door, window) that are in neither |
-| `stl/woodgrain/` | The same 23 parts with wood grain and end-grain rings on the 11 logs |
-| `stl/rounded_woodgrain/` | A separate logs-only set: the 7 notched logs with rounded ends, wood grain only (see below) |
-| `parts.mjs` | Geometry for every part (single source of truth), including the optional wood texture on the logs |
-| `log_generator.mjs` | Writes all three `stl/` sets and checks every mesh is watertight and sits on the bed |
-| `fusion/` | The parts as Autodesk Fusion designs: a smooth parametric file, a wood-grain copy and a rounded-end logs file (see `fusion/README.md`) |
-| `assembly.mjs` | The three test buildings (cabin 6 x 9 in with chimney, shed 3 x 6 in, cottage 3 x 6 in with small gables and chimney), using photographed parts only |
-| `verify.mjs` | Voxel check of the buildings: interference, support, interlock. Writes `VERIFY.md` |
-| `VERIFY.md`, `VERIFY_smooth.md` | Latest verification results, per part, for the wood-grain and the smooth logs |
-| `make_gif.mjs` | Renders `cabin_build.gif` from the same geometry and layout |
-| `cabin_build.gif` | Parts as printed, then the cabin built course by course, then the shed and the cottage |
-| `make_part_images.mjs` | Renders a still PNG and a rotating GIF of every photographed part into `images/` (shown in the `DESIGN_NOTES.md` parts table). Run `node make_part_images.mjs` |
-| `DESIGN_NOTES.md` | How each part was measured, what is assumed, printing notes |
-| `RESEARCH.md` | Web research summary |
-| `PARTS_SPEC.md` | Catalog of every commercially sold piece with dimensions, part numbers and confidence |
+| Nozzle | 0.4 mm |
+| Layer height | 0.2 mm. Use 0.12 to 0.16 mm to show the wood grain better |
+| Walls | 3 or more |
+| Infill | 20 to 30% |
+| Supports | None |
+| Material | PLA. For PETG, use 0.3 mm clearance (step 2) |
 
-## Smooth or wood grain
+How each part sits on the bed:
 
-Every log comes in two finishes. Pick one folder and print from it; each folder is a complete set, and the two finishes fit together and can be mixed in one building.
+| Part | Orientation in the STL |
+|---|---|
+| Round logs, beveled end | Lying on a 0.8 mm flat along one side, notches facing sideways |
+| Octagonal log | Lying on one of its faces |
+| Half logs | Flat side down, notches up |
+| Solid logs | Standing on end |
+| Gables, shingles, door, window | Flat on a face |
+| Chimney | Upside down: open top on the bed, V-cut facing up |
 
-| | Smooth | Wood grain |
-|---|---|---|
-| STLs | `stl/smooth/` | `stl/woodgrain/` |
-| Fusion design | `fusion/DeadPresidentTreeSections.f3d` (parametric solids) | `fusion/DeadPresidentTreeSections_woodgrain.f3d` (the same design plus textured meshes) |
-| Logs | Plain cylinders | Lengthwise grain up to 0.25 mm deep, growth rings on the ends |
-| File size | About 1 MB for the set | About 15 MB for the set |
+**Bed size.** Two parts are longer than a 256 mm bed: `log_4insert_10-5_8` (270 mm) and `shingle_flat_11` (279 mm). Turn them diagonally, or use a larger printer. The next longest parts are the 9 in shingles (229 mm) and the 3-notch log (194 mm).
 
-- Only the 11 logs differ (notched logs, half logs, beveled pieces, solid logs). The gables, shingles, chimney, door and window are identical in both folders.
-- The grain is cut into the surface, never raised, so sizes and notch fit are the same in both finishes.
-- The pictures in `images/` and `cabin_build.gif` show the wood-grain finish.
+**Rounded-end logs.** The last 1.5 mm of each end lifts slightly off the bed, a small overhang that is meant to print without supports.
 
-Details are in the "Wood texture" section of `DESIGN_NOTES.md`.
+### 4. Print a building
 
-## Rounded ends
+Quantities for the three buildings in the animation:
 
-`stl/rounded_woodgrain/` is a third, logs-only set with wood grain only. It holds every notched log (1 5/8, 1 1/2 round and octagonal, 4 1/2, 4 3/4, 7 5/8 and 10 5/8 in) with rounded ends, the shape of the original 4 3/4 in rounded-end log, which now lives only in this set. Lengths and notches match the standard logs. Half logs, the slanted 1 1/2 in beveled end and the solid logs aren't in it. Images are in `images/rounded/`; details are in the "Rounded-end set" section of `DESIGN_NOTES.md`. The Fusion design is `fusion/DeadPresidentTreeSections_rounded_woodgrain.f3d`.
+| Part | Cabin (6 x 9 in) | Shed (3 x 6 in) | Cottage (3 x 6 in) |
+|---|:---:|:---:|:---:|
+| `half_log_7-1_2` | 2 | | |
+| `half_log_4-1_2` | | 2 | 2 |
+| `log_4insert_10-5_8` | 8 | | |
+| `log_3insert_7-5_8` | 3 | 8 | 8 |
+| `log_2insert_4-1_2` | 3 | 6 | 6 |
+| `log_1insert_1-5_8` | 1 | | |
+| `log_1insert_1-1_2_round` | 1 | | |
+| `log_1insert_1-1_2_octagonal` | 1 | | |
+| `gable_plastic_8-1_2` | 2 | | |
+| `gable_plastic_small_2notch` | | | 2 |
+| `gable_wood_triangle_4x2` | | 2 | |
+| `shingle_flat_9` | 6 | | |
+| `shingle_ridge_9` | 2 | | |
+| `shingle_flat_6` | | 4 | 6 |
+| `shingle_ridge_6` | | 2 | |
+| `chimney` | 1 | | 1 |
+| **Total** | **30** | **24** | **25** |
 
-## Run
+The shed and the cottage are the easier first builds: their longest part is 194 mm. The cabin needs the 270 mm logs.
 
-Requires Node (`node --version`). From this folder:
+For colours close to the originals, print the logs brown, the stepped gables orange, the chimney yellow, and the shingles green, yellow, orange or red.
+
+### 5. Assemble
+
+1. Lay two **half logs** flat side down as the end walls. They are the only parts that touch the table.
+2. Cross two side-wall logs over them, notch into notch.
+3. Keep alternating end walls and side walls. Each course adds 3/8 in. Use the short 1- and 2-notch logs to leave gaps for a door or window.
+4. Set a gable where the next end-wall log would go, its bottom notches over the side-wall logs.
+5. Lay shingles across the two gables from the eave upward, then drop the chimney over the ridge. The chimney fits the stepped gables only; the triangle's roof is steeper.
+
+## Editing the parts
+
+**In Fusion.** [`fusion/`](fusion) holds the parts as Autodesk Fusion designs, with every size a named parameter. See [fusion/README.md](fusion/README.md).
+
+![The parts laid out in Fusion](fusion/layout.png)
+
+**In code.** All geometry is defined in `parts.mjs`.
+
+### Regenerating the files
+
+Requires [Node.js](https://nodejs.org); there is nothing to install. From this folder:
 
 ```bash
 node log_generator.mjs
 ```
 
-```bash
-node verify.mjs
-```
+This rewrites all three `stl/` sets and checks that every mesh is watertight and sits on the bed. Options:
+
+| Option | Default | Meaning |
+|---|---|---|
+| `--clearance` | `0.2` | Notch clearance per side, in mm |
+| `--flat` | `0.8` | Depth of the flat that round logs print on, in mm |
+| `--finish` | `all` | `all`, `smooth`, `woodgrain` or `rounded_woodgrain` |
+| `--out` | `stl` | Parent folder for the sets |
+
+For example, for PETG:
 
 ```bash
-node verify.mjs --finish smooth
+node log_generator.mjs --clearance 0.3
 ```
 
-```bash
-node make_gif.mjs
-```
+The other scripts:
 
-The generator writes all three sets. It takes `--clearance` (mm per side, default 0.2), `--flat` (side flat, default 0.8) and `--finish` (`all`, `smooth`, `woodgrain` or `rounded_woodgrain`; default `all`); `--out` changes the parent folder (default `stl`). `verify.mjs` exits non-zero if any parts overlap or any part is unsupported.
+| Command | What it does |
+|---|---|
+| `node verify.mjs` | Checks the three buildings with wood-grain logs and writes `VERIFY.md`. Exits non-zero if parts overlap or a part is unsupported |
+| `node verify.mjs --finish smooth` | The same with smooth logs; writes `VERIFY_smooth.md` |
+| `node make_gif.mjs` | Renders `cabin_build.gif` |
+| `node make_part_images.mjs` | Renders a still and a rotating image of each part into `images/` |
 
 ## Status
 
-- **Verified (in software):** all three buildings have no overlapping parts, every part supported, all wall logs locked by their notches, and only the half logs touch the table.
-- **Not verified:** real-world fit. Nothing has been printed.
+- **Checked in software:** in all three buildings no parts overlap, every part is supported, and every wall log is locked by its notches. Results are in [VERIFY.md](VERIFY.md) and [VERIFY_smooth.md](VERIFY_smooth.md). The rounded-end logs share the standard notch layout but aren't checked separately.
+- **Not checked:** real-world fit. Nothing has been printed.
 
-Next steps:
-1. **Fit test:** print two `log_1insert_1-5_8` and one `half_log_4-1_2`, cross them, and adjust `--clearance` in 0.05 mm steps.
-2. Print one gable of each type with two shingles, and check the shingles settle where `assembly.mjs` predicts. Check the chimney straddles a plastic-gable ridge.
-3. If you have original pieces, check these assumptions in `parts.mjs`: gable thickness, shingle thickness, and chimney depth.
+If you print these, the most useful things to report are:
+
+1. The clearance that gave a good fit, with your printer and material.
+2. Whether shingles settle on the gables as in the animation, and whether the chimney sits on a stepped-gable ridge.
+3. If you own original pieces: their gable thickness, shingle thickness and chimney depth. These three are assumptions (see [DESIGN_NOTES.md](DESIGN_NOTES.md#limits)).
+
+## More documentation
+
+| File | Contents |
+|---|---|
+| [DESIGN_NOTES.md](DESIGN_NOTES.md) | How each part was measured, what is assumed, the wood texture, and how the buildings are verified |
+| [fusion/README.md](fusion/README.md) | The Fusion designs and their parameters |
+| [PARTS_SPEC.md](PARTS_SPEC.md) | Catalog of the pieces sold commercially, with dimensions and confidence |
+| [RESEARCH.md](RESEARCH.md) | Sources: existing models, original dimensions, printing tolerances |
+| [VERIFY.md](VERIFY.md), [VERIFY_smooth.md](VERIFY_smooth.md) | Per-part verification results (generated) |
 
 ## Legal
 
-"Lincoln Logs" is a Hasbro trademark. Printing for yourself is low risk. If you share or sell the files, call them "compatible log-cabin logs".
+"Lincoln Logs" is a Hasbro trademark; this project is not affiliated with Hasbro. The 1920 patent has expired, so the geometry is free to copy. If you share or sell the files or prints, call them "compatible log-cabin logs".
