@@ -1,11 +1,11 @@
 // Writes every part in parts.mjs to ./stl as binary STL, in printing orientation, and checks each mesh.
-// Usage: node log_generator.mjs [--clearance 0.2] [--flat 0.8] [--out stl]
+// Usage: node log_generator.mjs [--clearance 0.2] [--flat 0.8] [--texture 1] [--out stl]   (--texture 0 = smooth logs)
 import fs from 'node:fs';
 import path from 'node:path';
 import { makeParts } from './parts.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((a, v, i, arr) => (v.startsWith('--') ? [...a, [v.slice(2), arr[i + 1]]] : a), []));
-const opts = { clearance: +(args.clearance ?? 0.2), flat: +(args.flat ?? 0.8) };
+const opts = { clearance: +(args.clearance ?? 0.2), flat: +(args.flat ?? 0.8), texture: (args.texture ?? '1') !== '0' };
 const outDir = args.out ?? 'stl';
 
 export function checkMesh(t) {
@@ -19,8 +19,9 @@ export function checkMesh(t) {
     }
     vol += (a[0] * (b[1] * c[2] - b[2] * c[1]) - a[1] * (b[0] * c[2] - b[2] * c[0]) + a[2] * (b[0] * c[1] - b[1] * c[0])) / 6;
   }
-  const lo = [0, 1, 2].map((i) => Math.min(...t.map((tr) => Math.min(tr[0][i], tr[1][i], tr[2][i]))));
-  const hi = [0, 1, 2].map((i) => Math.max(...t.map((tr) => Math.max(tr[0][i], tr[1][i], tr[2][i]))));
+  // reduce, not Math.min(...array): textured meshes have too many triangles to spread into arguments
+  const lo = [0, 1, 2].map((i) => t.reduce((m, tr) => Math.min(m, tr[0][i], tr[1][i], tr[2][i]), Infinity));
+  const hi = [0, 1, 2].map((i) => t.reduce((m, tr) => Math.max(m, tr[0][i], tr[1][i], tr[2][i]), -Infinity));
   return { open: [...edges.values()].filter((v) => v !== 0).length, vol, lo, size: hi.map((v, i) => v - lo[i]) };
 }
 function writeSTL(file, t) {

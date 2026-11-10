@@ -110,7 +110,7 @@ const P = makeParts();
 for (const p of Object.values(P)) {
   if (!p.info.listing) continue;
   const pts = p.model.flat();
-  const lo = [0, 1, 2].map((i) => Math.min(...pts.map((v) => v[i]))), hi = [0, 1, 2].map((i) => Math.max(...pts.map((v) => v[i])));
+  const lo = [0, 1, 2].map((i) => pts.reduce((m, v) => Math.min(m, v[i]), Infinity)), hi = [0, 1, 2].map((i) => pts.reduce((m, v) => Math.max(m, v[i]), -Infinity));
   const c = lo.map((v, i) => (v + hi[i]) / 2), rad = Math.hypot(hi[0] - lo[0], hi[1] - lo[1], hi[2] - lo[2]) / 2;
   const tris = p.model.map((t) => t.map((v) => [v[0] - c[0], v[1] - c[1], v[2] - c[2]]));
   // camera distance: smallest that keeps the bounding box inside the frame (8% margin) at every rotation angle

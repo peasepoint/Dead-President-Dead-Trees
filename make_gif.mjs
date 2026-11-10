@@ -38,10 +38,11 @@ const showItems = [];
   let x = 0, y = 0, rowH = 0;
   for (const p of Object.values(P)) {
     if (!p.info.listing) continue;
-    const xs = p.print.flat().map((v) => v[0]), ys = p.print.flat().map((v) => v[1]);
-    const w = Math.max(...xs) - Math.min(...xs), d = Math.max(...ys) - Math.min(...ys);
+    const span = (i) => p.print.flat().reduce(([lo, hi], v) => [Math.min(lo, v[i]), Math.max(hi, v[i])], [Infinity, -Infinity]);
+    const [xLo, xHi] = span(0), [yLo, yHi] = span(1);
+    const w = xHi - xLo, d = yHi - yLo;
     if (x + w > 600) { x = 0; y += rowH + 14; rowH = 0; }
-    const dx = x - Math.min(...xs), dy = y - Math.min(...ys);
+    const dx = x - xLo, dy = y - yLo;
     showItems.push(item(mapT(p.print, ([a, b, c]) => [a + dx, b + dy, c]), matFor(p.name)));
     x += w + 14; rowH = Math.max(rowH, d);
   }

@@ -1,6 +1,6 @@
 # Fusion design
 
-Every part in `parts.mjs` as an editable, parametric Autodesk Fusion design.
+Every part in `parts.mjs` as an editable, parametric Autodesk Fusion design. The logs here are smooth: the wood grain and end rings in the STLs are added by `parts.mjs` only.
 
 | File | What it is |
 |---|---|
