@@ -7,9 +7,10 @@ Every part is defined in `parts.mjs`. The same geometry feeds each script:
 | Script | What it does |
 |---|---|
 | `log_generator.mjs` | Writes `stl/smooth/`, `stl/woodgrain/` and `stl/rounded_woodgrain/` |
-| `assembly.mjs` | Lays the parts out into three test buildings |
+| `assembly.mjs` | Lays the parts out into six test buildings |
 | `verify.mjs` | Checks the buildings; results in `VERIFY.md` and `VERIFY_smooth.md` |
 | `make_gif.mjs` | Renders `cabin_build.gif` |
+| `render_lib.mjs`, `make_renders.mjs`, `make_landscape_gif.mjs` | Render the example-building stills and the landscape animation in `images/examples/` |
 | `make_part_images.mjs` | Renders the still and rotating images in the tables below (`images/`, and `images/rounded/` for the rounded-end set), in assembly orientation |
 
 ## How the parts were measured
@@ -117,7 +118,7 @@ Everything else agrees with the spec within its stated confidence. Known differe
 
 ## Test buildings (verified)
 
-`assembly.mjs` builds three buildings using only parts from the reference photos. It follows the brand's building rules:
+`assembly.mjs` builds six buildings using only parts from the reference photos. It follows the brand's building rules:
 - End walls take the even courses, starting with **half logs**.
 - Side walls take the odd courses.
 - Each gable sits where the next end-wall log would go, with its bottom notches dropped over the crossing side-wall logs.
@@ -132,6 +133,18 @@ Everything else agrees with the spec within its stated confidence. Known differe
 | Shingles per slope | 3 flat 9 in + 1 ridge 9 in | 2 flat 6 in + 1 ridge 6 in | 3 flat 6 in |
 | Chimney | Yes, on the ridge | No (its 39 deg roof doesn't match the chimney's 27 deg V) | Yes, on the ridge |
 
+Three more buildings use the same rules and helpers:
+
+| | Porch cabin | Tall house | Watchtower |
+|---|---|---|---|
+| Size between wall centres | 6 x 6 in room + 3 in porch | 6 x 6 in | 3 x 3 in |
+| Courses | 8 | 12 | 14 |
+| Base | 3 x `half_log_7-1_2` (the third is the porch sill) | `half_log_7-1_2` | `half_log_4-1_2` |
+| Walls | 3-insert logs; the top side-wall course is 4-insert logs that run forward over two posts, each seven crossed 1-insert logs | 3-insert logs; doorway on three courses and a window in each wall, framed with 1- and 2-insert logs | 2-insert logs; five look-out slits, each a pair of 1-insert logs |
+| Gables | 2 x large plastic gable (one over the porch) | 2 x large plastic gable | 2 x wooden triangle |
+| Shingles | 9 in, flush with the gables | 9 in, overhanging 1 1/2 in at each gable | 6 in, overhanging 1 1/2 in at each gable |
+| Chimney | Yes | Yes | No |
+
 **The chimney is placed the same way as a real one would settle.** It is centred on the ridge and lowered until its V-cut base first touches the shingles.
 
 **Shingle positions are computed, not placed by hand.** Each shingle is lowered onto the gable's top edge, the way a real board settles:
@@ -144,7 +157,7 @@ The layout that reaches closest to the peak without crossing it is kept. On the 
 ### What `verify.mjs` checks
 
 Each placed part is voxelised at 0.5 mm, from the same geometry as the STLs. Then:
-- **Interference:** volume shared between parts; any shared voxel counts. Result: **none, in all three buildings**. Parts touch but never overlap.
+- **Interference:** volume shared between parts; any shared voxel counts. Result: **none, in all six buildings**. Parts touch but never overlap.
 - **Support:** each part's centre of mass must lie inside the convex hull of its contacts below. A contact means another part, or the table, within 1 mm (two voxels) directly below. One voxel isn't enough, because rounding to a 0.5 mm grid can open a false gap at a line contact, such as a shingle corner resting on a step. Result: **every part supported**. Only the half logs touch the table, so every building sits flat.
 - **Interlock:** each part is pushed 1.5 mm in each sideways direction to see whether a neighbour blocks it. Result: **all 51 wall logs are locked in all four directions** by their notches.
   - The gables are locked by their bottom notches.
