@@ -5,7 +5,8 @@
 //                 print  = the same solid rotated to its printing orientation (what goes in the STL)
 //                 info   = listing name, quantity, notch centres, etc.
 // Frames:
-//  - logs, half logs, beveled pieces: axis along +x from 0 to length; the round section is centred on y = 0, z = 0
+//  - logs, half logs, beveled pieces: axis along +x from 0 to length; the section is centred on z = 0, and in y the
+//    width that sits in a notch (the round section less its printing flat) is centred on y = 0
 //    (a half log keeps that virtual centre; its flat bottom is at z = -h)
 //  - gables: width along x from 0, thickness centred on y = 0, bottom at z = 0
 //  - shingles: length along x, width along y, thickness along z (groove up)
@@ -262,28 +263,33 @@ const ROUNDED_LOGS = [
 
 // set: 'standard' (every part, smooth or wood grain) or 'rounded' (only the notched logs, all with rounded ends)
 export function makeParts({ clearance = 0.2, flat = 0.8, texture = true, set = 'standard' } = {}) {
-  const notchW = D + 2 * clearance;
-  const yf = -R + flat;
+  // Every part that sits in a notch is MATE wide there: the round logs are, because of their printing flat, and the
+  // octagonal log, half logs and gables are trimmed to match. The notch is that width plus the clearance on each side.
+  // (Fit-tested in PLA: an 18.65 mm notch round an 18.25 mm log, 0.2 mm per side, seats fully with slight play.)
+  const MATE = D - flat, notchW = MATE + 2 * clearance;
+  const yf = -R + flat, yShift = -flat / 2; // logs are placed so the mating width is centred on the log's nominal axis
   const withCuts = (P) => insertLine(insertLine(P, 1, h), 1, -h);
   const NC = 144; // facets round a log: 0.4 mm apart, with vertices exactly on the notch-floor lines (30 deg)
   const onFlat = (a, b) => a[0] <= yf + 1e-6 && b[0] <= yf + 1e-6, onBottom = (a, b) => a[1] <= -h + 1e-6 && b[1] <= -h + 1e-6;
   const roundBase = subdivide(withCuts(clipPoly(circle(NC, R), 0, yf, true)), onFlat);       // round log with a printing flat on one side
-  const octBase = subdivide(withCuts(octagon(D)), () => true);                              // flats top, bottom and sides
-  const halfBase = subdivide(insertLine(clipPoly(circle(NC, R), 1, -h, true), 1, h), onBottom); // flat bottom at the bottom-notch floor
+  const octBase = subdivide(withCuts(clipPoly(octagon(D), 0, yf, true)), () => true);       // flats top, bottom and sides; the face it prints on is cut to the same depth as the round logs' flat
+  const halfBase = subdivide(insertLine(clipPoly(clipPoly(circle(NC, R), 0, yf, true), 1, -h, true), 1, h), (a, b) => onBottom(a, b) || onFlat(a, b)); // flat bottom at the bottom-notch floor; side flat like the round logs, so it fits a notch
   // wood texture: grain on the outside, rings on the ends; the face on the print bed stays smooth
   const tex = (name, smooth) => (texture ? texFor(name, smooth) : null);
-  const roundSmooth = (p) => p[0] <= yf + 1e-6, octSmooth = (p) => p[0] <= -R + 1e-6, halfSmooth = (p) => p[1] <= -h + 1e-6;
+  const roundSmooth = (p) => p[0] <= yf + 1e-6, octSmooth = roundSmooth, halfSmooth = (p) => p[1] <= -h + 1e-6 || p[0] <= yf + 1e-6;
   const centersFor = (L, n) => Array.from({ length: n }, (_, k) => L / 2 + (k - (n - 1) / 2) * CENTERS);
   const parts = {};
   const add = (name, info, model, toPrint) => { parts[name] = { name, info, model, print: model.map((t) => t.map(toPrint)) }; };
-  const logPrint = (yflat) => ([x, y, z]) => [x, -z, y - yflat];                 // lie on the side flat, notches sideways
-  const logModelFromPrint = (yflat) => ([X, Y, Z]) => [X, Z + yflat, -Y];
+  const centred = (m) => m.map((t) => t.map(([x, y, z]) => [x, y + yShift, z]));  // section frame -> model frame
+  const yBed = yf + yShift;                                                      // the printing flat, in the model frame
+  const logPrint = ([x, y, z]) => [x, -z, y - yBed];                             // lie on the side flat, notches sideways
+  const logModelFromPrint = ([X, Y, Z]) => [X, Z + yBed, -Y];
 
   const log = (name, listing, Lin, n, opts = {}) => {
     const L = Lin * IN, centers = centersFor(L, n);
-    const base = opts.oct ? octBase : roundBase, yflat = opts.oct ? -R : yf;
-    add(name, { listing, length: L, centers, kind: 'log', note: opts.note }, logMesh({ L, centers, base, notchW, chamfer: opts.chamfer, tex: tex(name, opts.oct ? octSmooth : roundSmooth) }), logPrint(yflat));
-    parts[name].toModel = logModelFromPrint(yflat);
+    const base = opts.oct ? octBase : roundBase;
+    add(name, { listing, length: L, centers, kind: 'log', note: opts.note }, centred(logMesh({ L, centers, base, notchW, chamfer: opts.chamfer, tex: tex(name, opts.oct ? octSmooth : roundSmooth) })), logPrint);
+    parts[name].toModel = logModelFromPrint;
   };
   if (set === 'rounded') {
     for (const [name, listing, Lin, n, opts = {}] of ROUNDED_LOGS) log(name, listing, Lin, n, { ...opts, chamfer: ROUNDED_ENDS });
@@ -299,16 +305,16 @@ export function makeParts({ clearance = 0.2, flat = 0.8, texture = true, set = '
 
   const half = (name, listing, Lin, n) => {
     const L = Lin * IN, centers = centersFor(L, n);
-    add(name, { listing, length: L, centers, kind: 'half' }, logMesh({ L, centers, base: halfBase, notchW, bottom: false, tex: tex(name, halfSmooth) }), ([x, y, z]) => [x, y, z + h]);
-    parts[name].toModel = ([X, Y, Z]) => [X, Y, Z - h];
+    add(name, { listing, length: L, centers, kind: 'half' }, centred(logMesh({ L, centers, base: halfBase, notchW, bottom: false, tex: tex(name, halfSmooth) })), ([x, y, z]) => [x, y - yShift, z + h]);
+    parts[name].toModel = ([X, Y, Z]) => [X, Y + yShift, Z - h];
   };
   half('half_log_4-1_2', 'Half Log, 4 1/2', 4.5, 2);
   half('half_log_7-1_2', 'Half Log, 7 1/2', 7.5, 3);
 
   // short log with one end cut at the roof angle of the wooden triangle (about 39 deg in the photos)
   add('beveled_end_1-1_2', { listing: 'Beveled End, 1 1/2 x 1 1/4', kind: 'bevel', note: 'top edge 1 1/2 in, end cut at 39 deg; the listed "1 1/4" is not explained by the photos' },
-    bevelMesh({ Ltop: 1.5 * IN, base: roundBase, phi: (39 * Math.PI) / 180, tex: tex('beveled_end_1-1_2', roundSmooth) }), logPrint(yf));
-  parts['beveled_end_1-1_2'].toModel = logModelFromPrint(yf);
+    centred(bevelMesh({ Ltop: 1.5 * IN, base: roundBase, phi: (39 * Math.PI) / 180, tex: tex('beveled_end_1-1_2', roundSmooth) })), logPrint);
+  parts['beveled_end_1-1_2'].toModel = logModelFromPrint;
 
   for (const [name, Lin, listing] of [['solid_log_1-3_8', 1.375, 'Solid Log, 1 3/8'], ['solid_log_1-5_8', 1.625, 'Solid Log, 1 5/8']]) {
     // a plain cylinder standing on end: built along x like the other logs, then stood up
@@ -318,7 +324,7 @@ export function makeParts({ clearance = 0.2, flat = 0.8, texture = true, set = '
   }
 
   // ---- gables: profile in XY, thickness T along Z in the print frame; model = (X, T/2 - Z, Y)
-  const T = D; // 3/4 in: fills the crossing log's notch slot the way a log does (thickness not visible in photos)
+  const T = MATE; // as wide as a log is where it sits in a notch, so a gable fills the crossing log's notch slot the way a log does (thickness not visible in photos)
   const gableAdd = (name, info, poly) => {
     add(name, info, extrudeShell(poly, 0, T).map((t) => t.map(([X, Y, Z]) => [X, T / 2 - Z, Y])), ([x, y, z]) => [x, z, T / 2 - y]);
     parts[name].toModel = ([X, Y, Z]) => [X, T / 2 - Z, Y];

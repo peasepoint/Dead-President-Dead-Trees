@@ -24,7 +24,8 @@ A second photo (supplied directly, not from the listing) shows nine orange plast
 | Feature | Value | Basis |
 |---|---|---|
 | Log diameter | 3/4 in (19.05 mm) | Photos (end grain about 0.76 in), published spec |
-| Notch width | 3/4 in + 0.2 mm clearance per side | Photos about 0.76 in |
+| Notch width | 18.65 mm: the 18.25 mm mating width + 0.2 mm clearance per side | Fit test in PLA (see Limits). The photos show about 0.76 in |
+| Mating width | 18.25 mm: 3/4 in less the 0.8 mm printing flat | How wide a round log is across its printing flat. The octagonal log, half logs and gables are trimmed to the same width so they fit the same notch |
 | Notch depth | 3/16 in, top and bottom | Hobbyist plans; consistent with photos |
 | Notch centres | 3 in | Photos: 245 to 260 px between notches on every log |
 | Course rise | 3/8 in | Two 3/16 in notches overlap |
@@ -58,11 +59,11 @@ Listing quantities are from the Poshmark sheet. The small plastic gable and the 
 |---|---|---|---|---|
 | `log_1insert_1-5_8` | 1 Insert Log, 1 5/8 (119) | Round, 1 notch | Photo measured 1.58 in | <img src="images/log_1insert_1-5_8.png" width="160" alt="log_1insert_1-5_8"> <img src="images/log_1insert_1-5_8.gif" width="160" alt="log_1insert_1-5_8 rotating"> |
 | `log_1insert_1-1_2_round` | 1 Insert Log (Round), 1 1/2 (169) | Round, 1 notch | | <img src="images/log_1insert_1-1_2_round.png" width="160" alt="log_1insert_1-1_2_round"> <img src="images/log_1insert_1-1_2_round.gif" width="160" alt="log_1insert_1-1_2_round rotating"> |
-| `log_1insert_1-1_2_octagonal` | 1 Insert Log (Hex), 1 1/2 (96) | Octagon, 3/4 in across flats, 1 notch | Listed as hex. The end grain shows flats top and bottom; a true hexagon could not both stack and fit a 3/4 in notch, so this is modelled as an octagon | <img src="images/log_1insert_1-1_2_octagonal.png" width="160" alt="log_1insert_1-1_2_octagonal"> <img src="images/log_1insert_1-1_2_octagonal.gif" width="160" alt="log_1insert_1-1_2_octagonal rotating"> |
+| `log_1insert_1-1_2_octagonal` | 1 Insert Log (Hex), 1 1/2 (96) | Octagon, 3/4 in across flats (18.25 mm across the face it prints on), 1 notch | Listed as hex. The end grain shows flats top and bottom; a true hexagon could not both stack and fit a 3/4 in notch, so this is modelled as an octagon | <img src="images/log_1insert_1-1_2_octagonal.png" width="160" alt="log_1insert_1-1_2_octagonal"> <img src="images/log_1insert_1-1_2_octagonal.gif" width="160" alt="log_1insert_1-1_2_octagonal rotating"> |
 | `log_2insert_4-1_2` | 2 Insert Log, 4 1/2 (121) | Round, 2 notches | Photo measured 4.57 in | <img src="images/log_2insert_4-1_2.png" width="160" alt="log_2insert_4-1_2"> <img src="images/log_2insert_4-1_2.gif" width="160" alt="log_2insert_4-1_2 rotating"> |
 | `log_3insert_7-5_8` | 3 Insert Log, 7 3/4 (110) | Round, 3 notches, 7 5/8 in | The sheet says 7 3/4, but the photo measured about 7.6 in and the length rule in `PARTS_SPEC.md` (3 in centres, 7/16 in shoulders) gives 7 5/8, matching the 1 5/8 and 10 5/8 in logs from the same lot. 7 5/8 is used | <img src="images/log_3insert_7-5_8.png" width="160" alt="log_3insert_7-5_8"> <img src="images/log_3insert_7-5_8.gif" width="160" alt="log_3insert_7-5_8 rotating"> |
 | `log_4insert_10-5_8` | 4 Insert Log, 10 5/8 (3) | Round, 4 notches | | <img src="images/log_4insert_10-5_8.png" width="160" alt="log_4insert_10-5_8"> <img src="images/log_4insert_10-5_8.gif" width="160" alt="log_4insert_10-5_8 rotating"> |
-| `half_log_4-1_2`, `half_log_7-1_2` | Half Log, 4 1/2 (8) and 7 1/2 (10) | Flat bottom at the bottom-notch floor (9/16 in tall), notches on top only | Photo: about 0.53 in tall. These are the base course, so a building sits flat on the table | <img src="images/half_log_4-1_2.png" width="160" alt="half_log_4-1_2"> <img src="images/half_log_4-1_2.gif" width="160" alt="half_log_4-1_2 rotating"><br><img src="images/half_log_7-1_2.png" width="160" alt="half_log_7-1_2"> <img src="images/half_log_7-1_2.gif" width="160" alt="half_log_7-1_2 rotating"> |
+| `half_log_4-1_2`, `half_log_7-1_2` | Half Log, 4 1/2 (8) and 7 1/2 (10) | Flat bottom at the bottom-notch floor (9/16 in tall), notches on top only, one side cut flat like the round logs (18.25 mm wide) | Photo: about 0.53 in tall. These are the base course, so a building sits flat on the table | <img src="images/half_log_4-1_2.png" width="160" alt="half_log_4-1_2"> <img src="images/half_log_4-1_2.gif" width="160" alt="half_log_4-1_2 rotating"><br><img src="images/half_log_7-1_2.png" width="160" alt="half_log_7-1_2"> <img src="images/half_log_7-1_2.gif" width="160" alt="half_log_7-1_2 rotating"> |
 | `beveled_end_1-1_2` | Beveled End, 1 1/2 x 1 1/4 (19) | 1 1/2 in log, one end cut at 39 deg | The 39 deg is from the photos and matches the wooden triangle. The sheet's "1 1/4" is not explained by the photos | <img src="images/beveled_end_1-1_2.png" width="160" alt="beveled_end_1-1_2"> <img src="images/beveled_end_1-1_2.gif" width="160" alt="beveled_end_1-1_2 rotating"> |
 | `solid_log_1-3_8`, `solid_log_1-5_8` | Solid Log, 1 3/8 (30) and 1 5/8 (15) | Plain 3/4 in cylinders | Purpose unknown; not used in the test buildings | <img src="images/solid_log_1-3_8.png" width="160" alt="solid_log_1-3_8"> <img src="images/solid_log_1-3_8.gif" width="160" alt="solid_log_1-3_8 rotating"><br><img src="images/solid_log_1-5_8.png" width="160" alt="solid_log_1-5_8"> <img src="images/solid_log_1-5_8.gif" width="160" alt="solid_log_1-5_8 rotating"> |
 | `gable_plastic_8-1_2` | Plastic Orange Roof, 2 1/4 x 8 1/2 (1) | Symmetric; 3 bottom notches on 3 in centres; 7 steps per side; eave hook lips | Measured from an enlarged photo; slope 27 deg | <img src="images/gable_plastic_8-1_2.png" width="160" alt="gable_plastic_8-1_2"> <img src="images/gable_plastic_8-1_2.gif" width="160" alt="gable_plastic_8-1_2 rotating"> |
@@ -72,7 +73,7 @@ Listing quantities are from the Poshmark sheet. The small plastic gable and the 
 | `shingle_flat_6`, `_9`, `_11` | Orange/Yellow/Green Flat Shingle, 6, 9, 11 | 0.8 x 1/8 in boards | Width measured about 0.79 to 0.8 in | <img src="images/shingle_flat_6.png" width="160" alt="shingle_flat_6"> <img src="images/shingle_flat_6.gif" width="160" alt="shingle_flat_6 rotating"><br><img src="images/shingle_flat_9.png" width="160" alt="shingle_flat_9"> <img src="images/shingle_flat_9.gif" width="160" alt="shingle_flat_9 rotating"><br><img src="images/shingle_flat_11.png" width="160" alt="shingle_flat_11"> <img src="images/shingle_flat_11.gif" width="160" alt="shingle_flat_11 rotating"> |
 | `shingle_ridge_5-5_8`, `_6`, `_9` | Red/Yellow/Green with Ridge Shingle | 1 1/8 in board with a centre groove | Measured 1.13 to 1.17 in wide. Both halves are lit identically, so it is flat, not folded | <img src="images/shingle_ridge_5-5_8.png" width="160" alt="shingle_ridge_5-5_8"> <img src="images/shingle_ridge_5-5_8.gif" width="160" alt="shingle_ridge_5-5_8 rotating"><br><img src="images/shingle_ridge_6.png" width="160" alt="shingle_ridge_6"> <img src="images/shingle_ridge_6.gif" width="160" alt="shingle_ridge_6 rotating"><br><img src="images/shingle_ridge_9.png" width="160" alt="shingle_ridge_9"> <img src="images/shingle_ridge_9.gif" width="160" alt="shingle_ridge_9 rotating"> |
 
-**Gable thickness** isn't visible in any photo. All three gables are 3/4 in thick so they fill a crossing log's notch slot the way a log does. That locks them sideways.
+**Gable thickness** isn't visible in any photo. All three gables are 18.25 mm thick, the same as a log's mating width, so they fill a crossing log's notch slot the way a log does. That locks them sideways.
 
 **Shingle thickness** is also not visible. I used 1/8 in.
 
@@ -112,7 +113,7 @@ Every part was re-rendered and its dimensions compared with the spec. Two parts 
 Everything else agrees with the spec within its stated confidence. Known differences that were kept:
 - **End shoulders are mixed:** the 1 1/2 and 4 1/2 in logs and the half logs use 3/8 in; the 1 5/8, 7 5/8 and 10 5/8 in logs use 7/16 in. Both appear in the spec, and each length follows the reference lot.
 - **Half-log height** is 9/16 in against about 0.53 in measured, so the flat sits exactly at the notch floor. The difference is inside the photo error.
-- **Width across the notch faces:** the spec's 11/16 in (low confidence, from one compatible build) is not used. Logs stay 3/4 in, with 0.2 mm clearance per side in the notch.
+- **Width across the notch faces:** the spec's 11/16 in (low confidence, from one compatible build) is not used. Logs stay 3/4 in round. Where they sit in a notch they are 18.25 mm wide because of the printing flat, with 0.2 mm clearance per side.
 - **The 4 3/4 in rounded-end log** (now `log_2insert_4-3_4_rounded` in the rounded set) has 1/2 in shoulders, which doesn't follow the length rule. The 6 in 2-insert log (1 1/8 in shoulders, non-standard in the spec) has been removed.
 - **Spec pieces not modelled:** the 4-notch flat log, the 1916-1920s gable logs and one-piece roof, slats of 12, 9 3/4, 7 3/4, 4 and 3 in, slat clips, and the 1990s-on molded roofs, windows and doors (no dimensions exist).
 
@@ -169,7 +170,7 @@ Full per-part results are in `VERIFY.md`.
 
 ## Limits
 
-- Nothing has been printed. Clearance (0.2 mm per side) and the 3/16 in notch depth should be checked with a two-log fit test first.
+- Only the notch fit has been printed. Pairs of 1-notch logs were printed in PLA (0.4 mm nozzle, 0.2 mm layers) with notches 18.65, 18.85, 19.05, 19.25, 19.45 and 19.65 mm wide. The 18.65 mm pair fit best, with a small amount of play, so that is the default. The earlier default, 19.45 mm, ignored the printing flat and left about 1.2 mm of play. No narrower notch was tried, and no other part has been printed.
 - Photo measurements carry about ±0.03 in error. These are assumptions:
   - Gable thickness and shingle thickness.
   - Chimney depth and socket.

@@ -26,11 +26,12 @@ SHARED = [
     ('NotchDepth', '0.1875 in', 'mm', 'Notch depth, each side of a log'),
     ('NotchCenters', '3 in', 'mm', 'Spacing between notch centres'),
     ('Clearance', '0.2 mm', 'mm', 'Fit clearance per side. Try 0.3 mm for PETG'),
-    ('NotchWidth', 'LogDia + 2 * Clearance', 'mm', 'Notch width (log diameter plus clearance)'),
     ('PrintFlat', '0.8 mm', 'mm', 'Depth of the flat a round log lies on while printing'),
+    ('MateWidth', 'LogDia - PrintFlat', 'mm', 'Width of a log, half log or gable where it sits in a notch'),
+    ('NotchWidth', 'MateWidth + 2 * Clearance', 'mm', 'Notch width (mating width plus clearance on each side)'),
     ('CourseRise', 'LogDia - 2 * NotchDepth', 'mm', 'Height gained per crossing course'),
     ('HalfLogHeight', 'LogDia - NotchDepth', 'mm', 'Half-log height (flat sits at the notch floor)'),
-    ('GableThk', 'LogDia', 'mm', 'Gable thickness (fills a notch like a log)'),
+    ('GableThk', 'MateWidth', 'mm', 'Gable thickness (fills a notch like a log)'),
     ('ShingleThk', '0.125 in', 'mm', 'Shingle thickness'),
     ('FlatShingleWidth', '0.8 in', 'mm', 'Flat shingle width'),
     ('RidgeShingleWidth', '1.125 in', 'mm', 'Ridge shingle width'),
@@ -183,6 +184,12 @@ class Builder:
         cut = self.extrude(comp, s.profiles(), 'LogDia', CUT, 'Notch cut')
         self.pattern(comp, cut, comp.xConstructionAxis, f'max({code}_Notches; 2)', f'{code}_NotchStep', 'Notch pattern')
 
+    def bed_flat(self, comp, length):
+        """Cut away everything below the bed (Z = 0): the printing flat of an octagonal log drawn PrintFlat too low."""
+        s = Sk(self, comp, 'yz', 'Printing flat')
+        s.rect((neg('LogDia / 2 + 1 mm'), neg('PrintFlat + 1 mm')), ('LogDia / 2 + 1 mm', 0))
+        self.extrude(comp, s.profiles(), length, CUT, 'Printing flat')
+
     def bottom_notches(self, comp, code):
         """Notches in the bottom edge (Y = 0) of a gable profile drawn in XY."""
         s = Sk(self, comp, 'xy', 'Notch')
@@ -198,7 +205,7 @@ class Builder:
         def build(comp):
             if style == 'oct':
                 s = Sk(self, comp, 'yz', 'Section')
-                s.rect((neg('LogDia / 2'), 0), ('LogDia / 2', 'LogDia'))
+                s.rect((neg('LogDia / 2'), neg('PrintFlat')), ('LogDia / 2', 'LogDia - PrintFlat'))
                 ext = self.extrude(comp, s.profiles(), L, NEW, 'Log')
                 edges = adsk.core.ObjectCollection.create()
                 for e in ext.bodies.item(0).edges:
@@ -209,12 +216,17 @@ class Builder:
                 ci = ch.createInput2()
                 ci.chamferEdgeSets.addEqualDistanceChamferEdgeSet(edges, VI('LogDia * (1 - sqrt(2) / 2)'), False)
                 ch.add(ci).name = 'Octagon corners'
+                self.bed_flat(comp, L)
                 self.side_notches(comp, code)
                 return
             if style == 'half':
                 s = Sk(self, comp, 'yz', 'Section')
                 s.circle_on_bed('HalfLogHeight - LogDia / 2')
                 self.extrude(comp, [s.biggest()], L, NEW, 'Log')
+                # side flat, like the round logs' printing flat, so the half log is MateWidth wide in a notch
+                f = Sk(self, comp, 'yz', 'Side flat')
+                f.rect((neg('LogDia / 2 + 1 mm'), neg('1 mm')), (neg('LogDia / 2 - PrintFlat'), 'HalfLogHeight + 1 mm'))
+                self.extrude(comp, f.profiles(), L, CUT, 'Side flat')
                 n = Sk(self, comp, 'xz', 'Notch')
                 n.rect((f'{code}_FirstNotch - NotchWidth / 2', 'HalfLogHeight - NotchDepth'),
                        (f'{code}_FirstNotch + NotchWidth / 2', 'HalfLogHeight + 1 mm'))
@@ -398,7 +410,7 @@ class Builder:
         def build(comp):
             s = Sk(self, comp, 'yz', 'Section')
             if octagonal:
-                s.rect((neg('LogDia / 2'), 0), ('LogDia / 2', 'LogDia'))
+                s.rect((neg('LogDia / 2'), neg('PrintFlat')), ('LogDia / 2', 'LogDia - PrintFlat'))
                 ext = self.extrude(comp, s.profiles(), L, NEW, 'Log')
                 body = ext.bodies.item(0)
                 edges = adsk.core.ObjectCollection.create()
@@ -419,14 +431,16 @@ class Builder:
             fi = fl.createInput()
             fi.edgeSetInputs.addConstantRadiusEdgeSet(end_edges(body, self.ev(L)), VI('EndRadius'), True)
             fl.add(fi).name = 'Rounded ends'
-            if not octagonal:
+            if octagonal:
+                self.bed_flat(comp, L)
+            else:
                 self.extrude(comp, [s.smallest()], L, CUT, 'Printing flat')
             self.side_notches(comp, code)
 
         self.part(name, build)
 
     def build_rounded(self):
-        for name, expr, units, comment in SHARED[:7]:  # the log sizes only
+        for name, expr, units, comment in SHARED[:8]:  # the log sizes only
             self.param(name, expr, units, comment, True)
         self.param('EndRadius', '4 mm', 'mm', 'Radius of the rounded log ends', True)
         for args in ROUNDED:
