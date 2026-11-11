@@ -6,6 +6,8 @@
 
 > **Only the notch fit has been test-printed.** Two crossed 1-notch logs in PLA fit well at the current notch width. The three buildings above and the three [further down](#more-buildings) are checked in software for overlap, support and interlocking, but nobody has printed a whole building yet. Do the [fit test](#2-print-the-fit-test) on your own printer before printing a full set.
 
+> **This branch (`vertical-print-logs`): the round logs print standing on end.** The notched logs, the hex log, the beveled end and the solid logs are redesigned for it, and none of them has been printed this way yet. What changed is in [Logs that stand on end](#logs-that-stand-on-end).
+
 ## The parts
 
 Every STL is in millimetres and already lies in its printing orientation.
@@ -21,8 +23,8 @@ The files come in three sets:
 
 | Folder | Contents | Looks like |
 |---|---|:---:|
-| [`stl/smooth/`](stl/smooth) | All 23 parts, plain logs. Small files (about 1 MB in total) | |
-| [`stl/woodgrain/`](stl/woodgrain) | The same 23 parts, with grain along the logs and growth rings on their ends (about 15 MB in total) | <img src="images/log_2insert_4-1_2.gif" width="150" alt="Wood-grain log, rotating"> |
+| [`stl/smooth/`](stl/smooth) | All 23 parts, plain logs. Small files (about 5 MB in total) | |
+| [`stl/woodgrain/`](stl/woodgrain) | The same 23 parts, with grain along the logs and growth rings sunk into their ends (about 19 MB in total) | <img src="images/log_2insert_4-1_2.gif" width="150" alt="Wood-grain log, rotating"> |
 | [`stl/rounded_woodgrain/`](stl/rounded_woodgrain) | The 7 notched logs only, with rounded ends and wood grain | <img src="images/rounded/log_2insert_4-3_4_rounded.gif" width="150" alt="Rounded-end log, rotating"> |
 
 All three sets fit together and can be mixed in one building. The grain is cut into the surface, never raised, so sizes and notch fit don't change. Only the 11 logs differ between `smooth` and `woodgrain`; the gables, shingles, chimney, door and window are the same files in both.
@@ -42,8 +44,9 @@ Printers and filaments vary, so check the notch fit before printing a building. 
 
 Cross the two logs at their notches, then seat one in a half-log notch. A log should seat fully and lift out freely, without rattling.
 
-- **Too tight or too loose:** a notch is 18.65 mm wide and the part that sits in it is 18.25 mm wide, which leaves 0.2 mm clearance per side. In a PLA test print this seated fully with a small amount of play. Change the clearance in 0.05 mm steps with `--clearance` (see [Regenerating the files](#regenerating-the-files)) or the `Clearance` parameter in the [Fusion design](fusion/README.md).
+- **Too tight or too loose:** a notch is 19.45 mm wide and the part that sits in it is a full 19.05 mm (3/4 in) wide, which leaves 0.2 mm clearance per side. In a PLA test print of the earlier lying-down logs, 0.2 mm per side seated fully with a small amount of play. Change the clearance in 0.05 mm steps with `--clearance` (see [Regenerating the files](#regenerating-the-files)) or the `Clearance` parameter in the [Fusion design](fusion/README.md).
 - **PETG:** start at 0.3 mm.
+- **That test was printed with the logs lying down.** Standing logs keep the same clearance, but they are now fully round and the notch width runs up the layers, so repeat the test before printing a set.
 
 ### 3. Slice
 
@@ -55,23 +58,39 @@ Load the STLs as they are: no rotation and no supports.
 | Layer height | 0.2 mm. Use 0.12 to 0.16 mm to show the wood grain better |
 | Walls | 3 or more |
 | Infill | 20 to 30% |
-| Supports | None |
+| Supports | None from the slicer. The standing logs carry their own break-away supports in the notches |
+| Brim | 5 mm on standing logs taller than about 100 mm, and on all rounded-end logs |
 | Material | PLA. For PETG, use 0.3 mm clearance (step 2) |
 
 How each part sits on the bed:
 
 | Part | Orientation in the STL |
 |---|---|
-| Round logs, beveled end | Lying on a 0.8 mm flat along one side, notches facing sideways |
-| Octagonal log | Lying on one of its faces |
+| Round logs, hex log, beveled end | Standing on end |
 | Half logs | Flat side down, notches up |
 | Solid logs | Standing on end |
 | Gables, shingles, door, window | Flat on a face |
 | Chimney | Upside down: open top on the bed, V-cut facing up |
 
-**Bed size.** Two parts are longer than a 256 mm bed: `log_4insert_10-5_8` (270 mm) and `shingle_flat_11` (279 mm). Turn them diagonally, or use a larger printer. The next longest parts are the 9 in shingles (229 mm) and the 3-notch log (194 mm).
+**Bed size and height.** `log_4insert_10-5_8` stands 270 mm tall, which is more than a 256 mm printer can build; it needs a taller printer. The 3-notch log stands 194 mm tall. `shingle_flat_11` (279 mm) is longer than a 256 mm bed: turn it diagonally.
 
-**Rounded-end logs.** The last 1.5 mm of each end lifts slightly off the bed, a small overhang that is meant to print without supports.
+**Rounded-end logs.** They stand on a 12.7 mm end, so only about 59 mm2 touches the bed. Use a brim.
+
+### Logs that stand on end
+
+| Feature | What it is |
+|---|---|
+| Shape | A full 3/4 in circle from end to end: no printing flat and no trimmed sides. The hex log is the same circle with six shallow flats 0.7 mm deep |
+| Notches | Square walls, 19.45 mm apart. The upper wall of each notch is a flat overhang as printed, so each notch has a built-in support |
+| Built-in supports | A comb of five 0.5 mm fins in every notch, standing on the lower wall and stopping 0.2 mm under the upper one. It keeps 0.5 mm away from the notch floor and 0.4 mm inside the log's surface |
+| Ends, wood grain | The growth rings sit in a hollow 1 mm deep. Round it is a flat rim 1.2 to 2.8 mm wide, thick on one side and thin on the other like the wall of a hollow log. Only the rim touches the bed (about 106 mm2) |
+| Ends, smooth | Flat |
+
+![Two standing logs with the support combs in their notches](images/standing_logs_supports.png)
+
+**Removing the supports.** Grip a comb across its fins with needle-nose pliers and twist; it is joined to the log only along the foot of its fins. Scrape the lower notch wall flat if a ridge is left. To print without them, or with your slicer's supports instead, regenerate with `--supports 0`.
+
+Two things to expect on the end that sits on the bed: the floor of the hollow is a 13 mm bridge 1 mm above the bed, and the rings on it are cut one layer deep into that bridge, so they will print less cleanly than on the top end.
 
 ### 4. Print a building
 
@@ -86,7 +105,7 @@ Quantities for the three buildings in the animation:
 | `log_2insert_4-1_2` | 3 | 6 | 6 |
 | `log_1insert_1-5_8` | 1 | | |
 | `log_1insert_1-1_2_round` | 1 | | |
-| `log_1insert_1-1_2_octagonal` | 1 | | |
+| `log_1insert_1-1_2_hex` | 1 | | |
 | `gable_plastic_8-1_2` | 2 | | |
 | `gable_plastic_small_2notch` | | | 2 |
 | `gable_wood_triangle_4x2` | | 2 | |
@@ -127,7 +146,7 @@ Each cabin is also rendered in the other finish: [porch cabin, wood grain](image
 | `log_2insert_4-1_2` | 3 | 8 | 21 |
 | `log_1insert_1-5_8` | 12 | 3 | 10 |
 | `log_1insert_1-1_2_round` | 2 | 3 | |
-| `log_1insert_1-1_2_octagonal` | 1 | 2 | |
+| `log_1insert_1-1_2_hex` | 1 | 2 | |
 | `gable_plastic_8-1_2` | 2 | 2 | |
 | `gable_wood_triangle_4x2` | | | 2 |
 | `shingle_flat_9` | 6 | 6 | |
@@ -174,7 +193,9 @@ This rewrites all three `stl/` sets and checks that every mesh is watertight and
 | Option | Default | Meaning |
 |---|---|---|
 | `--clearance` | `0.2` | Gap on each side between a notch and the part sitting in it, in mm |
-| `--flat` | `0.8` | Depth of the flat that round logs print on, in mm. The parts that sit in notches are narrower by this much (18.25 mm), and the notches follow |
+| `--flat` | `0` | Narrows every part where it sits in a notch by this much, in mm, and the notches follow. `0.8` gives the earlier 18.25 mm mating width |
+| `--supports` | `1` | `0` leaves the break-away supports out of the standing logs' notches |
+| `--roof` | `90` | Angle of the upper wall of each notch on a standing log, in degrees from vertical as printed. `90` is square. `45` leans it back so it prints without support, at the cost of a looser hold on that side |
 | `--finish` | `all` | `all`, `smooth`, `woodgrain` or `rounded_woodgrain` |
 | `--out` | `stl` | Parent folder for the sets |
 
@@ -198,8 +219,8 @@ The other scripts:
 ## Status
 
 - **Checked in software:** in all six buildings no parts overlap, every part is supported, and every wall log is locked by its notches. Results are in [VERIFY.md](VERIFY.md) and [VERIFY_smooth.md](VERIFY_smooth.md). The rounded-end logs share the standard notch layout but aren't checked separately.
-- **Test-printed:** the notch fit only. Pairs of 1-notch logs were printed in PLA with notches from 18.65 to 19.65 mm wide; 18.65 mm fit best and is now the default.
-- **Not checked:** everything else in the real world. No half log, gable, shingle, chimney or whole building has been printed.
+- **Test-printed:** the notch fit only. Pairs of 1-notch logs were printed in PLA lying on a 0.8 mm flat, with notches from 18.65 to 19.65 mm wide; 18.65 mm round the 18.25 mm log fit best. That 0.2 mm per side is still the default.
+- **Not checked:** everything else in the real world. No standing log, half log, gable, shingle, chimney or whole building has been printed. The Fusion designs in `fusion/` still hold the lying-down logs.
 
 If you print these, the most useful things to report are:
 

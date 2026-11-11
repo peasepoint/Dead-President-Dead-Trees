@@ -1,13 +1,14 @@
 // Writes every part in parts.mjs as binary STL, in printing orientation, and checks each mesh.
+// Round logs are written standing on end (see standingLogMesh in parts.mjs).
 // Three sets are written: <out>/smooth (plain logs) and <out>/woodgrain (logs with grain and end rings) are complete
 // sets that differ only in the logs; <out>/rounded_woodgrain holds only the notched logs, with rounded ends and wood grain.
-// Usage: node log_generator.mjs [--clearance 0.2] [--flat 0.8] [--finish all|smooth|woodgrain|rounded_woodgrain] [--out stl]
+// Usage: node log_generator.mjs [--clearance 0.2] [--flat 0] [--roof 90] [--supports 1] [--finish all|smooth|woodgrain|rounded_woodgrain] [--out stl]
 import fs from 'node:fs';
 import path from 'node:path';
 import { makeParts } from './parts.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((a, v, i, arr) => (v.startsWith('--') ? [...a, [v.slice(2), arr[i + 1]]] : a), []));
-const opts = { clearance: +(args.clearance ?? 0.2), flat: +(args.flat ?? 0.8) };
+const opts = { clearance: +(args.clearance ?? 0.2), flat: +(args.flat ?? 0), roof: +(args.roof ?? 90), supports: (args.supports ?? '1') !== '0' };
 const outRoot = args.out ?? 'stl';
 const FINISHES = { smooth: { texture: false }, woodgrain: { texture: true }, rounded_woodgrain: { texture: true, set: 'rounded' } }; // folder name -> makeParts options
 const finish = args.finish === 'both' ? 'all' : args.finish ?? 'all'; // 'both' kept as an alias from when there were two sets

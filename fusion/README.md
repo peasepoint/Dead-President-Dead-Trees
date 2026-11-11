@@ -1,5 +1,7 @@
 # Fusion design
 
+> **Not updated on the `vertical-print-logs` branch.** These designs and `build_lincoln_logs.py` still hold the round logs lying on a printing flat, with square notches and flush ends. The STLs in `stl/` are the standing logs.
+
 Every part in `parts.mjs` as an editable, parametric Autodesk Fusion design. The three files match the three STL sets: smooth (`stl/smooth/`), wood grain (`stl/woodgrain/`) and the rounded-end logs (`stl/rounded_woodgrain/`). To print without Fusion, use the STLs; see the [main README](../README.md#how-to-print).
 
 | File | What it is |
