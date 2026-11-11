@@ -4,7 +4,7 @@
 
 ![Cabin, shed and cottage built from the printable parts](cabin_build.gif)
 
-> **Not yet test-printed.** The three buildings above and the three [further down](#more-buildings) are checked in software for overlap, support and interlocking, but nobody has printed these parts yet. Do the [fit test](#2-print-the-fit-test) before printing a full set.
+> **Only the notch fit has been test-printed.** Two crossed 1-notch logs in PLA fit well at the current notch width. The three buildings above and the three [further down](#more-buildings) are checked in software for overlap, support and interlocking, but nobody has printed a whole building yet. Do the [fit test](#2-print-the-fit-test) on your own printer before printing a full set.
 
 ## The parts
 
@@ -42,7 +42,7 @@ Printers and filaments vary, so check the notch fit before printing a building. 
 
 Cross the two logs at their notches, then seat one in a half-log notch. A log should seat fully and lift out freely, without rattling.
 
-- **Too tight or too loose:** the notches have 0.2 mm clearance per side. Change it in 0.05 mm steps with `--clearance` (see [Regenerating the files](#regenerating-the-files)) or the `Clearance` parameter in the [Fusion design](fusion/README.md).
+- **Too tight or too loose:** a notch is 18.65 mm wide and the part that sits in it is 18.25 mm wide, which leaves 0.2 mm clearance per side. In a PLA test print this seated fully with a small amount of play. Change the clearance in 0.05 mm steps with `--clearance` (see [Regenerating the files](#regenerating-the-files)) or the `Clearance` parameter in the [Fusion design](fusion/README.md).
 - **PETG:** start at 0.3 mm.
 
 ### 3. Slice
@@ -173,8 +173,8 @@ This rewrites all three `stl/` sets and checks that every mesh is watertight and
 
 | Option | Default | Meaning |
 |---|---|---|
-| `--clearance` | `0.2` | Notch clearance per side, in mm |
-| `--flat` | `0.8` | Depth of the flat that round logs print on, in mm |
+| `--clearance` | `0.2` | Gap on each side between a notch and the part sitting in it, in mm |
+| `--flat` | `0.8` | Depth of the flat that round logs print on, in mm. The parts that sit in notches are narrower by this much (18.25 mm), and the notches follow |
 | `--finish` | `all` | `all`, `smooth`, `woodgrain` or `rounded_woodgrain` |
 | `--out` | `stl` | Parent folder for the sets |
 
@@ -198,7 +198,8 @@ The other scripts:
 ## Status
 
 - **Checked in software:** in all six buildings no parts overlap, every part is supported, and every wall log is locked by its notches. Results are in [VERIFY.md](VERIFY.md) and [VERIFY_smooth.md](VERIFY_smooth.md). The rounded-end logs share the standard notch layout but aren't checked separately.
-- **Not checked:** real-world fit. Nothing has been printed.
+- **Test-printed:** the notch fit only. Pairs of 1-notch logs were printed in PLA with notches from 18.65 to 19.65 mm wide; 18.65 mm fit best and is now the default.
+- **Not checked:** everything else in the real world. No half log, gable, shingle, chimney or whole building has been printed.
 
 If you print these, the most useful things to report are:
 
