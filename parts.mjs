@@ -263,20 +263,25 @@ const ROUNDED_LOGS = [
 
 // set: 'standard' (every part, smooth or wood grain) or 'rounded' (only the notched logs, all with rounded ends)
 export function makeParts({ clearance = 0.2, flat = 0.8, texture = true, set = 'standard' } = {}) {
-  // Every part that sits in a notch is MATE wide there: the round logs are, because of their printing flat, and the
+  // Every part that sits in a notch is MATE wide there: the round logs are, because of their flats, and the
   // octagonal log, half logs and gables are trimmed to match. The notch is that width plus the clearance on each side.
+  // `flat` is the total width taken off the log, split into an equal flat on each side: the bed side and the side
+  // opposite it, so the log lies on the bed the same way it would stand on the other flat.
   // (Fit-tested in PLA: an 18.65 mm notch round an 18.25 mm log, 0.2 mm per side, seats fully with slight play.)
   const MATE = D - flat, notchW = MATE + 2 * clearance;
-  const yf = -R + flat, yShift = -flat / 2; // logs are placed so the mating width is centred on the log's nominal axis
+  const yf = -R + flat / 2, yTop = R - flat / 2; // the two flats, in the section frame (bed flat at yf)
+  const yShift = 0; // the flats are symmetric about the log's axis, so nothing to shift
   const withCuts = (P) => insertLine(insertLine(P, 1, h), 1, -h);
+  const bothFlats = (P) => clipPoly(clipPoly(P, 0, yf, true), 0, yTop, false);
   const NC = 144; // facets round a log: 0.4 mm apart, with vertices exactly on the notch-floor lines (30 deg)
-  const onFlat = (a, b) => a[0] <= yf + 1e-6 && b[0] <= yf + 1e-6, onBottom = (a, b) => a[1] <= -h + 1e-6 && b[1] <= -h + 1e-6;
-  const roundBase = subdivide(withCuts(clipPoly(circle(NC, R), 0, yf, true)), onFlat);       // round log with a printing flat on one side
-  const octBase = subdivide(withCuts(clipPoly(octagon(D), 0, yf, true)), () => true);       // flats top, bottom and sides; the face it prints on is cut to the same depth as the round logs' flat
-  const halfBase = subdivide(insertLine(clipPoly(clipPoly(circle(NC, R), 0, yf, true), 1, -h, true), 1, h), (a, b) => onBottom(a, b) || onFlat(a, b)); // flat bottom at the bottom-notch floor; side flat like the round logs, so it fits a notch
+  const onFlat = (a, b) => (a[0] <= yf + 1e-6 && b[0] <= yf + 1e-6) || (a[0] >= yTop - 1e-6 && b[0] >= yTop - 1e-6), onBottom = (a, b) => a[1] <= -h + 1e-6 && b[1] <= -h + 1e-6;
+  const roundBase = subdivide(withCuts(bothFlats(circle(NC, R))), onFlat);       // round log with an equal flat on each side
+  const octBase = subdivide(withCuts(bothFlats(octagon(D))), () => true);       // flats top, bottom and sides; the two side flats are cut to the same depth as the round logs' flats
+  const halfBase = subdivide(insertLine(clipPoly(bothFlats(circle(NC, R)), 1, -h, true), 1, h), (a, b) => onBottom(a, b) || onFlat(a, b)); // flat bottom at the bottom-notch floor; equal side flats like the round logs, so it fits a notch
   // wood texture: grain on the outside, rings on the ends; the face on the print bed stays smooth
   const tex = (name, smooth) => (texture ? texFor(name, smooth) : null);
-  const roundSmooth = (p) => p[0] <= yf + 1e-6, octSmooth = roundSmooth, halfSmooth = (p) => p[1] <= -h + 1e-6 || p[0] <= yf + 1e-6;
+  const sideFlat = (p) => p[0] <= yf + 1e-6 || p[0] >= yTop - 1e-6;
+  const roundSmooth = sideFlat, octSmooth = roundSmooth, halfSmooth = (p) => p[1] <= -h + 1e-6 || sideFlat(p);
   const centersFor = (L, n) => Array.from({ length: n }, (_, k) => L / 2 + (k - (n - 1) / 2) * CENTERS);
   const parts = {};
   const add = (name, info, model, toPrint) => { parts[name] = { name, info, model, print: model.map((t) => t.map(toPrint)) }; };

@@ -16,7 +16,7 @@ Every part in `parts.mjs` as an editable, parametric Autodesk Fusion design. The
 
 - **One component per part**, named like the STL (`log_3insert_7-5_8`, `chimney` ...). The timeline has one group per part.
 - **Every size is a user parameter** (Modify > Change Parameters). Sketch dimensions and feature distances are expressions of those parameters, and every sketch is fully constrained.
-- **Each body is in its printing orientation**, sitting on Z = 0: round logs on their printing flat with notches sideways, half logs flat side down, gables and shingles flat, solid logs standing, the chimney upside down.
+- **Each body is in its printing orientation**, sitting on Z = 0: round logs on their two equal flats with notches sideways, half logs flat side down, gables and shingles flat, solid logs standing, the chimney upside down.
 
 ## Shared parameters
 
@@ -28,7 +28,7 @@ Change one and every part follows.
 | `NotchDepth` | 0.1875 in | Notch depth, each side |
 | `NotchCenters` | 3 in | Spacing between notch centres |
 | `Clearance` | 0.2 mm | Fit clearance per side (try 0.3 mm for PETG) |
-| `PrintFlat` | 0.8 mm | Depth of the flat a round log prints on |
+| `PrintFlat` | 0.8 mm | Total width taken off a round log, split into an equal 0.4 mm flat on each side. The bed side is one of them. (The `.f3d` exports still show the earlier one-sided flat) |
 | `MateWidth` | `LogDia - PrintFlat` | Width of a log, half log or gable where it sits in a notch (18.25 mm) |
 | `NotchWidth` | `MateWidth + 2 * Clearance` | Notch width (18.65 mm) |
 | `CourseRise` | `LogDia - 2 * NotchDepth` | Height gained per crossing course |

@@ -62,7 +62,7 @@ How each part sits on the bed:
 
 | Part | Orientation in the STL |
 |---|---|
-| Round logs, beveled end | Lying on a 0.8 mm flat along one side, notches facing sideways |
+| Round logs, beveled end | Lying on a 0.4 mm flat on the bed side, with an equal flat on the opposite side, notches facing sideways |
 | Octagonal log | Lying on one of its faces |
 | Half logs | Flat side down, notches up |
 | Solid logs | Standing on end |
@@ -174,7 +174,7 @@ This rewrites all three `stl/` sets and checks that every mesh is watertight and
 | Option | Default | Meaning |
 |---|---|---|
 | `--clearance` | `0.2` | Gap on each side between a notch and the part sitting in it, in mm |
-| `--flat` | `0.8` | Depth of the flat that round logs print on, in mm. The parts that sit in notches are narrower by this much (18.25 mm), and the notches follow |
+| `--flat` | `0.8` | Total width taken off round logs, in mm, split into an equal flat on each side (0.4 mm each). The bed side is one of the two. The parts that sit in notches are narrower by this much (18.25 mm), and the notches follow |
 | `--finish` | `all` | `all`, `smooth`, `woodgrain` or `rounded_woodgrain` |
 | `--out` | `stl` | Parent folder for the sets |
 
