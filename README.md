@@ -43,7 +43,7 @@ The files are in five folders under `stl/`. A building needs the roof parts plus
 
 ### Log sets
 
-Four finishes of the same 11 logs: six notched logs, two half logs, a beveled end and two solid logs. Choose one.
+Four finishes of the same 11 logs: six notched logs, two half logs, a beveled end and two solid logs. Choose one. Each set also has the longest log as [two shorter halves](#the-two-piece-4-notch-log).
 
 | Set | Folder | Shape | Ends | Surface | Looks like |
 |---|---|---|---|---|:---:|
@@ -55,6 +55,21 @@ Four finishes of the same 11 logs: six notched logs, two half logs, a beveled en
 - **The sets mix.** Every log is 18.25 mm wide where it sits in a notch, whichever set it comes from.
 - **The grain doesn't change the fit.** It is cut into the surface, never raised.
 - **File names match across sets.** Ball-end files add `_rounded` and octagonal files add `_oct`; the parts lists below use the plain names. One exception: `log_1insert_1-1_2_round` is `log_1insert_1-1_2_oct` in the octagonal set.
+
+### The two-piece 4-notch log
+
+The 270 mm log does not fit a 256 mm bed, so every log set also has it as two halves of 138 mm, `log_4insert_10-5_8_split_tongue` and `log_4insert_10-5_8_split_groove`. Print one of each in place of one whole log. They have not been test-printed yet.
+
+![The two halves lying as they print: joined, and moved apart to show the dovetail](images/examples/split_log_joint.png)
+
+- **The joint is a dovetail,** the joint of a hewn-log cabin corner, turned to join two logs end to end. A tail on one half, wider at its tip than at its neck, sits in a matching socket in the other. It is halfway between the two middle notches, so all four notches stay where they are on the whole log.
+- **It prints upright.** The dovetail is cut straight through the log from one printing flat to the other, so on the bed every face of it is a vertical wall. No supports.
+- **It goes together sideways.** Slide the tail into the socket across the log, not endways. Once the log is in a wall, the dovetail stops the halves pulling apart and the logs crossing in the notches stop them sliding sideways.
+- **The fit is loose:** 0.3 mm of clearance on each face. Change it with `--splice-clearance` (see [Regenerating the files](#regenerating-the-files)).
+
+**Longer logs.** `log_extender_1insert_3` goes between the two halves: its socket takes the tongue half's tail, and its tail goes into the groove half. Each extender adds one notch and 3 in, so one makes a 5-notch log of 13 5/8 in (346 mm), two a 6-notch log of 16 5/8 in, and so on. The notches stay on 3 in centres.
+
+![The two halves with one extender between them: joined, and moved apart](images/examples/split_log_extender.png)
 
 ## How to print
 
@@ -102,7 +117,7 @@ How each part sits on the bed:
 | Gables, shingles, door, window | Flat on a face |
 | Chimney | Upside down: open top on the bed, V-cut facing up |
 
-**Bed size.** Two parts are longer than a 256 mm bed: `log_4insert_10-5_8` (270 mm) and `shingle_flat_11` (279 mm). Turn them diagonally, or use a larger printer. The next longest parts are the 9 in shingles (229 mm) and the 3-notch log (194 mm).
+**Bed size.** Two parts are longer than a 256 mm bed: `log_4insert_10-5_8` (270 mm) and `shingle_flat_11` (279 mm). Turn them diagonally, or use a larger printer. The log also comes as [two halves](#the-two-piece-4-notch-log) of 138 mm. The next longest parts are the 9 in shingles (229 mm) and the 3-notch log (194 mm).
 
 **Ball-end logs.** The last 1.5 mm of each end lifts slightly off the bed, a small overhang that is meant to print without supports.
 
