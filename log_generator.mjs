@@ -4,8 +4,9 @@
 //   smooth/              the logs, plain
 //   flat_end_round/      the logs with wood grain and growth rings in their flat ends
 //   flat_end_octagonal/  the logs with an octagonal section, wood grain and flat ends
-//   ball_end_round/      the notched logs only, with rounded ends and wood grain
-// Each log folder also gets the 4-notch log as two halves that join with a dovetail (--splice-clearance: gap per face).
+//   ball_end_round/      the logs with rounded ends and wood grain
+// Each log folder also gets the 4-notch log as two halves that join with a dovetail, and an extender for them
+// (--splice-clearance: gap per face).
 // Usage: node log_generator.mjs [--clearance 0.2] [--flat 0.8] [--splice-clearance 0.3] [--set all|<folder>] [--out stl]
 import fs from 'node:fs';
 import path from 'node:path';

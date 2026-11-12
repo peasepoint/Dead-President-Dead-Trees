@@ -19,7 +19,7 @@
 
 ## Quick start
 
-1. **Pick a log set.** There are [four finishes](#log-sets) of the same 11 logs. Every building also uses the [roof parts](#roof-parts).
+1. **Pick a log set.** There are [four finishes](#log-sets) of the same 10 logs. Every building also uses the [roof parts](#roof-parts).
 2. **Download** the repository (**Code > Download ZIP**), or single files from the [parts catalogue](PARTS.md).
 3. **Print the [fit test](#2-print-the-fit-test)**: three small parts that show whether the notches suit your printer.
 4. **Print a building** from the [parts list](#4-print-a-building). No rotation and no supports are needed.
@@ -43,14 +43,14 @@ The files are in five folders under `stl/`. A building needs the roof parts plus
 
 ### Log sets
 
-Four finishes of the same 11 logs: six notched logs, two half logs, a beveled end and two solid logs. Choose one. Each set also has the longest log as [two shorter halves](#the-two-piece-4-notch-log).
+Four finishes of the same 10 logs: five notched logs, two half logs, a beveled end and two solid logs. Choose one. Each set also has the longest log as [two shorter halves](#the-two-piece-4-notch-log).
 
 | Set | Folder | Shape | Ends | Surface | Looks like |
 |---|---|---|---|---|:---:|
 | [**Flat-End-Round**](PARTS.md#flat-end-round) | [`stl/flat_end_round/`](stl/flat_end_round) | Round | Flat, with growth rings | Wood grain | <img src="images/flat_end_round/log_2insert_4-1_2.gif" width="150" alt="Flat-end round log, rotating"> |
 | [**Ball-End-Round**](PARTS.md#ball-end-round) | [`stl/ball_end_round/`](stl/ball_end_round) | Round | Rounded | Wood grain | <img src="images/ball_end_round/log_2insert_4-1_2_rounded.gif" width="150" alt="Ball-end log, rotating"> |
 | [**Flat-End-Octagonal**](PARTS.md#flat-end-octagonal) | [`stl/flat_end_octagonal/`](stl/flat_end_octagonal) | Eight-sided | Flat, with growth rings | Wood grain | <img src="images/flat_end_octagonal/log_2insert_4-1_2_oct.gif" width="150" alt="Octagonal log, rotating"> |
-| [**Smooth**](PARTS.md#smooth) | [`stl/smooth/`](stl/smooth) | Round | Flat | Plain; small files | |
+| [**Smooth**](PARTS.md#smooth) | [`stl/smooth/`](stl/smooth) | Round | Flat | Plain; small files | <img src="images/smooth/log_2insert_4-1_2.gif" width="150" alt="Smooth log, rotating"> |
 
 - **The sets mix.** Every log is 18.25 mm wide where it sits in a notch, whichever set it comes from.
 - **The grain doesn't change the fit.** It is cut into the surface, never raised.
@@ -134,8 +134,7 @@ How many of each part the six [example buildings](#example-buildings) need. Logs
 | `log_3insert_7-5_8` | 3 | 8 | 8 | 9 | 14 | |
 | `log_2insert_4-1_2` | 3 | 6 | 6 | 3 | 8 | 21 |
 | `log_1insert_1-5_8` | 1 | | | 12 | 3 | 10 |
-| `log_1insert_1-1_2_round` | 1 | | | 2 | 3 | |
-| `log_1insert_1-1_2_octagonal` | 1 | | | 1 | 2 | |
+| `log_1insert_1-1_2_round` | 2 | | | 3 | 5 | |
 | `gable_plastic_8-1_2` | 2 | | | 2 | 2 | |
 | `gable_plastic_small_2notch` | | | 2 | | | |
 | `gable_wood_triangle_4x2` | | 2 | | | | 2 |
@@ -147,7 +146,7 @@ How many of each part the six [example buildings](#example-buildings) need. Logs
 | **Total** | **30** | **24** | **25** | **43** | **43** | **41** |
 
 - **Easiest first builds:** the shed, cottage and watchtower. Their longest part is 194 mm or less. The cabin and porch cabin need the 270 mm logs.
-- **The three 1-notch logs are interchangeable,** so any mix of them works.
+- **The 1-notch logs are interchangeable,** so any mix of them works.
 - **Colours close to the originals:** brown logs, orange stepped gables, a yellow chimney, and green, yellow, orange or red shingles.
 
 ### 5. Assemble
@@ -223,7 +222,7 @@ The other scripts:
 | `node make_gif.mjs` | Renders `cabin_build.gif` |
 | `node make_renders.mjs` | Renders the stills of the example buildings into `images/examples/` |
 | `node make_landscape_gif.mjs` | Renders `images/examples/cabin_landscape.gif` and a still of the same scene (takes a few minutes) |
-| `node make_part_images.mjs` | Renders a still and a rotating image of each part into `images/<set>/`. `--set <folder>` renders one set |
+| `node make_part_images.mjs` | Renders a still and a rotating image of each part into `images/<set>/`, for the roof parts and all four log sets. `--set <folder>` renders one set |
 
 ## Status
 
