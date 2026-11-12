@@ -269,8 +269,8 @@ function bevelMesh({ Ltop, base, phi, tex = null, chamfer = null }) {
 // ---------- the part catalogue ----------
 // Rounded ends (taken from the old 4 3/4 in "beveled end" log): [distance in from the end (mm), section scale]
 export const ROUNDED_ENDS = [[0, 0.6], [1.5, 0.82], [3.5, 0.95], [5, 1]];
-// set: 'standard' (every part: the 11 logs, smooth or wood grain, and the roof parts), or one of two logs-only sets
-// with the same 11 logs: 'rounded' (round, with rounded ends) or 'octagonal' (octagonal section, flat ends)
+// set: 'standard' (every part: the 10 logs, smooth or wood grain, and the roof parts), or one of two logs-only sets
+// with the same 10 logs: 'rounded' (round, with rounded ends) or 'octagonal' (octagonal section, flat ends)
 export function makeParts({ clearance = 0.2, flat = 0.8, texture = true, set = 'standard' } = {}) {
   const oct = set === 'octagonal', ball = set === 'rounded';
   const ends = ball ? ROUNDED_ENDS : null; // chamfer profile for every log end
@@ -309,14 +309,13 @@ export function makeParts({ clearance = 0.2, flat = 0.8, texture = true, set = '
 
   const log = (std, listing, Lin, n, opts = {}) => {
     const name = opts.name ?? std + sfx, L = Lin * IN, centers = centersFor(L, n);
-    const base = opts.oct ? octBase : logBase;
-    add(name, { listing: listing + O, length: L, centers, kind: 'log', note: opts.note, replaces: [std] }, centred(logMesh({ L, centers, base, notchW, chamfer: ends, tex: tex(name, opts.oct ? octSmooth : logSmooth) })), logPrint);
+    add(name, { listing: listing + O, length: L, centers, kind: 'log', note: opts.note, replaces: [std] }, centred(logMesh({ L, centers, base: logBase, notchW, chamfer: ends, tex: tex(name, logSmooth) })), logPrint);
     parts[name].toModel = logModelFromPrint;
   };
   log('log_1insert_1-5_8', '1 Insert Log, 1 5/8', 1.625, 1);
   // in the octagonal set this one is octagonal too, so "round" is dropped from its name
   log('log_1insert_1-1_2_round', '1 Insert Log (Round), 1 1/2', 1.5, 1, oct ? { name: 'log_1insert_1-1_2_oct' } : {});
-  log('log_1insert_1-1_2_octagonal', '1 Insert Log (Hex), 1 1/2', 1.5, 1, { oct: true, note: 'listed as hex; photo shows flats top and bottom, modelled as an octagon so it stacks' });
+  // dropped: the listing's 1 1/2 in "hex" log, the same size as the round one (in the octagonal set, the same shape)
   log('log_2insert_4-1_2', '2 Insert Log, 4 1/2', 4.5, 2);
   log('log_3insert_7-5_8', '3 Insert Log, 7 3/4', 7.625, 3, { note: 'sheet says 7 3/4; photo measures about 7.6 and the length rule (3 in centres, 7/16 in shoulders, PARTS_SPEC.md) gives 7 5/8' });
   log('log_4insert_10-5_8', '4 Insert Log, 10 5/8', 10.625, 4);

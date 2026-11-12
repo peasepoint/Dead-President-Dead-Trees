@@ -139,7 +139,7 @@ export function buildings(P) {
       if (c % 2) { cabin.push(yLog('log_4insert_10-5_8', c, 0, 0, 0, q(c)), yLog('log_4insert_10-5_8', c, WID, 0, 0, q(c))); continue; }
       // front wall: doorway in the left bay on courses 2 and 4 (short logs at the corner, 2-insert across the right bay)
       if (c === 2 || c === 4) {
-        cabin.push(xLog(c === 2 ? 'log_1insert_1-1_2_octagonal' : 'log_1insert_1-1_2_round', c, front, 0, 0, q(c)), xLog('log_2insert_4-1_2', c, front, CENTERS, 0, q(c)));
+        cabin.push(xLog('log_1insert_1-1_2_round', c, front, 0, 0, q(c)), xLog('log_2insert_4-1_2', c, front, CENTERS, 0, q(c)));
       } else cabin.push(xLog('log_3insert_7-5_8', c, front, 0, 0, q(c)));
       // back wall: window in the left bay on course 4
       if (c === 4) cabin.push(xLog('log_1insert_1-5_8', c, back, 0, 0, q(c)), xLog('log_2insert_4-1_2', c, back, CENTERS, 0, q(c)));
@@ -196,7 +196,7 @@ export function buildings(P) {
       }
       porch.push(xLog(POST, c, sill, 0), xLog(POST, c, sill, WID));
       // room front: doorway in the left bay on courses 2 and 4
-      if (c === 2 || c === 4) porch.push(xLog(c === 2 ? 'log_1insert_1-1_2_octagonal' : 'log_1insert_1-1_2_round', c, front, 0), xLog('log_2insert_4-1_2', c, front, CENTERS));
+      if (c === 2 || c === 4) porch.push(xLog('log_1insert_1-1_2_round', c, front, 0), xLog('log_2insert_4-1_2', c, front, CENTERS));
       else porch.push(xLog('log_3insert_7-5_8', c, front, 0));
       // back: window in the right bay on course 4
       if (c === 4) porch.push(xLog('log_2insert_4-1_2', c, back, 0), xLog('log_1insert_1-1_2_round', c, back, WID));
@@ -213,7 +213,8 @@ export function buildings(P) {
   const house = [];
   {
     const WID = 2 * CENTERS, LEN = 2 * CENTERS, K = 12, front = 0, back = LEN;
-    const ONE = ['log_1insert_1-5_8', 'log_1insert_1-1_2_round', 'log_1insert_1-1_2_octagonal'], TWO = 'log_2insert_4-1_2', THREE = 'log_3insert_7-5_8';
+    // the 1-notch logs in turn: one 1 5/8 in, then two 1 1/2 in
+    const ONE = ['log_1insert_1-5_8', 'log_1insert_1-1_2_round', 'log_1insert_1-1_2_round'], TWO = 'log_2insert_4-1_2', THREE = 'log_3insert_7-5_8';
     let n1 = 0;
     const one = () => ONE[n1++ % 3];
     house.push(xLog('half_log_7-1_2', 0, front, 0), xLog('half_log_7-1_2', 0, back, 0));

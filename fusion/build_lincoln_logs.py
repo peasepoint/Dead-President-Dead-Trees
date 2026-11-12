@@ -3,10 +3,10 @@
 # Run it from Fusion: Utilities > Add-Ins > Scripts and Add-Ins > "+" > pick this folder > Run.
 # It opens a new design and builds the set named by PART_SET below:
 #   'roof_parts'          gables, shingles, chimney, door and window (stl/roof_parts/)
-#   'smooth'              the 11 logs, round, plain (stl/smooth/)
-#   'flat_end_round'      the 11 logs, round, flat ends, plus their wood-grain meshes (stl/flat_end_round/)
-#   'flat_end_octagonal'  the 11 logs, octagonal, flat ends, plus their wood-grain meshes (stl/flat_end_octagonal/)
-#   'ball_end_round'      the 11 logs, round, rounded ends, plus their wood-grain meshes (stl/ball_end_round/)
+#   'smooth'              the 10 logs, round, plain (stl/smooth/)
+#   'flat_end_round'      the 10 logs, round, flat ends, plus their wood-grain meshes (stl/flat_end_round/)
+#   'flat_end_octagonal'  the 10 logs, octagonal, flat ends, plus their wood-grain meshes (stl/flat_end_octagonal/)
+#   'ball_end_round'      the 10 logs, round, rounded ends, plus their wood-grain meshes (stl/ball_end_round/)
 #
 # How a design is organised (see fusion/README.md for the full parameter list):
 #   - Shared sizes (LogDia, NotchDepth, NotchCenters, Clearance ...) are user parameters.
@@ -52,13 +52,12 @@ ROOF_PARAMS = [
     ('PanelThk', '0.125 in', 'mm', 'Door and window panel thickness'),
 ]
 
-# The 11 logs, the same in every log set. code, base name, length, notches, kind, section
+# The 10 logs, the same in every log set. code, base name, length, notches, kind, section
 # kind: 'log' (notched, lying), 'half' (lying, notches on top), 'bevel' (lying, one end cut on a slant), 'solid' (standing)
-# section: 'set' takes the set's section (round or octagonal); 'oct' is octagonal in every set (the listing's hex log)
+# section: 'set' takes the set's section (round or octagonal); 'oct' is octagonal in every set
 LOGS = [
     ('L1a', 'log_1insert_1-5_8', '1.625 in', 1, 'log', 'set'),
     ('L1b', 'log_1insert_1-1_2_round', '1.5 in', 1, 'log', 'set'),
-    ('L1oct', 'log_1insert_1-1_2_octagonal', '1.5 in', 1, 'log', 'oct'),
     ('L2', 'log_2insert_4-1_2', '4.5 in', 2, 'log', 'set'),
     ('L3', 'log_3insert_7-5_8', '7.625 in', 3, 'log', 'set'),
     ('L4', 'log_4insert_10-5_8', '10.625 in', 4, 'log', 'set'),
@@ -90,7 +89,7 @@ RIDGE_SHINGLES = [('ShRidge5', 'shingle_ridge_5-5_8', '5.625 in'), ('ShRidge6', 
 LAYOUT = {
     'log_4insert_10-5_8': (0, 0), 'log_3insert_7-5_8': (0, 3.5), 'half_log_7-1_2': (0, 7), 'log_2insert_4-1_2': (0, 10.5),
     'half_log_4-1_2': (0, 14), 'log_1insert_1-5_8': (0, 17.5), 'log_1insert_1-1_2_round': (6, 17.5),
-    'log_1insert_1-1_2_octagonal': (12, 17.5), 'beveled_end_1-1_2': (18, 17.5),
+    'beveled_end_1-1_2': (12, 17.5),
     'solid_log_1-3_8': (1, 21.5), 'solid_log_1-5_8': (5, 21.5),
     'shingle_flat_11': (32, 0), 'shingle_flat_9': (32, 3.5), 'shingle_flat_6': (32, 7),
     'shingle_ridge_9': (32, 11), 'shingle_ridge_6': (32, 15), 'shingle_ridge_5-5_8': (48, 15),
