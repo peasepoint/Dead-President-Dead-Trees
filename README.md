@@ -55,10 +55,14 @@ Load the STLs as they are: no rotation and no supports.
 |---|---|
 | Nozzle | 0.4 mm |
 | Layer height | 0.2 mm. Use 0.12 to 0.16 mm to show the wood grain better |
-| Walls | 3 or more |
-| Infill | 20 to 30% |
+| Walls | 2 |
+| Infill | 10%, gyroid |
+| Top shell layers | 4 |
+| Bottom shell layers | 3 |
 | Supports | None |
 | Material | PLA. For PETG, use 0.3 mm clearance (step 2) |
+
+These are the settings of the [log style sample plate](sample_print/README.md), a ready-made Bambu Studio project with two of each log style. They are chosen to save filament and have been sliced but not yet printed. For sturdier parts use 3 walls and 20 to 30% infill, which is what the notch fit test was printed with.
 
 How each part sits on the bed:
 

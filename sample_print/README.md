@@ -1,6 +1,37 @@
-# Log sample plate (P2S)
+# Sample plates (P2S)
 
-`log_sample_p2s.3mf` is a Bambu Studio project for a Bambu Lab P2S, 0.4 mm nozzle, Bambu PLA Basic, Cool Plate. It uses the same settings as the notch fit test: 0.2 mm layers, 3 walls, 25% infill, no slicer supports. Bambu Studio's CLI estimates about 3 h 28 min and about 105 g.
+Two Bambu Studio projects for a Bambu Lab P2S, 0.4 mm nozzle, Bambu PLA Basic, Cool Plate.
+
+## Log style reference sample
+
+`log_styles_p2s.3mf` prints two of each kind of log from every log set, to compare the four styles side by side and to cross the pairs at their notches. It holds 16 parts on one plate, all in their STL orientation: logs lying on their flats, half logs flat side down. Nothing stands on end and nothing needs support.
+
+![Plate preview](log_styles_preview.png)
+
+Rows run from the back of the bed to the front, two parts in each:
+
+| Rows | Part | Sets, in order |
+|---|---|---|
+| 1 to 4 | `log_2insert_4-1_2` (2 notches, 4 1/2 in) | Ball-End-Round, Flat-End-Round, Flat-End-Octagonal, Smooth |
+| 5 to 8 | `half_log_4-1_2` (4 1/2 in) | Ball-End-Round, Flat-End-Round, Flat-End-Octagonal, Smooth |
+
+The print settings are chosen to save filament:
+
+| Setting | Value |
+|---|---|
+| Layer height | 0.2 mm |
+| Walls | 2 |
+| Infill | 10%, gyroid |
+| Top shell layers | 4 |
+| Bottom shell layers | 3 |
+| Supports | None |
+| Brim | Auto |
+
+Bambu Studio's CLI estimates about 5 h 19 min and about 166 g. With the fit test's 3 walls, 25% grid infill and 5 top layers the same plate comes to about 6 h and about 246 g. The plate has been sliced but not yet printed.
+
+## Standing and lying comparison (earlier)
+
+`log_sample_p2s.3mf` is the earlier sample that compared logs printed standing on end with logs printed lying down. Standing logs have since been dropped, so use it only for reference. It has the same settings as the notch fit test: 0.2 mm layers, 3 walls, 25% infill, no slicer supports. Bambu Studio's CLI estimates about 3 h 28 min and about 105 g.
 
 ![Plate preview](plate_preview.png)
 
