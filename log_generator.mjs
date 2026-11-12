@@ -1,7 +1,11 @@
 // Writes every part in parts.mjs as binary STL, in printing orientation, and checks each mesh.
-// Three sets are written: <out>/smooth (plain logs) and <out>/woodgrain (logs with grain and end rings) are complete
-// sets that differ only in the logs; <out>/rounded_woodgrain holds only the notched logs, with rounded ends and wood grain.
-// Usage: node log_generator.mjs [--clearance 0.2] [--flat 0.8] [--finish all|smooth|woodgrain|rounded_woodgrain] [--out stl]
+// Five folders are written under <out>:
+//   roof_parts/          gables, shingles, chimney, door and window: the same for every log set
+//   smooth/              the logs, plain
+//   flat_end_round/      the logs with wood grain and growth rings in their flat ends
+//   flat_end_octagonal/  the logs with an octagonal section, wood grain and flat ends
+//   ball_end_round/      the notched logs only, with rounded ends and wood grain
+// Usage: node log_generator.mjs [--clearance 0.2] [--flat 0.8] [--set all|<folder>] [--out stl]
 import fs from 'node:fs';
 import path from 'node:path';
 import { makeParts } from './parts.mjs';
@@ -9,9 +13,20 @@ import { makeParts } from './parts.mjs';
 const args = Object.fromEntries(process.argv.slice(2).reduce((a, v, i, arr) => (v.startsWith('--') ? [...a, [v.slice(2), arr[i + 1]]] : a), []));
 const opts = { clearance: +(args.clearance ?? 0.2), flat: +(args.flat ?? 0.8) };
 const outRoot = args.out ?? 'stl';
-const FINISHES = { smooth: { texture: false }, woodgrain: { texture: true }, rounded_woodgrain: { texture: true, set: 'rounded' } }; // folder name -> makeParts options
-const finish = args.finish === 'both' ? 'all' : args.finish ?? 'all'; // 'both' kept as an alias from when there were two sets
-if (finish !== 'all' && !(finish in FINISHES)) { console.error(`--finish must be all, smooth, woodgrain or rounded_woodgrain (got ${finish})`); process.exit(2); }
+const LOG_KINDS = ['log', 'half', 'bevel', 'solid'];
+const isLog = (p) => LOG_KINDS.includes(p.info.kind);
+// folder name -> makeParts options and which of the parts it gets
+export const SETS = {
+  roof_parts: { make: { texture: false }, keep: (p) => !isLog(p) },
+  smooth: { make: { texture: false }, keep: isLog },
+  flat_end_round: { make: { texture: true }, keep: isLog },
+  flat_end_octagonal: { make: { texture: true, set: 'octagonal' }, keep: isLog },
+  ball_end_round: { make: { texture: true, set: 'rounded' }, keep: isLog },
+};
+const ALIASES = { woodgrain: 'flat_end_round', rounded_woodgrain: 'ball_end_round', octagonal: 'flat_end_octagonal', roof: 'roof_parts', both: 'all' }; // older names
+const pick = args.set ?? args.finish ?? 'all';
+const only = ALIASES[pick] ?? pick;
+if (only !== 'all' && !(only in SETS)) { console.error(`--set must be all or one of ${Object.keys(SETS).join(', ')} (got ${pick})`); process.exit(2); }
 
 export function checkMesh(t) {
   const key = (v) => v.map((n) => n.toFixed(5)).join(',');
@@ -46,13 +61,13 @@ function writeSTL(file, t) {
 if (import.meta.url === `file://${process.argv[1]}`) {
   console.log('options (mm):', JSON.stringify(opts));
   let bad = 0;
-  for (const [name, setOpts] of Object.entries(FINISHES)) {
-    if (finish !== 'all' && finish !== name) continue;
-    const parts = makeParts({ ...opts, ...setOpts }), outDir = path.join(outRoot, name);
+  for (const [name, set] of Object.entries(SETS)) {
+    if (only !== 'all' && only !== name) continue;
+    const parts = Object.values(makeParts({ ...opts, ...set.make })).filter(set.keep), outDir = path.join(outRoot, name);
     fs.mkdirSync(outDir, { recursive: true });
     for (const f of fs.readdirSync(outDir)) if (f.endsWith('.stl')) fs.unlinkSync(path.join(outDir, f));
     console.log(`\n${outDir}/`);
-    for (const p of Object.values(parts)) {
+    for (const p of parts) {
       const { open, vol, lo, size } = checkMesh(p.print);
       if (open || vol <= 0 || Math.abs(lo[2]) > 1e-6) bad++;
       writeSTL(path.join(outDir, `${p.name}.stl`), p.print);

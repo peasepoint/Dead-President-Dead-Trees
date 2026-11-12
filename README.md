@@ -12,26 +12,28 @@ Every STL is in millimetres and already lies in its printing orientation.
 
 | Logs | Half logs | Gables | Shingles | Chimney |
 |:---:|:---:|:---:|:---:|:---:|
-| <img src="images/log_3insert_7-5_8.png" width="150" alt="3-notch log"> | <img src="images/half_log_7-1_2.png" width="150" alt="Half log"> | <img src="images/gable_plastic_8-1_2.png" width="150" alt="Large plastic-style gable"> | <img src="images/shingle_ridge_9.png" width="150" alt="Ridge shingle"> | <img src="images/chimney.png" width="150" alt="Chimney"> |
+| <img src="images/flat_end_round/log_3insert_7-5_8.png" width="150" alt="3-notch log"> | <img src="images/flat_end_round/half_log_7-1_2.png" width="150" alt="Half log"> | <img src="images/roof_parts/gable_plastic_8-1_2.png" width="150" alt="Large plastic-style gable"> | <img src="images/roof_parts/shingle_ridge_9.png" width="150" alt="Ridge shingle"> | <img src="images/roof_parts/chimney.png" width="150" alt="Chimney"> |
 | 1 to 4 notches, 1 1/2 to 10 5/8 in | 4 1/2 and 7 1/2 in; the base course | Two stepped sizes and a plain triangle | Flat and ridge, 5 5/8 to 11 in | Sits astride the roof ridge |
 
 Also included: two solid logs, a short beveled end, and a door and window of my own design (not copies of an original). Pictures and measurements of every part are in [DESIGN_NOTES.md](DESIGN_NOTES.md#every-part).
 
-The files come in three sets:
+The files are in five folders under `stl/`: one of roof parts that every building uses, and four sets of logs to choose from.
 
 | Folder | Contents | Looks like |
 |---|---|:---:|
-| [`stl/smooth/`](stl/smooth) | All 23 parts, plain logs. Small files (about 1 MB in total) | |
-| [`stl/woodgrain/`](stl/woodgrain) | The same 23 parts, with grain along the logs and growth rings on their ends (about 15 MB in total) | <img src="images/log_2insert_4-1_2.gif" width="150" alt="Wood-grain log, rotating"> |
-| [`stl/rounded_woodgrain/`](stl/rounded_woodgrain) | The 7 notched logs only, with rounded ends and wood grain | <img src="images/rounded/log_2insert_4-3_4_rounded.gif" width="150" alt="Rounded-end log, rotating"> |
+| [`stl/roof_parts/`](stl/roof_parts) | **Roof Parts.** The 3 gables, 6 shingles and chimney, plus the door and window (12 parts). Smooth; the same whichever logs you print | <img src="images/roof_parts/gable_plastic_8-1_2.gif" width="150" alt="Plastic-style gable, rotating"> |
+| [`stl/ball_end_round/`](stl/ball_end_round) | **Ball-End-Round.** The 11 logs with rounded ends and wood grain (was `rounded_woodgrain`) | <img src="images/ball_end_round/log_2insert_4-1_2_rounded.gif" width="150" alt="Ball-end log, rotating"> |
+| [`stl/flat_end_round/`](stl/flat_end_round) | **Flat-End-Round.** The 11 logs with grain along them and growth rings on their flat ends (was `woodgrain`) | <img src="images/flat_end_round/log_2insert_4-1_2.gif" width="150" alt="Flat-end round log, rotating"> |
+| [`stl/flat_end_octagonal/`](stl/flat_end_octagonal) | **Flat-End-Octagonal.** The 11 logs with an eight-sided section, wood grain and flat ends | <img src="images/flat_end_octagonal/log_2insert_4-1_2_oct.gif" width="150" alt="Octagonal log, rotating"> |
+| [`stl/smooth/`](stl/smooth) | **Smooth.** The 11 logs, plain. Small files | |
 
-All three sets fit together and can be mixed in one building. The grain is cut into the surface, never raised, so sizes and notch fit don't change. Only the 11 logs differ between `smooth` and `woodgrain`; the gables, shingles, chimney, door and window are the same files in both.
+To print a building, take what you need from `roof_parts` and the logs from one set. Every log set has the same 11 logs, named after the flat-end round ones with `_rounded` or `_oct` added; in the octagonal set the plain 1 1/2 in log is `log_1insert_1-1_2_oct`. All four log sets are 18.25 mm wide where they sit in a notch, so they can be mixed in one building. The grain is cut into the surface, never raised, so sizes and notch fit don't change.
 
 ## How to print
 
 ### 1. Get the files
 
-On GitHub, choose **Code > Download ZIP** and unzip it, or clone the repository. You only need the `stl/` folder. Pick one of the three sets above.
+On GitHub, choose **Code > Download ZIP** and unzip it, or clone the repository. You only need the `stl/` folder: `roof_parts` plus one of the four log sets above.
 
 ### 2. Print the fit test
 
@@ -63,7 +65,7 @@ How each part sits on the bed:
 | Part | Orientation in the STL |
 |---|---|
 | Round logs, beveled end | Lying on a 0.4 mm flat on the bed side, with an equal flat on the opposite side, notches facing sideways |
-| Octagonal log | Lying on one of its faces |
+| Octagonal logs | Lying on one of their faces, which is cut to the same 0.4 mm flat as the round logs |
 | Half logs | Flat side down, notches up |
 | Solid logs | Standing on end |
 | Gables, shingles, door, window | Flat on a face |
@@ -71,11 +73,11 @@ How each part sits on the bed:
 
 **Bed size.** Two parts are longer than a 256 mm bed: `log_4insert_10-5_8` (270 mm) and `shingle_flat_11` (279 mm). Turn them diagonally, or use a larger printer. The next longest parts are the 9 in shingles (229 mm) and the 3-notch log (194 mm).
 
-**Rounded-end logs.** The last 1.5 mm of each end lifts slightly off the bed, a small overhang that is meant to print without supports.
+**Ball-end logs.** The last 1.5 mm of each end lifts slightly off the bed, a small overhang that is meant to print without supports. The ball-end half logs are rounded over the top and sides only, so their flat side stays on the bed.
 
 ### 4. Print a building
 
-Quantities for the three buildings in the animation:
+Quantities for the three buildings in the animation. Every part starting `gable`, `shingle` or `chimney` is in `roof_parts`; the logs come from your log set.
 
 | Part | Cabin (6 x 9 in) | Shed (3 x 6 in) | Cottage (3 x 6 in) |
 |---|:---:|:---:|:---:|
@@ -155,9 +157,9 @@ The logs in these pictures are the exact STL geometry. The colours are a suggest
 
 ## Editing the parts
 
-**In Fusion.** [`fusion/`](fusion) holds the parts as Autodesk Fusion designs, with every size a named parameter. See [fusion/README.md](fusion/README.md).
+**In Fusion.** [`fusion/`](fusion) holds one Autodesk Fusion design per folder in `stl/`, with every size a named parameter. See [fusion/README.md](fusion/README.md).
 
-![The parts laid out in Fusion](fusion/layout.png)
+![The octagonal logs laid out in Fusion](fusion/layout_flat_end_octagonal.png)
 
 **In code.** All geometry is defined in `parts.mjs`.
 
@@ -169,14 +171,14 @@ Requires [Node.js](https://nodejs.org); there is nothing to install. From this f
 node log_generator.mjs
 ```
 
-This rewrites all three `stl/` sets and checks that every mesh is watertight and sits on the bed. Options:
+This rewrites all five `stl/` folders and checks that every mesh is watertight and sits on the bed. Options:
 
 | Option | Default | Meaning |
 |---|---|---|
 | `--clearance` | `0.2` | Gap on each side between a notch and the part sitting in it, in mm |
 | `--flat` | `0.8` | Total width taken off round logs, in mm, split into an equal flat on each side (0.4 mm each). The bed side is one of the two. The parts that sit in notches are narrower by this much (18.25 mm), and the notches follow |
-| `--finish` | `all` | `all`, `smooth`, `woodgrain` or `rounded_woodgrain` |
-| `--out` | `stl` | Parent folder for the sets |
+| `--set` | `all` | `all`, or one folder: `roof_parts`, `ball_end_round`, `flat_end_round`, `flat_end_octagonal` or `smooth` |
+| `--out` | `stl` | Parent folder for the five folders |
 
 For example, for PETG:
 
@@ -188,18 +190,18 @@ The other scripts:
 
 | Command | What it does |
 |---|---|
-| `node verify.mjs` | Checks the six buildings with wood-grain logs and writes `VERIFY.md`. Exits non-zero if parts overlap or a part is unsupported |
-| `node verify.mjs --finish smooth` | The same with smooth logs; writes `VERIFY_smooth.md` |
+| `node verify.mjs` | Checks the six buildings with flat-end round logs and writes `VERIFY_flat_end_round.md`. Exits non-zero if parts overlap or a part is unsupported |
+| `node verify.mjs --set <set>` | The same with `ball_end_round`, `flat_end_octagonal` or `smooth` logs; writes `VERIFY_<set>.md` |
 | `node make_gif.mjs` | Renders `cabin_build.gif` |
 | `node make_renders.mjs` | Renders the stills of the example buildings into `images/examples/` |
 | `node make_landscape_gif.mjs` | Renders `images/examples/cabin_landscape.gif` and a still of the same scene (takes a few minutes) |
-| `node make_part_images.mjs` | Renders a still and a rotating image of each part into `images/` |
+| `node make_part_images.mjs` | Renders a still and a rotating image of each part into `images/<set>/`. `--set <folder>` renders one set |
 
 ## Status
 
-- **Checked in software:** in all six buildings no parts overlap, every part is supported, and every wall log is locked by its notches. Results are in [VERIFY.md](VERIFY.md) and [VERIFY_smooth.md](VERIFY_smooth.md). The rounded-end logs share the standard notch layout but aren't checked separately.
+- **Checked in software:** in all six buildings no parts overlap, every part is supported, and every wall log is locked by its notches, with each of the four log sets. Results are in `VERIFY_<set>.md`: [flat-end round](VERIFY_flat_end_round.md), [ball-end round](VERIFY_ball_end_round.md), [flat-end octagonal](VERIFY_flat_end_octagonal.md), [smooth](VERIFY_smooth.md).
 - **Test-printed:** the notch fit only. Pairs of 1-notch logs were printed in PLA with notches from 18.65 to 19.65 mm wide; 18.65 mm fit best and is now the default.
-- **Not checked:** everything else in the real world. No half log, gable, shingle, chimney or whole building has been printed.
+- **Not checked:** everything else in the real world. No octagonal or ball-end log, half log, gable, shingle, chimney or whole building has been printed.
 
 If you print these, the most useful things to report are:
 
@@ -215,7 +217,7 @@ If you print these, the most useful things to report are:
 | [fusion/README.md](fusion/README.md) | The Fusion designs and their parameters |
 | [PARTS_SPEC.md](PARTS_SPEC.md) | Catalog of the pieces sold commercially, with dimensions and confidence |
 | [RESEARCH.md](RESEARCH.md) | Sources: existing models, original dimensions, printing tolerances |
-| [VERIFY.md](VERIFY.md), [VERIFY_smooth.md](VERIFY_smooth.md) | Per-part verification results (generated) |
+| `VERIFY_<set>.md` | Per-part verification results for each log set (generated) |
 
 ## Legal
 
