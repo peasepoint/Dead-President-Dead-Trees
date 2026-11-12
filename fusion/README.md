@@ -1,54 +1,68 @@
-# Fusion design
+# Fusion designs
 
-Every part in `parts.mjs` as an editable, parametric Autodesk Fusion design. The three files match the three STL sets: smooth (`stl/smooth/`), wood grain (`stl/woodgrain/`) and the rounded-end logs (`stl/rounded_woodgrain/`). To print without Fusion, use the STLs; see the [main README](../README.md#how-to-print).
+Every part in `parts.mjs` as an editable, parametric Autodesk Fusion design: one design per folder in `stl/`. To print without Fusion, use the STLs; see the [main README](../README.md#how-to-print).
 
 | File | What it is |
 |---|---|
-| `DeadPresidentTreeSections.f3d` | Smooth version: the parametric design, exported from the Fusion document of the same name. In Fusion: File > Open > Open from my computer |
-| `DeadPresidentTreeSections_woodgrain.f3d` | Wood-grain version: a copy of the design with the textured log meshes from `stl/woodgrain/` added (see "Wood-grain copy" below) |
-| `DeadPresidentTreeSections_rounded_woodgrain.f3d` | Rounded-end logs only: the 7 notched logs with rounded ends, as parametric solids plus the textured meshes from `stl/rounded_woodgrain/` (see "Rounded-end logs" below) |
-| `build_lincoln_logs.py` | The script that built the parametric solids. Run it to rebuild from scratch: Utilities > Add-Ins > Scripts and Add-Ins > + > pick this folder. Set `PART_SET = 'rounded'` at the top to build the rounded-end logs instead |
-| `layout.png`, `layout_rounded.png` | Pictures of the two layouts |
+| `DeadPresidentTreeSections_roof_parts.f3d` | Gables, shingles, chimney, door and window (`stl/roof_parts/`) |
+| `DeadPresidentTreeSections_smooth.f3d` | The 11 logs, round and plain (`stl/smooth/`) |
+| `DeadPresidentTreeSections_flat_end_round.f3d` | The 11 logs, round, flat ends, with their wood-grain meshes (`stl/flat_end_round/`) |
+| `DeadPresidentTreeSections_flat_end_octagonal.f3d` | The 11 logs, octagonal, flat ends, with their wood-grain meshes (`stl/flat_end_octagonal/`) |
+| `DeadPresidentTreeSections_ball_end_round.f3d` | The 11 logs, round, rounded ends, with their wood-grain meshes (`stl/ball_end_round/`) |
+| `build_lincoln_logs.py` | The script that built them. To rebuild one, set `PART_SET` at the top to the folder name, then in Fusion: Utilities > Add-Ins > Scripts and Add-Ins > + > pick this folder > Run. For a wood-grain set it reads the meshes from `../stl/<set>/` |
+| `layout_<set>.png` | A picture of each design |
 
-![All 23 parts laid out in Fusion](layout.png)
+Open a design in Fusion with File > Open > Open from my computer.
+
+![The octagonal log set in Fusion](layout_flat_end_octagonal.png)
 
 ## How it is organised
 
-- **One component per part**, named like the STL (`log_3insert_7-5_8`, `chimney` ...). The timeline has one group per part.
+- **One component per part**, named like the STL (`log_3insert_7-5_8_oct`, `chimney` ...). The timeline has one group per part.
 - **Every size is a user parameter** (Modify > Change Parameters). Sketch dimensions and feature distances are expressions of those parameters, and every sketch is fully constrained.
-- **Each body is in its printing orientation**, sitting on Z = 0: round logs on their two equal flats with notches sideways, half logs flat side down, gables and shingles flat, solid logs standing, the chimney upside down.
+- **Each body sits exactly where its STL does**, in printing orientation on Z = 0: notched logs and the beveled end lying along X on one of their two equal flats, notches facing sideways (+/-Y); half logs flat side down; solid logs standing; gables and shingles flat; the chimney upside down. So a body and its STL line up when both are shown.
+- **The four log designs hold the same 11 logs** with the same part codes, so a parameter means the same thing in each.
+
+## What is parametric and what is a mesh
+
+The parametric solids are the plain shapes: round or octagonal sections, the two flats, square notches, the slanted end, and (in the ball-end set) rounded ends. The wood grain and the growth rings on the ends are only in the STLs.
+
+So in the three wood-grain designs each log component also holds its STL as a mesh body, named `<part>_woodgrain`. The mesh is visible and the parametric solid is hidden; turn on a body's eye icon to see it. The meshes don't follow parameter changes: after changing a size, regenerate the STLs with `node log_generator.mjs` and rebuild the design with the script, or re-insert the mesh (Insert > Insert Mesh).
+
+The smooth design has no meshes; its solids match `stl/smooth/`. To print from Fusion, right-click a body (or a wood-grain mesh body) > Save As Mesh.
 
 ## Shared parameters
 
-Change one and every part follows.
+Change one and every part in the design follows.
 
 | Parameter | Default | Meaning |
 |---|---|---|
-| `LogDia` | 0.75 in | Log diameter |
+| `LogDia` | 0.75 in | Log diameter; across the flats for an octagonal log |
 | `NotchDepth` | 0.1875 in | Notch depth, each side |
 | `NotchCenters` | 3 in | Spacing between notch centres |
 | `Clearance` | 0.2 mm | Fit clearance per side (try 0.3 mm for PETG) |
-| `PrintFlat` | 0.8 mm | Total width taken off a round log, split into an equal 0.4 mm flat on each side. The bed side is one of them. (The `.f3d` exports still show the earlier one-sided flat) |
+| `PrintFlat` | 0.8 mm | Total width taken off a log, as an equal 0.4 mm flat on each side; the bed side is one of them |
 | `MateWidth` | `LogDia - PrintFlat` | Width of a log, half log or gable where it sits in a notch (18.25 mm) |
 | `NotchWidth` | `MateWidth + 2 * Clearance` | Notch width (18.65 mm) |
 | `CourseRise` | `LogDia - 2 * NotchDepth` | Height gained per crossing course |
 | `HalfLogHeight` | `LogDia - NotchDepth` | Half-log height |
-| `GableThk` | `MateWidth` | Gable thickness |
-| `ShingleThk`, `FlatShingleWidth`, `RidgeShingleWidth` | 0.125, 0.8, 1.125 in | Shingle sizes |
-| `RidgeGrooveWidth`, `RidgeGrooveDepth` | 1.6, 0.8 mm | Ridge shingle groove |
-| `PanelThk` | 0.125 in | Door and window thickness |
-| `PlasticRoofAngle` | from the large gable (27.1 deg) | The small gable's height and the chimney's V follow it |
+| `EndRadius` | 4 mm | Radius of the rounded ends (ball-end design only) |
+| `GableThk` | `MateWidth` | Gable thickness (roof design) |
+| `ShingleThk`, `FlatShingleWidth`, `RidgeShingleWidth` | 0.125, 0.8, 1.125 in | Shingle sizes (roof design) |
+| `RidgeGrooveWidth`, `RidgeGrooveDepth` | 1.6, 0.8 mm | Ridge shingle groove (roof design) |
+| `PanelThk` | 0.125 in | Door and window thickness (roof design) |
+| `PlasticRoofAngle` | from the large gable (27.1 deg) | The small gable's height and the chimney's V follow it (roof design) |
 
 ## Per-part parameters
 
 Each part's parameters start with its code.
 
-| Code | Component | Main parameters |
+| Code | Part (base name) | Main parameters |
 |---|---|---|
-| `L1a`, `L1b`, `L1oct` | `log_1insert_1-5_8`, `log_1insert_1-1_2_round`, `log_1insert_1-1_2_octagonal` | `_Length`, `_Notches` |
-| `L2a`, `L3`, `L4` | `log_2insert_4-1_2`, `log_3insert_7-5_8`, `log_4insert_10-5_8` | `_Length`, `_Notches` |
-| `BevShort` | `beveled_end_1-1_2` | `_Length`, `_Angle` |
+| `L1a`, `L1b`, `L1oct` | `log_1insert_1-5_8`, `log_1insert_1-1_2_round` (`log_1insert_1-1_2_oct` in the octagonal set), `log_1insert_1-1_2_octagonal` | `_Length`, `_Notches` |
+| `L2`, `L3`, `L4` | `log_2insert_4-1_2`, `log_3insert_7-5_8`, `log_4insert_10-5_8` | `_Length`, `_Notches` |
 | `Half2`, `Half3` | `half_log_4-1_2`, `half_log_7-1_2` | `_Length`, `_Notches` |
+| `Bev` | `beveled_end_1-1_2` | `_Length`, `_Angle` |
 | `Solid1`, `Solid2` | `solid_log_1-3_8`, `solid_log_1-5_8` | `_Length` |
 | `GableL`, `GableS` | `gable_plastic_8-1_2`, `gable_plastic_small_2notch` | `_Width`, `_Height`, `_Steps`, `_Notches`, `_EaveHeight`, `_LipThk`, `_LipHeight`, `_Riser` |
 | `GableTri` | `gable_wood_triangle_4x2` | `_Width`, `_Height`, `_Notches` |
@@ -63,36 +77,22 @@ Notes:
 - `_NotchStep` exists because Fusion cannot pattern a single copy. The notch pattern always makes at least two; with one notch the step drops to 0.001 mm so the second copy lands on the first.
 - `GableS_Height` is an expression that keeps the large gable's pitch. Type a number over it to set the height directly.
 
-## Wood-grain copy
+## How the shapes are modelled
 
-`DeadPresidentTreeSections_woodgrain.f3d` is the same design with one mesh body added to each of the 11 log components (notched logs, half logs, beveled pieces, solid logs), named `<part>_woodgrain`. Each mesh is the textured STL from `stl/woodgrain/`, sitting exactly where the smooth solid is.
+- **Round log:** a `LogDia` circle centred `LogDia / 2 - PrintFlat / 2` above the bed, extruded along X, with everything below Z = 0 and above `MateWidth` cut away: two equal flats.
+- **Octagon:** a `LogDia` square with its four long edges chamfered by `LogDia * (1 - sqrt(2) / 2)`, a regular octagon `LogDia` across the flats, then cut to the same two flats. The 1 1/2 in "hex" log is this octagon in every set.
+- **Notches:** everything beyond the notch floors (`|Y| > LogDia / 2 - NotchDepth`) is cut away over `NotchWidth` round each notch centre, giving square walls, and the cut is patterned along the log.
+- **Half log:** the section centred `HalfLogHeight - LogDia / 2` above the bed, cut flat at Z = 0 and to `MateWidth` across, with notches in the top.
+- **Rounded ends:** a fillet of `EndRadius` on the end edges, made before the flats are cut. On a half log the bottom edge is left sharp, so it stays flat on the bed; on the beveled end only the square end is rounded. The STLs use a three-step taper instead (`ROUNDED_ENDS` in `parts.mjs`), which removes a little more, so a ball-end solid is about 0.5 to 4.6% larger than its mesh.
 
-- The smooth parametric solids are still there, hidden. Turn on a body's eye icon to see it.
-- The meshes are imported, not parametric: changing `LogDia`, a `_Length` or any other parameter moves the solid but not the mesh. After a change, regenerate the STLs with `node log_generator.mjs` and re-insert the ones from `stl/woodgrain/` (Insert > Insert Mesh).
-- Gables, shingles, the chimney and the extras have no texture and are unchanged.
-- To print a textured log from here: right-click the mesh body > Save As Mesh. It is the same geometry as the file in `stl/woodgrain/`.
+## Checked against the STLs
 
-The grain itself is generated by `parts.mjs`; `build_lincoln_logs.py` builds only the smooth design.
+Each design was built with the script and every body's volume and bounding box compared with the same part from `parts.mjs`, without texture:
 
-## Rounded-end logs
-
-`DeadPresidentTreeSections_rounded_woodgrain.f3d` holds only the rounded-end set: one component per log, named like the STLs in `stl/rounded_woodgrain/` (`log_3insert_7-5_8_rounded` ...).
-
-![The seven rounded-end logs in Fusion](layout_rounded.png)
-
-- **Parametric solids**, hidden, built by `build_lincoln_logs.py` with `PART_SET = 'rounded'`. They use the shared log parameters (`LogDia`, `NotchDepth`, `NotchCenters`, `Clearance`, `PrintFlat`, `MateWidth`, `NotchWidth`, `CourseRise`), plus `EndRadius` (4 mm), which rounds the ends of every log at once. Per-log codes are `R1a`, `R1b`, `R1oct`, `R2a`, `R2c` (4 3/4 in), `R3` and `R4`, each with `_Length` and `_Notches`.
-- **Wood-grain meshes**, visible, named `<part>_woodgrain`: the STLs from `stl/rounded_woodgrain/`, sitting exactly where the solids are. As in the wood-grain copy, they don't follow parameter changes.
-- The solids round the ends with a 4 mm fillet; the meshes use the STLs' three-step taper (`ROUNDED_ENDS` in `parts.mjs`). So the solid and the mesh differ slightly at the very ends.
+- **Smooth and flat-end round:** volumes within 0.03% (the STLs are 144-sided, the solids true circles); bounding boxes the same.
+- **Octagonal:** volumes the same to the mm3; bounding boxes the same.
+- **Ball-end:** bounding boxes the same; volumes 0.5 to 4.6% larger, from the fillet described above.
 
 ## Making a new part
 
-Copy a component (right-click > Copy, then Paste New), or add an entry to the lists at the top of `build_lincoln_logs.py` (for example a 5-notch log: `('L5', 'log_5insert', '13.625 in', 5, 'round')`, plus a position in `LAYOUT`) and run the script again.
-
-## Printing
-
-Right-click a component's body > Save As Mesh (3MF or STL). Bodies are already oriented for the bed, so no rotation is needed in the slicer. Slicer settings are in the [main README](../README.md#3-slice).
-
-## Differences from the STLs in `stl/smooth/`
-
-Volumes and bounding boxes were compared with every STL. All match, with one expected difference:
-- Round parts are true cylinders here; the STLs are 144-sided, so the Fusion volumes are about 0.03% larger.
+Copy a component (right-click > Copy, then Paste New), or add an entry to `LOGS` at the top of `build_lincoln_logs.py` (for example a 5-notch log: `('L5', 'log_5insert_13-5_8', '13.625 in', 5, 'log', 'set')`, plus a position in `LAYOUT`) and run the script again.

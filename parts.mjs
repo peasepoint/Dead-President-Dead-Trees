@@ -187,17 +187,25 @@ function endCap(T, rim, xOf, inward, flip, ring) {
   for (let i = 0; i < n; i++) tri(c, outer[i], outer[(i + 1) % n]);
 }
 
+// section scale at distance d from an end, for a chamfer profile [[d, scale], ...] (last scale = 1)
+function endScale(st, d) {
+  if (!st || d >= st[st.length - 1][0]) return 1;
+  for (let i = 0; i < st.length - 1; i++) if (d <= st[i + 1][0]) return st[i][1] + ((d - st[i][0]) / (st[i + 1][0] - st[i][0])) * (st[i + 1][1] - st[i][1]);
+  return 1;
+}
+
 // ---------- notched log solid ----------
 // base: CCW cross-section (y, z) already containing exact vertices on z = +/-h.
 // tex (optional): { grain, rings: [end at 0, end at L], smooth(p) } from texFor
-function logMesh({ L, centers, base, notchW, top = true, bottom = true, chamfer = null, tex = null }) {
+// pivotZ: the section shrinks towards (0, pivotZ) at chamfered ends (a half log passes -h so its bottom stays flat)
+function logMesh({ L, centers, base, notchW, top = true, bottom = true, chamfer = null, tex = null, pivotZ = 0 }) {
   const idx = base.map((_, i) => i);
   const keep = idx.filter((i) => (!top || base[i][1] <= h + EPS) && (!bottom || base[i][1] >= -h - EPS));
   const caps = [];
   if (top) caps.push(arc(idx, (i) => base[i][1] >= h - EPS));
   if (bottom) caps.push(arc(idx, (i) => base[i][1] <= -h + EPS));
   const T = [];
-  const section = (x, s) => base.map((p) => { const q = displace(p, x, tex); return [x, q[0] * s, q[1] * s]; });
+  const section = (x, s) => base.map((p) => { const q = displace(p, x, tex); return [x, q[0] * s, s === 1 ? q[1] : pivotZ + (q[1] - pivotZ) * s]; });
   const skin = (A, B, sel) => { const n = sel.length; for (let i = 0; i < n; i++) { const u = sel[i], v = sel[(i + 1) % n]; T.push([A[u], A[v], B[v]], [A[u], B[v], B[u]]); } };
   const wall = (S, cap, flip) => { // notch wall: the part of the section above (below) the notch floor
     const pts = cap.map((i) => S[i]);
@@ -229,17 +237,28 @@ function logMesh({ L, centers, base, notchW, top = true, bottom = true, chamfer 
   return T;
 }
 // log with one end cut on a slant (top edge longest)
-function bevelMesh({ Ltop, base, phi, tex = null }) {
+// chamfer (optional): rounds the square end only, as logMesh does; the slanted end is left as cut
+function bevelMesh({ Ltop, base, phi, tex = null, chamfer = null }) {
   const zmax = Math.max(...base.map((p) => p[1]));
   const xe = (z) => Ltop - (zmax - z) / Math.tan(phi);
   const T = [], n = base.length;
   const end = base.map((p) => { const q = displace(p, xe(p[1]), tex); return [xe(q[1]), q[0], q[1]]; }); // on the slanted cut
-  const m = tex ? Math.ceil(Ltop / TEX.step) : 1;
-  const row = (j) => (j === m ? end : base.map((p, i) => { const x = (end[i][0] * j) / m, q = displace(p, x, tex); return [x, q[0], q[1]]; }));
-  let A = row(0);
+  // rows: with a chamfer, first at fixed x through the rounded end (x0 is well short of the slanted cut), then
+  // spread from x0 to the cut; without one, spread from 0 to the cut
+  let x0 = 0, fixed = [];
+  if (chamfer) {
+    x0 = chamfer[chamfer.length - 1][0];
+    fixed = chamfer.map(([d]) => d);
+    if (tex) fixed = fixed.flatMap((x, i) => { if (!i) return [x]; const a = fixed[i - 1], k = Math.ceil((x - a) / TEX.step); return Array.from({ length: k }, (_, j) => a + ((x - a) * (j + 1)) / k); });
+    fixed.pop(); // x0 itself is the first spread row
+  }
+  const m = tex ? Math.ceil((Ltop - x0) / TEX.step) : 1;
+  const at = (xi) => base.map((p, i) => { const x = xi(i), q = displace(p, x, tex), s = endScale(chamfer, x); return [x, q[0] * s, q[1] * s]; });
+  const rows = [...fixed.map((x) => at(() => x)), ...Array.from({ length: m + 1 }, (_, j) => (j === m ? end : at((i) => x0 + ((end[i][0] - x0) * j) / m)))];
+  let A = rows[0];
   endCap(T, A.map((p) => [p[1], p[2]]), () => 0, 1, true, tex?.rings[0]);
-  for (let j = 1; j <= m; j++) {
-    const B = row(j);
+  for (let j = 1; j < rows.length; j++) {
+    const B = rows[j];
     for (let i = 0; i < n; i++) { const k = (i + 1) % n; T.push([A[i], A[k], B[k]], [A[i], B[k], B[i]]); }
     A = B;
   }
@@ -250,19 +269,11 @@ function bevelMesh({ Ltop, base, phi, tex = null }) {
 // ---------- the part catalogue ----------
 // Rounded ends (taken from the old 4 3/4 in "beveled end" log): [distance in from the end (mm), section scale]
 export const ROUNDED_ENDS = [[0, 0.6], [1.5, 0.82], [3.5, 0.95], [5, 1]];
-// The notched logs that make up the rounded-end set: [name, listing, length (in), notches, options]
-const ROUNDED_LOGS = [
-  ['log_1insert_1-5_8_rounded', '1 Insert Log, 1 5/8 (rounded ends)', 1.625, 1],
-  ['log_1insert_1-1_2_round_rounded', '1 Insert Log (Round), 1 1/2 (rounded ends)', 1.5, 1],
-  ['log_1insert_1-1_2_octagonal_rounded', '1 Insert Log (Hex), 1 1/2 (rounded ends)', 1.5, 1, { oct: true }],
-  ['log_2insert_4-1_2_rounded', '2 Insert Log, 4 1/2 (rounded ends)', 4.5, 2],
-  ['log_2insert_4-3_4_rounded', 'Beveled End, 4 3/4 (the original rounded-end log)', 4.75, 2],
-  ['log_3insert_7-5_8_rounded', '3 Insert Log, 7 5/8 (rounded ends)', 7.625, 3],
-  ['log_4insert_10-5_8_rounded', '4 Insert Log, 10 5/8 (rounded ends)', 10.625, 4],
-];
-
-// set: 'standard' (every part, smooth or wood grain) or 'rounded' (only the notched logs, all with rounded ends)
+// set: 'standard' (every part: the 11 logs, smooth or wood grain, and the roof parts), or one of two logs-only sets
+// with the same 11 logs: 'rounded' (round, with rounded ends) or 'octagonal' (octagonal section, flat ends)
 export function makeParts({ clearance = 0.2, flat = 0.8, texture = true, set = 'standard' } = {}) {
+  const oct = set === 'octagonal', ball = set === 'rounded';
+  const ends = ball ? ROUNDED_ENDS : null; // chamfer profile for every log end
   // Every part that sits in a notch is MATE wide there: the round logs are, because of their flats, and the
   // octagonal log, half logs and gables are trimmed to match. The notch is that width plus the clearance on each side.
   // `flat` is the total width taken off the log, split into an equal flat on each side: the bed side and the side
@@ -277,11 +288,17 @@ export function makeParts({ clearance = 0.2, flat = 0.8, texture = true, set = '
   const onFlat = (a, b) => (a[0] <= yf + 1e-6 && b[0] <= yf + 1e-6) || (a[0] >= yTop - 1e-6 && b[0] >= yTop - 1e-6), onBottom = (a, b) => a[1] <= -h + 1e-6 && b[1] <= -h + 1e-6;
   const roundBase = subdivide(withCuts(bothFlats(circle(NC, R))), onFlat);       // round log with an equal flat on each side
   const octBase = subdivide(withCuts(bothFlats(octagon(D))), () => true);       // flats top, bottom and sides; the two side flats are cut to the same depth as the round logs' flats
-  const halfBase = subdivide(insertLine(clipPoly(bothFlats(circle(NC, R)), 1, -h, true), 1, h), (a, b) => onBottom(a, b) || onFlat(a, b)); // flat bottom at the bottom-notch floor; equal side flats like the round logs, so it fits a notch
+  // the octagonal set uses octBase for every log; its half logs are the same octagon cut at the bottom-notch floor
+  const halfBase = oct ? subdivide(insertLine(clipPoly(bothFlats(octagon(D)), 1, -h, true), 1, h), () => true)
+    : subdivide(insertLine(clipPoly(bothFlats(circle(NC, R)), 1, -h, true), 1, h), (a, b) => onBottom(a, b) || onFlat(a, b)); // flat bottom at the bottom-notch floor; equal side flats like the round logs, so it fits a notch
   // wood texture: grain on the outside, rings on the ends; the face on the print bed stays smooth
   const tex = (name, smooth) => (texture ? texFor(name, smooth) : null);
   const sideFlat = (p) => p[0] <= yf + 1e-6 || p[0] >= yTop - 1e-6;
   const roundSmooth = sideFlat, octSmooth = roundSmooth, halfSmooth = (p) => p[1] <= -h + 1e-6 || sideFlat(p);
+  const logBase = oct ? octBase : roundBase, logSmooth = oct ? octSmooth : roundSmooth;
+  // the logs-only sets reuse the standard names with a suffix; info.replaces names the standard part each stands in for
+  const sfx = oct ? '_oct' : ball ? '_rounded' : '';
+  const O = oct ? ' (octagonal)' : ball ? ' (rounded ends)' : '';
   const centersFor = (L, n) => Array.from({ length: n }, (_, k) => L / 2 + (k - (n - 1) / 2) * CENTERS);
   const parts = {};
   const add = (name, info, model, toPrint) => { parts[name] = { name, info, model, print: model.map((t) => t.map(toPrint)) }; };
@@ -290,43 +307,46 @@ export function makeParts({ clearance = 0.2, flat = 0.8, texture = true, set = '
   const logPrint = ([x, y, z]) => [x, -z, y - yBed];                             // lie on the side flat, notches sideways
   const logModelFromPrint = ([X, Y, Z]) => [X, Z + yBed, -Y];
 
-  const log = (name, listing, Lin, n, opts = {}) => {
-    const L = Lin * IN, centers = centersFor(L, n);
-    const base = opts.oct ? octBase : roundBase;
-    add(name, { listing, length: L, centers, kind: 'log', note: opts.note }, centred(logMesh({ L, centers, base, notchW, chamfer: opts.chamfer, tex: tex(name, opts.oct ? octSmooth : roundSmooth) })), logPrint);
+  const log = (std, listing, Lin, n, opts = {}) => {
+    const name = opts.name ?? std + sfx, L = Lin * IN, centers = centersFor(L, n);
+    const base = opts.oct ? octBase : logBase;
+    add(name, { listing: listing + O, length: L, centers, kind: 'log', note: opts.note, replaces: [std] }, centred(logMesh({ L, centers, base, notchW, chamfer: ends, tex: tex(name, opts.oct ? octSmooth : logSmooth) })), logPrint);
     parts[name].toModel = logModelFromPrint;
   };
-  if (set === 'rounded') {
-    for (const [name, listing, Lin, n, opts = {}] of ROUNDED_LOGS) log(name, listing, Lin, n, { ...opts, chamfer: ROUNDED_ENDS });
-    return parts;
-  }
   log('log_1insert_1-5_8', '1 Insert Log, 1 5/8', 1.625, 1);
-  log('log_1insert_1-1_2_round', '1 Insert Log (Round), 1 1/2', 1.5, 1);
+  // in the octagonal set this one is octagonal too, so "round" is dropped from its name
+  log('log_1insert_1-1_2_round', '1 Insert Log (Round), 1 1/2', 1.5, 1, oct ? { name: 'log_1insert_1-1_2_oct' } : {});
   log('log_1insert_1-1_2_octagonal', '1 Insert Log (Hex), 1 1/2', 1.5, 1, { oct: true, note: 'listed as hex; photo shows flats top and bottom, modelled as an octagon so it stacks' });
   log('log_2insert_4-1_2', '2 Insert Log, 4 1/2', 4.5, 2);
   log('log_3insert_7-5_8', '3 Insert Log, 7 3/4', 7.625, 3, { note: 'sheet says 7 3/4; photo measures about 7.6 and the length rule (3 in centres, 7/16 in shoulders, PARTS_SPEC.md) gives 7 5/8' });
   log('log_4insert_10-5_8', '4 Insert Log, 10 5/8', 10.625, 4);
-  // the 4 3/4 in rounded-end log is in the rounded set (ROUNDED_LOGS above); the 6 in 2-insert log was dropped
+  // dropped: the 6 in 2-insert log and the 4 3/4 in rounded-end log, whose shoulders don't follow the length rule
 
-  const half = (name, listing, Lin, n) => {
-    const L = Lin * IN, centers = centersFor(L, n);
-    add(name, { listing, length: L, centers, kind: 'half' }, centred(logMesh({ L, centers, base: halfBase, notchW, bottom: false, tex: tex(name, halfSmooth) })), ([x, y, z]) => [x, y - yShift, z + h]);
+  const half = (std, listing, Lin, n) => {
+    const name = std + sfx, L = Lin * IN, centers = centersFor(L, n);
+    // rounded ends shrink towards the bottom, so the flat side stays flat on the bed
+    add(name, { listing: listing + O, length: L, centers, kind: 'half', replaces: [std] }, centred(logMesh({ L, centers, base: halfBase, notchW, bottom: false, chamfer: ends, pivotZ: -h, tex: tex(name, halfSmooth) })), ([x, y, z]) => [x, y - yShift, z + h]);
     parts[name].toModel = ([X, Y, Z]) => [X, Y + yShift, Z - h];
   };
   half('half_log_4-1_2', 'Half Log, 4 1/2', 4.5, 2);
   half('half_log_7-1_2', 'Half Log, 7 1/2', 7.5, 3);
 
   // short log with one end cut at the roof angle of the wooden triangle (about 39 deg in the photos)
-  add('beveled_end_1-1_2', { listing: 'Beveled End, 1 1/2 x 1 1/4', kind: 'bevel', note: 'top edge 1 1/2 in, end cut at 39 deg; the listed "1 1/4" is not explained by the photos' },
-    centred(bevelMesh({ Ltop: 1.5 * IN, base: roundBase, phi: (39 * Math.PI) / 180, tex: tex('beveled_end_1-1_2', roundSmooth) })), logPrint);
-  parts['beveled_end_1-1_2'].toModel = logModelFromPrint;
+  const bev = 'beveled_end_1-1_2' + sfx; // the square end is the one rounded in the rounded set
+  add(bev, { listing: 'Beveled End, 1 1/2 x 1 1/4' + O, kind: 'bevel', replaces: ['beveled_end_1-1_2'], note: 'top edge 1 1/2 in, end cut at 39 deg; the listed "1 1/4" is not explained by the photos' },
+    centred(bevelMesh({ Ltop: 1.5 * IN, base: logBase, phi: (39 * Math.PI) / 180, chamfer: ends, tex: tex(bev, logSmooth) })), logPrint);
+  parts[bev].toModel = logModelFromPrint;
 
-  for (const [name, Lin, listing] of [['solid_log_1-3_8', 1.375, 'Solid Log, 1 3/8'], ['solid_log_1-5_8', 1.625, 'Solid Log, 1 5/8']]) {
-    // a plain cylinder standing on end: built along x like the other logs, then stood up
-    const m = logMesh({ L: Lin * IN, centers: [], base: circle(NC, R), notchW, top: false, bottom: false, tex: tex(name, null) }).map((t) => t.map(([x, y, z]) => [y + R, z + R, x]));
-    add(name, { listing, kind: 'solid' }, m, (p) => p);
+  // solid logs stand on end and sit in no notch, so they keep the full section: no side flats
+  const solidBase = oct ? subdivide(octagon(D), () => true) : circle(NC, R);
+  for (const [std, Lin, listing] of [['solid_log_1-3_8', 1.375, 'Solid Log, 1 3/8'], ['solid_log_1-5_8', 1.625, 'Solid Log, 1 5/8']]) {
+    // a plain cylinder (or octagonal prism) standing on end: built along x like the other logs, then stood up
+    const name = std + sfx;
+    const m = logMesh({ L: Lin * IN, centers: [], base: solidBase, notchW, top: false, bottom: false, chamfer: ends, tex: tex(name, null) }).map((t) => t.map(([x, y, z]) => [y + R, z + R, x]));
+    add(name, { listing: listing + O, kind: 'solid', replaces: [std] }, m, (p) => p);
     parts[name].toModel = (p) => p;
   }
+  if (oct || ball) return parts; // logs-only sets: the gables, shingles, chimney and extras are shared
 
   // ---- gables: profile in XY, thickness T along Z in the print frame; model = (X, T/2 - Z, Y)
   const T = MATE; // as wide as a log is where it sits in a notch, so a gable fills the crossing log's notch slot the way a log does (thickness not visible in photos)
