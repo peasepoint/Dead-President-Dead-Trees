@@ -1,7 +1,9 @@
-// Renders, for every listed part in parts.mjs, a still image (images/<name>.png) and a rotating GIF (images/<name>.gif).
-// The rounded-end logs go to images/rounded/<name>.png and .gif.
+// Renders, for every listed part in parts.mjs, a still image (<name>.png) and a rotating GIF (<name>.gif), into one
+// folder per set, named like the folders in stl/: images/roof_parts/, images/flat_end_round/, images/flat_end_octagonal/
+// and images/ball_end_round/. The smooth logs have no pictures of their own.
 // Parts are shown in their assembly orientation (logs lying along their length, gables upright).
-// Software rasteriser, PNG and GIF encoders; no dependencies beyond Node.  Usage: node make_part_images.mjs
+// Software rasteriser, PNG and GIF encoders; no dependencies beyond Node.
+// Usage: node make_part_images.mjs [--set all|roof_parts|flat_end_round|flat_end_octagonal|ball_end_round]
 import fs from 'node:fs';
 import zlib from 'node:zlib';
 import { makeParts } from './parts.mjs';
@@ -106,10 +108,19 @@ function gifEncoder(base) {
 }
 
 // ---------- per part ----------
-const jobs = [[OUT, makeParts()], [`${OUT}/rounded`, makeParts({ set: 'rounded' })]];
+const isLog = (p) => ['log', 'half', 'bevel', 'solid'].includes(p.info.kind);
+const SETS = {
+  roof_parts: () => Object.values(makeParts()).filter((p) => !isLog(p)),
+  flat_end_round: () => Object.values(makeParts()).filter(isLog),
+  flat_end_octagonal: () => Object.values(makeParts({ set: 'octagonal' })),
+  ball_end_round: () => Object.values(makeParts({ set: 'rounded' })),
+};
+const only = process.argv.includes('--set') ? process.argv[process.argv.indexOf('--set') + 1] : 'all';
+if (only !== 'all' && !(only in SETS)) { console.error(`--set must be all or one of ${Object.keys(SETS).join(', ')}`); process.exit(2); }
+const jobs = Object.entries(SETS).filter(([k]) => only === 'all' || k === only).map(([k, f]) => [`${OUT}/${k}`, f()]);
 for (const [dir, P] of jobs) {
 fs.mkdirSync(dir, { recursive: true });
-for (const p of Object.values(P)) {
+for (const p of P) {
   if (!p.info.listing) continue;
   const pts = p.model.flat();
   const lo = [0, 1, 2].map((i) => pts.reduce((m, v) => Math.min(m, v[i]), Infinity)), hi = [0, 1, 2].map((i) => pts.reduce((m, v) => Math.max(m, v[i]), -Infinity));
