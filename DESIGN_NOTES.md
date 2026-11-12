@@ -43,7 +43,7 @@ Where the seller's sheet gives a length, that figure is used. Where a photo and 
 
 ## The five sets
 
-One folder of roof parts that every building uses, and four log sets to choose between. Every log set has the same 11 logs, the same notch layout and the same 18.25 mm mating width, so the sets mix in one building and each one can build any of the test buildings.
+One folder of roof parts that every building uses, and four log sets to choose between. Every log set has the same 10 logs, the same notch layout and the same 18.25 mm mating width, so the sets mix in one building and each one can build any of the test buildings.
 
 | Folder | Contents | Built by |
 |---|---|---|
@@ -53,11 +53,11 @@ One folder of roof parts that every building uses, and four log sets to choose b
 | [`stl/flat_end_octagonal/`](stl/flat_end_octagonal) | Octagonal logs, wood grain, flat ends | `makeParts({ set: 'octagonal' })` |
 | [`stl/smooth/`](stl/smooth) | Round logs, plain, flat ends | `makeParts({ texture: false })` |
 
-"Logs" means the notched logs, half logs, beveled end and solid logs. The 1 1/2 in "hex" log is an octagon in every set. Two folders were renamed: `flat_end_round` was `woodgrain`, and `ball_end_round` was `rounded_woodgrain`.
+"Logs" means the notched logs, half logs, beveled end and solid logs. Two folders were renamed: `flat_end_round` was `woodgrain`, and `ball_end_round` was `rounded_woodgrain`.
 
 ### Flat-End-Round and Smooth
 
-The reference shapes. Both folders hold the same 11 logs under the same file names; Smooth leaves out the texture. The other two sets are variations on these.
+The reference shapes. Both folders hold the same 10 logs under the same file names; Smooth leaves out the texture. The other two sets are variations on these.
 
 ### Ball-End-Round
 
@@ -77,11 +77,11 @@ The standard logs with an eight-sided section. Each STL is named like its round 
 
 | Feature | Value |
 |---|---|
-| Section | The same octagon as the 1 1/2 in "hex" log: 3/4 in across the flats, with the two side faces cut 0.4 mm each, so it is 18.25 mm wide where it sits in a notch |
+| Section | A regular octagon, 3/4 in across the flats, with the two side faces cut 0.4 mm each, so it is 18.25 mm wide where it sits in a notch |
 | Printing | Lying on one of the cut side faces, notches facing sideways, as the round logs lie on their flat |
 | Fit | Notches, clearance and course rise are unchanged; the corners stay inside the round log's 3/4 in square |
 | Grain | Streaks on six faces; the two side faces stay smooth, like the round logs' flats |
-| 1 1/2 in logs | Both are octagonal here. `log_1insert_1-1_2_oct` takes the round one's place and `log_1insert_1-1_2_octagonal_oct` the hex one's. They are the same shape with different grain, which keeps the count at 11 |
+| 1 1/2 in log | Octagonal like the rest, so it is named `log_1insert_1-1_2_oct` rather than `..._round_oct` |
 | Half logs | The octagon cut at the bottom-notch floor, with the same side faces |
 | Solid logs | Octagonal prisms standing on end, a full 3/4 in across the flats (they sit in no notch) |
 
@@ -110,13 +110,13 @@ What each part was modelled from and where the sources disagree. Names are the F
 |---|---|---|---|
 | `log_1insert_1-5_8` | 1 Insert Log, 1 5/8 | Round, 1 notch | Photo measured 1.58 in |
 | `log_1insert_1-1_2_round` | 1 Insert Log (Round), 1 1/2 | Round, 1 notch | |
-| `log_1insert_1-1_2_octagonal` | 1 Insert Log (Hex), 1 1/2 | Octagon, 3/4 in across flats, 1 notch | Sold as hex. The end grain shows flats top and bottom; a true hexagon could not both stack and fit a 3/4 in notch |
 | `log_2insert_4-1_2` | 2 Insert Log, 4 1/2 | Round, 2 notches | Photo measured 4.57 in |
 | `log_3insert_7-5_8` | 3 Insert Log, 7 3/4 | Round, 3 notches, 7 5/8 in | The sheet says 7 3/4, but the photo measured about 7.6 in and the length rule in [`PARTS_SPEC.md`](PARTS_SPEC.md) gives 7 5/8, in line with the 1 5/8 and 10 5/8 in logs |
 | `log_4insert_10-5_8` | 4 Insert Log, 10 5/8 | Round, 4 notches | |
 | `half_log_4-1_2`, `half_log_7-1_2` | Half Log, 4 1/2 and 7 1/2 | Flat bottom at the bottom-notch floor (9/16 in tall), notches on top only | Photo: about 0.53 in tall |
 | `beveled_end_1-1_2` | Beveled End, 1 1/2 x 1 1/4 | 1 1/2 in log, one end cut at 39 deg | The angle is from the photos and matches the triangle gable. The "1 1/4" is not explained by the photos |
 | `solid_log_1-3_8`, `solid_log_1-5_8` | Solid Log, 1 3/8 and 1 5/8 | Plain 3/4 in cylinders | Purpose unknown; not used in the test buildings |
+| (dropped) | 1 Insert Log (Hex), 1 1/2 | Not included | The end grain shows flats top and bottom. It is the same size as the round 1 1/2 in log and does the same job, so the 1 1/2 in log covers it; the [Flat-End-Octagonal](#flat-end-octagonal) set gives octagonal logs of every length |
 
 ### Roof parts
 
@@ -151,6 +151,7 @@ Everything else agrees with the spec within its stated confidence. Known differe
 - **Half-log height** is 9/16 in against about 0.53 in measured, so the flat sits exactly at the notch floor. The difference is inside the photo error.
 - **Width across the notch faces.** The spec's 11/16 in (low confidence, from one compatible build) is not used. Logs stay 3/4 in round and are 18.25 mm wide where they sit in a notch.
 - **Two logs were dropped** because their shoulders don't follow the length rule: the 4 3/4 in rounded-end log (its ends live on in the ball-end set) and the 6 in 2-insert log.
+- **The 1 1/2 in "hex" log was dropped** because it duplicates the round 1 1/2 in log: same length, same notch, same job. The Flat-End-Octagonal set gives octagonal logs of every length instead.
 - **Spec pieces not modelled:** the 4-notch flat log, the 1916-1920s gable logs and one-piece roof, slats of 12, 9 3/4, 7 3/4, 4 and 3 in, slat clips, and the 1990s-on molded roofs, windows and doors (no dimensions exist).
 
 ## Test buildings

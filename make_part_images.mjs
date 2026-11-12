@@ -3,7 +3,7 @@
 // and images/ball_end_round/. The smooth logs have no pictures of their own.
 // Parts are shown in their assembly orientation (logs lying along their length, gables upright).
 // Software rasteriser, PNG and GIF encoders; no dependencies beyond Node.
-// Usage: node make_part_images.mjs [--set all|roof_parts|flat_end_round|flat_end_octagonal|ball_end_round]
+// Usage: node make_part_images.mjs [--set all|roof_parts|flat_end_round|smooth|flat_end_octagonal|ball_end_round]
 import fs from 'node:fs';
 import zlib from 'node:zlib';
 import { makeParts } from './parts.mjs';
@@ -112,6 +112,7 @@ const isLog = (p) => ['log', 'half', 'bevel', 'solid'].includes(p.info.kind);
 const SETS = {
   roof_parts: () => Object.values(makeParts()).filter((p) => !isLog(p)),
   flat_end_round: () => Object.values(makeParts()).filter(isLog),
+  smooth: () => Object.values(makeParts({ texture: false })).filter(isLog),
   flat_end_octagonal: () => Object.values(makeParts({ set: 'octagonal' })),
   ball_end_round: () => Object.values(makeParts({ set: 'rounded' })),
 };
