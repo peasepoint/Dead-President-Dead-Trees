@@ -232,7 +232,7 @@ If you print these, the most useful things to report are:
 | [DESIGN_NOTES.md](DESIGN_NOTES.md) | How each part was measured, what is assumed, the wood texture, and how the buildings are verified |
 | [fusion/README.md](fusion/README.md) | The Fusion designs and their parameters |
 | [fit_test/README.md](fit_test/README.md) | The notch fit test print and its result |
-| [sample_print/README.md](sample_print/README.md) | A sample plate comparing standing and lying logs |
+| [sample_print/README.md](sample_print/README.md) | The log style sample plate and its print settings, plus an earlier plate comparing standing and lying logs |
 | [PARTS_SPEC.md](PARTS_SPEC.md) | The pieces sold commercially since 1916, with dimensions and confidence |
 | [RESEARCH.md](RESEARCH.md) | Sources: existing models, original dimensions, printing tolerances |
 | Verification results | Per-part results for each log set (generated): [flat-end round](VERIFY_flat_end_round.md), [ball-end round](VERIFY_ball_end_round.md), [flat-end octagonal](VERIFY_flat_end_octagonal.md), [smooth](VERIFY_smooth.md) |
