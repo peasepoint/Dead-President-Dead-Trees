@@ -82,10 +82,14 @@ Load the STLs as they are: no rotation and no supports.
 |---|---|
 | Nozzle | 0.4 mm |
 | Layer height | 0.2 mm. Use 0.12 to 0.16 mm to show the wood grain better |
-| Walls | 3 or more |
-| Infill | 20 to 30% |
+| Walls | 2 |
+| Infill | 10%, gyroid |
+| Top shell layers | 4 |
+| Bottom shell layers | 3 |
 | Supports | None |
 | Material | PLA. For PETG, use 0.3 mm clearance (step 2) |
+
+These are the settings of the [log style sample plate](sample_print/README.md), a ready-made Bambu Studio project with two of each log style. They are chosen to save filament and have been sliced but not yet printed. For sturdier parts use 3 walls and 20 to 30% infill, which is what the notch fit test was printed with.
 
 How each part sits on the bed:
 
@@ -228,7 +232,7 @@ If you print these, the most useful things to report are:
 | [DESIGN_NOTES.md](DESIGN_NOTES.md) | How each part was measured, what is assumed, the wood texture, and how the buildings are verified |
 | [fusion/README.md](fusion/README.md) | The Fusion designs and their parameters |
 | [fit_test/README.md](fit_test/README.md) | The notch fit test print and its result |
-| [sample_print/README.md](sample_print/README.md) | A sample plate comparing standing and lying logs |
+| [sample_print/README.md](sample_print/README.md) | The log style sample plate and its print settings, plus an earlier plate comparing standing and lying logs |
 | [PARTS_SPEC.md](PARTS_SPEC.md) | The pieces sold commercially since 1916, with dimensions and confidence |
 | [RESEARCH.md](RESEARCH.md) | Sources: existing models, original dimensions, printing tolerances |
 | Verification results | Per-part results for each log set (generated): [flat-end round](VERIFY_flat_end_round.md), [ball-end round](VERIFY_ball_end_round.md), [flat-end octagonal](VERIFY_flat_end_octagonal.md), [smooth](VERIFY_smooth.md) |
