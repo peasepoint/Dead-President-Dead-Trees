@@ -185,6 +185,7 @@ Step-by-step instructions, slicer settings and part counts for each building are
 
 - **Printing flat:** round logs and the beveled end lie on a 0.4 mm flat on the bed side, with an equal flat on the opposite side, and their notches face sideways, so nothing overhangs and no supports are needed.
 - **Solid logs** print standing. The end on the bed has rings too; they are shallow enough to close over in the second layer.
+- **Standing round logs: tried and dropped.** Printing round logs on end saves bed space, but the notch walls then need support. The built-in break-away support combs did not remove cleanly or easily, and even with slicer-generated supports the notches lost quality. The bed space gained was not worth that, so round logs stay lying flat on the bed.
 - **Wood grain** needs no supports. Finer layers (0.12 to 0.16 mm) show the grain on top of the logs better. Textured log STLs are 1 to 2.5 MB each.
 - **Chimney:** the STL is upside down, open top on the bed and V facing up.
 - **Long parts:** the 4-insert log (270 mm) and the 11 in shingle (279 mm) need a large bed or a diagonal layout.
