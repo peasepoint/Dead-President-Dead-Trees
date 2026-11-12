@@ -5,13 +5,15 @@
 //   flat_end_round/      the logs with wood grain and growth rings in their flat ends
 //   flat_end_octagonal/  the logs with an octagonal section, wood grain and flat ends
 //   ball_end_round/      the logs with rounded ends and wood grain
-// Usage: node log_generator.mjs [--clearance 0.2] [--flat 0.8] [--set all|<folder>] [--out stl]
+// Each log folder also gets the 4-notch log as two halves that join with a dovetail, and an extender for them
+// (--splice-clearance: gap per face).
+// Usage: node log_generator.mjs [--clearance 0.2] [--flat 0.8] [--splice-clearance 0.3] [--set all|<folder>] [--out stl]
 import fs from 'node:fs';
 import path from 'node:path';
 import { makeParts } from './parts.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((a, v, i, arr) => (v.startsWith('--') ? [...a, [v.slice(2), arr[i + 1]]] : a), []));
-const opts = { clearance: +(args.clearance ?? 0.2), flat: +(args.flat ?? 0.8) };
+const opts = { clearance: +(args.clearance ?? 0.2), flat: +(args.flat ?? 0.8), spliceClearance: +(args['splice-clearance'] ?? 0.3) };
 const outRoot = args.out ?? 'stl';
 const LOG_KINDS = ['log', 'half', 'bevel', 'solid'];
 const isLog = (p) => LOG_KINDS.includes(p.info.kind);

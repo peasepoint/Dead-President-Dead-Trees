@@ -57,3 +57,15 @@ shot('tall_house_smooth', itemsFor(B.smooth.house, PALETTES.red), { az: -62, el:
   put(W.porch, PALETTES.classic, -230, -60, 4); put(W.cottage, PALETTES.red, 40, -70, 5); put(W.shed, PALETTES.forest, 230, -60, 6);
   shot('village_woodgrain', row, { az: -66, el: 24, dist: 1250, target: [60, 150, 55], fov: 30 }, { W: 1800, H: 1000, radius: 520, center: [60, 170, 60], aoR: 10, fogAt: 2000 });
 }
+// 7. the two-piece 10 5/8 in log and its dovetail splice, lying as the pieces print (on a side flat, notches sideways):
+// joined (behind) and moved apart (in front). The tail goes into the socket across the log, not endways.
+{
+  const P = makeParts({ texture: true }), a = P['log_4insert_10-5_8_split_tongue'], b = P['log_4insert_10-5_8_split_groove'];
+  const x0 = b.info.splice.x0, mid = x0 + b.info.splice.len / 2;
+  const at = (p, dx, dy) => ({ name: p.name, tris: p.print.map((t) => t.map(([x, y, z]) => [x + dx, y + dy, z])) });
+  const pair = (gap, dy) => [at(a, -gap / 2, dy), at(b, x0 + gap / 2, dy)];
+  shot('split_log_joint', itemsFor([...pair(0, 30), ...pair(16, 0)], PALETTES.classic, [0, 0, 0], 11), { az: -96, el: 62, dist: 120, target: [mid, 15, 9], fov: 30 }, { W: 1400, H: 700, radius: 160, aoR: 3 });
+  // the same halves with one extender between them: a 5-notch, 13 5/8 in log
+  const c = P.log_extender_1insert_3, step = 3 * IN, row = (gap, dy) => [at(a, -gap, dy), at(c, x0, dy), at(b, x0 + step + gap, dy)];
+  shot('split_log_extender', itemsFor([...row(0, 30), ...row(14, 0)], PALETTES.classic, [0, 0, 0], 11), { az: -93, el: 58, dist: 300, target: [x0 + step / 2, 15, 9], fov: 30 }, { W: 1600, H: 620, radius: 260, aoR: 3 });
+}

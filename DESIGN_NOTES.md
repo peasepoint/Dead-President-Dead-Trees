@@ -85,6 +85,26 @@ The standard logs with an eight-sided section. Each STL is named like its round 
 | Half logs | The octagon cut at the bottom-notch floor, with the same side faces |
 | Solid logs | Octagonal prisms standing on end, a full 3/4 in across the flats (they sit in no notch) |
 
+### The two-piece 4-notch log
+
+Every log set also holds `log_4insert_10-5_8` as two halves, `..._split_tongue` and `..._split_groove`, for beds shorter than 270 mm. Neither is in the reference lot. Nothing here has been printed.
+
+| Feature | Value | Reason |
+|---|---|---|
+| Position | Centred on the log, between the two middle notches | The four notches keep their places, and 25 mm of whole log is left between the joint and the nearest notch |
+| Shape | Dovetail: a tail on one half, a socket between two tines on the other | The joint of a hewn-log cabin corner. Unlike a plain tongue it stops the halves pulling apart |
+| Direction | Cut straight through from one printing flat to the other | A log prints lying on a flat, so every face of the joint is an upright wall and needs no support. In a wall the tail slides in from the side, and the tines above and below it keep the two halves level |
+| Tail | 1/4 in (6.35 mm) long, 4.0 mm at the neck, 7.0 mm at the tip | Sides slope 1 in 4 (14 degrees). A steeper slope gives less endways play for the same clearance |
+| Socket | 4.75 mm at the mouth, 7.8 mm at the floor | The tail plus 0.3 mm on each face |
+| Clearance | 0.3 mm on every face, and 0.3 mm between each half and the other's shoulder | Looser than the notches (0.2 mm). The halves can move about 1.2 mm apart before the dovetail takes up; in a wall the notches set the spacing |
+| Length of each half | 137.8 mm | Half the log plus half the tail, less the clearance |
+
+- **Bed contact.** On the round logs the socket's floor (7.8 mm) is wider than the printing flat (5.4 mm), so the inner 4.6 mm of each tine's edge lifts off the bed along the log's own curve, by up to 0.4 mm (two layers) at the socket floor. That is a short unsupported strip a slicer should bridge, but it is untested. The octagonal logs' flat is wide enough that the tines sit on the bed all the way.
+- **Strength.** The neck is 4.0 mm thick and the full 18.25 mm wide, with the layers running along it. It is the weakest point of the joined log.
+- **Grain.** The joint faces are smooth. The grain stops at the cut lines, so the texture does not change the fit.
+- **Extender.** `log_extender_1insert_3` has the same socket at one end and the same tail at the other, 3 in apart, with one notch between them. It goes between the two halves and adds 3 in, so every notch of the longer log stays on 3 in centres; several can be chained. It is 81.95 mm long. Each joint adds its own endways play (about 1.2 mm), and no building longer than the 4-notch log exists to use it yet.
+- **Not in the other files.** The Fusion designs and `verify.mjs` do not include the halves or the extender, and no example building uses them.
+
 ## Wood texture
 
 Three log sets carry a shallow wood grain, built into the mesh by `parts.mjs`: `flat_end_round`, `ball_end_round` and `flat_end_octagonal`. The roof parts are smooth.
