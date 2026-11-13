@@ -158,12 +158,16 @@ function subdivide(P, pred, maxLen = TEX.facet) {
 }
 // move one cross-section vertex inwards by the grain depth. Vertices on the notch-floor lines (and on tex.levels, the
 // heights a splice joint is cut at) slide sideways only, so those cuts stay flat and at their exact height.
+// tex.levelAxis = 0: the joint is cut upright instead, tex.levels are distances either side of the middle of the log,
+// and the vertices on them slide up and down only.
 function displace(p, x, tex) {
   if (!tex || (tex.smooth && tex.smooth(p))) return p;
   const d = tex.grain(Math.atan2(p[1], p[0]), x);
   if (!d) return p;
   const r = Math.hypot(p[0], p[1]);
-  if (Math.abs(Math.abs(p[1]) - h) < 1e-7 || tex.levels?.some((v) => Math.abs(Math.abs(p[1]) - v) < 1e-7)) return [p[0] - (Math.sign(p[0]) * d * r) / Math.abs(p[0]), p[1]];
+  const la = tex.levelAxis ?? 1, onLevel = tex.levels?.some((v) => Math.abs(Math.abs(p[la]) - v) < 1e-7);
+  if (onLevel && la === 0) return [p[0], p[1] - (Math.sign(p[1]) * d * r) / Math.abs(p[1])];
+  if (Math.abs(Math.abs(p[1]) - h) < 1e-7 || onLevel) return [p[0] - (Math.sign(p[0]) * d * r) / Math.abs(p[0]), p[1]];
   return [(p[0] * (r - d)) / r, (p[1] * (r - d)) / r];
 }
 // end face: loops of the rim shrunk towards the log axis, each vertex sunk by the ring depth.
@@ -226,28 +230,30 @@ function filletPath(P, radii, n = 8) {
 // the crown of the log there. The side flats are not moved, so the piece still lies flat on the bed.
 // base must then also contain exact vertices on z = +/-g for the first g of a tail's prof, and for the first, the
 // last and the smallest g of a socket's prof.
+// axis (optional, on a joint): 1 = as above, the default. 0 = the joint is cut straight down through the log instead
+// (along z), for a part that prints on its flat bottom: read y for z above, and the two pieces go together from above.
 function logMesh({ L, centers, base, notchW, top = true, bottom = true, chamfer = null, tex = null, pivotZ = 0, joints = [null, null] }) {
   const idx = base.map((_, i) => i);
-  const slice = (g) => idx.filter((i) => Math.abs(base[i][1]) <= g + EPS);                              // what is left between two cuts
-  const caps = (g, t = true, b = true) => [...(t ? [arc(idx, (i) => base[i][1] >= g - EPS)] : []), ...(b ? [arc(idx, (i) => base[i][1] <= -g + EPS)] : [])];
+  const slice = (g, ax = 1) => idx.filter((i) => Math.abs(base[i][ax]) <= g + EPS);                     // what is left between two cuts
+  const caps = (g, t = true, b = true, ax = 1) => [...(t ? [arc(idx, (i) => base[i][ax] >= g - EPS)] : []), ...(b ? [arc(idx, (i) => base[i][ax] <= -g + EPS)] : [])];
   // each kind of span: the loops of section vertices that are solid in it, and the loops that are cut away
   const full = { solid: [idx], cut: [] };
   const notch = { solid: [idx.filter((i) => (!top || base[i][1] <= h + EPS) && (!bottom || base[i][1] >= -h - EPS))], cut: caps(h, top, bottom) };
   const gs = (j) => j.prof.map((q) => q[1]);
-  const jointKind = (j) => (j.type === 'tongue' ? { solid: [slice(gs(j)[0])], cut: caps(gs(j)[0]), zOnly: true } : { solid: caps(Math.min(...gs(j))), cut: [slice(gs(j).at(-1))], socket: true });
-  // rounded rims: within r of the plane x = at, every vertex above the level zc sinks towards it, the crown by most
-  const zTop = Math.max(...base.map((p) => Math.abs(p[1]))), eases = [];
+  const jointKind = (j) => { const ax = j.axis ?? 1; return j.type === 'tongue' ? { solid: [slice(gs(j)[0], ax)], cut: caps(gs(j)[0], true, true, ax), tail: true, ax } : { solid: caps(Math.min(...gs(j)), true, true, ax), cut: [slice(gs(j).at(-1), ax)], socket: true, ax }; };
+  // rounded rims: within r of the plane x = at, every vertex beyond the level zc sinks towards it, the outermost by most
+  const eases = [];
   const eased = (x, q) => {
-    for (const { at, r, zc } of eases) {
-      const d = Math.abs(x - at), a = Math.abs(q[1]);
-      if (d < r && a > zc) return [q[0], Math.sign(q[1]) * (a - (r - Math.sqrt(r * r - (r - d) * (r - d))) * ((a - zc) / (zTop - zc)))];
+    for (const { at, r, zc, ax, top } of eases) {
+      const d = Math.abs(x - at), a = Math.abs(q[ax]);
+      if (d < r && a > zc) { const o = [...q]; o[ax] = Math.sign(q[ax]) * (a - (r - Math.sqrt(r * r - (r - d) * (r - d))) * ((a - zc) / (top - zc))); return o; }
     }
     return q;
   };
   // a tine at a point where the socket is g high: the vertices of its loop that the socket has cut away move to where
   // the cut crosses the log's outline (loops run CCW, so those vertices are at the two ends of the loop)
-  const trim = (S, loop, g) => {
-    const sg = Math.sign(base[loop[Math.floor(loop.length / 2)]][1]), zb = (i) => sg * base[i][1], kept = (i) => zb(i) >= g - EPS;
+  const trim = (S, loop, g, ax) => {
+    const sg = Math.sign(base[loop[Math.floor(loop.length / 2)]][ax]), zb = (i) => sg * base[i][ax], kept = (i) => zb(i) >= g - EPS;
     const k0 = loop.findIndex(kept), k1 = loop.length - 1 - [...loop].reverse().findIndex(kept);
     const cross = (i, o) => { const t = (g - zb(i)) / (zb(o) - zb(i)); return t > 1 - 1e-9 ? S[o] : S[i].map((v, k) => v + t * (S[o][k] - v)); };
     const a = k0 > 0 ? cross(loop[k0 - 1], loop[k0]) : null, b = k1 < loop.length - 1 ? cross(loop[k1 + 1], loop[k1]) : null;
@@ -256,8 +262,9 @@ function logMesh({ L, centers, base, notchW, top = true, bottom = true, chamfer 
   const T = [];
   // s: the section's scale (in z only for a tail, which widens towards its tip), or for a socket its half-height there
   const section = (x, s, kind) => {
-    if (kind.socket) { const S = base.map((p) => { const q = eased(x, displace(p, x, tex)); return [x, q[0], q[1]]; }); for (const loop of kind.solid) trim(S, loop, s); return S; }
-    return base.map((p) => { const q = eased(x, displace(p, x, tex)); return [x, kind.zOnly ? q[0] : q[0] * s, s === 1 ? q[1] : pivotZ + (q[1] - pivotZ) * s]; });
+    if (kind.socket) { const S = base.map((p) => { const q = eased(x, displace(p, x, tex)); return [x, q[0], q[1]]; }); for (const loop of kind.solid) trim(S, loop, s, kind.ax); return S; }
+    if (kind.tail) return base.map((p) => { const q = [...eased(x, displace(p, x, tex))]; q[kind.ax] *= s; return [x, q[0], q[1]]; }); // a tail narrows across its cut only
+    return base.map((p) => { const q = eased(x, displace(p, x, tex)); return [x, q[0] * s, s === 1 ? q[1] : pivotZ + (q[1] - pivotZ) * s]; });
   };
   const same = (p, q) => p === q || (p[0] === q[0] && p[1] === q[1] && p[2] === q[2]);
   const tri = (a, b, c) => { if (!same(a, b) && !same(b, c) && !same(a, c)) T.push([a, b, c]); }; // trimmed tine vertices coincide
@@ -278,7 +285,7 @@ function logMesh({ L, centers, base, notchW, top = true, bottom = true, chamfer 
     for (let k = 0; k < pts.length - 1; k++) spans.push([...pts[k], ...pts[k + 1], kind]);
     if (j.ease) {
       if (!tongue && j.prof.some(([d, g]) => d < j.ease && g > g0 + EPS)) throw new Error('socket widens inside its rounded rim');
-      eases.push({ at: xOf(0), r: j.ease, zc: g0, dir: end ? -1 : 1 });
+      eases.push({ at: xOf(0), r: j.ease, zc: g0, dir: end ? -1 : 1, ax: kind.ax, top: Math.max(...base.map((p) => Math.abs(p[kind.ax]))) });
     }
   };
   let x0, x1;
@@ -411,7 +418,7 @@ export function makeParts({ clearance = 0.2, flat = 0.8, texture = true, set = '
   // The tail is the socket less spliceClearance on each side. The socket is a little wider than the printing flat on
   // the round logs, so most of each tine's inner edge lifts off the bed, by up to 0.3 mm.
   const SPLICE = { len: IN / 4, neck: 4.6, slope: 1 / 4 };
-  const spliceBase = (base, levels) => levels.reduce((P, g) => insertLine(insertLine(P, 1, g), 1, -g), base);
+  const spliceBase = (base, levels, axis = 1) => levels.reduce((P, g) => insertLine(insertLine(P, axis, g), axis, -g), base);
   {
     const std = 'log_4insert_10-5_8', L = 10.625 * IN, all = centersFor(L, 4), xs = L / 2 - SPLICE.len / 2; // xs: the shoulder line on the whole log
     const e = spliceClearance; // each piece stops this far short of the other along the log, so the notches set the spacing
@@ -431,11 +438,20 @@ export function makeParts({ clearance = 0.2, flat = 0.8, texture = true, set = '
       prof[0][0] = 0; prof.at(-1)[0] = lj;
     }
     const gTail = tailProf.map((q) => q[1]), gSocket = socketProf.map((q) => q[1]);
-    const piece = (base_, type, listing, note, x0, Lp, centers, joints, levels) => {
-      const name = `${base_}${sfx}`, t = tex(name, logSmooth);
-      if (t) t.levels = levels;
-      add(name, { listing: `${listing}${O}`, length: Lp, centers, kind: 'log', splice: { type, of: std, x0, len: SPLICE.len, round: rOut, tail: tailProf, socket: socketProf }, note },
-        centred(logMesh({ L: Lp, centers, base: spliceBase(logBase, levels), notchW, chamfer: ends, joints, tex: t })), logPrint);
+    // flatBottom: the same piece as a half log, for the base course. It prints on its flat bottom, so its dovetail is
+    // cut straight down through the log instead of across it: the same outline, seen from above. Every face of the
+    // joint is again an upright wall on the bed, and the two pieces go together from above, not from the side.
+    const piece = (base_, type, listing, note, x0, Lp, centers, joints, levels, flatBottom = false) => {
+      const name = `${base_}${sfx}`, t = tex(name, flatBottom ? halfSmooth : logSmooth), axis = flatBottom ? 0 : 1;
+      if (t) { t.levels = levels; t.levelAxis = axis; }
+      const info = { listing: `${listing}${O}`, length: Lp, centers, kind: flatBottom ? 'half' : 'log', splice: { type, of: std, x0, len: SPLICE.len, round: rOut, tail: tailProf, socket: socketProf, axis }, note };
+      joints = joints.map((j) => j && { ...j, axis });
+      if (flatBottom) {
+        add(name, info, centred(logMesh({ L: Lp, centers, base: spliceBase(halfBase, levels, 0), notchW, bottom: false, chamfer: ends, pivotZ: -h, joints, tex: t })), ([x, y, z]) => [x, y - yShift, z + h]);
+        parts[name].toModel = ([X, Y, Z]) => [X, Y + yShift, Z - h];
+        return;
+      }
+      add(name, info, centred(logMesh({ L: Lp, centers, base: spliceBase(logBase, levels), notchW, chamfer: ends, joints, tex: t })), logPrint);
       parts[name].toModel = logModelFromPrint;
     };
     // tongue piece: the whole log's 0 .. L/2 + len/2 (less e at the tip); groove piece: L/2 - len/2 (plus e) .. L
@@ -449,6 +465,13 @@ export function makeParts({ clearance = 0.2, flat = 0.8, texture = true, set = '
     // In its own frame x = 0 is the tips of its tines, e past the shoulder line of the piece before it.
     piece('log_extender_1insert_3', 'extender', 'Extender for the two-piece log, 1 insert, 3', 'goes between the two halves of the two-piece log; each one adds a notch and 3 in',
       xs + e, CENTERS + SPLICE.len - 2 * e, [SPLICE.len / 2 - e + CENTERS / 2], [socket, tail], [...new Set([...socketLevels, ...tailLevels])]);
+    // the same three pieces as half logs: flat underneath, notches on top only, the same lengths and notch places.
+    // Not in the reference lot either, which has no half log this long.
+    const baseNote = 'flat underneath, for the base course; joins only with the other flat-bottomed pieces';
+    piece('half_log_10-5_8_split_tongue', 'tongue', 'Half Log, 10 5/8: tongue half', baseNote, 0, xs + lj, all.slice(0, 2), [null, tail], tailLevels, true);
+    piece('half_log_10-5_8_split_groove', 'groove', 'Half Log, 10 5/8: groove half', baseNote, xs + e, L - xs - e, all.slice(2).map((c) => c - xs - e), [socket, null], socketLevels, true);
+    piece('half_log_extender_1insert_3', 'extender', 'Extender for the two-piece half log, 1 insert, 3', 'flat underneath; goes between the two halves of the two-piece half log',
+      xs + e, CENTERS + SPLICE.len - 2 * e, [SPLICE.len / 2 - e + CENTERS / 2], [socket, tail], [...new Set([...socketLevels, ...tailLevels])], true);
   }
 
   const half = (std, listing, Lin, n) => {

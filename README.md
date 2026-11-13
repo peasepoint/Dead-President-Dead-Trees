@@ -72,6 +72,13 @@ The 270 mm log does not fit a 256 mm bed, so every log set also has it as two ha
 
 ![The two halves with one extender between them: joined, and moved apart](images/examples/split_log_extender.png)
 
+**For the base course.** The same three pieces also come as half logs, flat underneath with notches on top: `half_log_10-5_8_split_tongue`, `half_log_10-5_8_split_groove` and `half_log_extender_1insert_3`. They are the same lengths and have their notches in the same places, so they go under a wall of two-piece or extended logs. No whole half log this long exists; the two halves joined make a 4-notch half log of 10 5/8 in.
+
+![The flat-bottomed halves with one extender between them: joined, and moved apart](images/examples/split_half_log_joint.png)
+
+- **The dovetail is turned upright.** A half log prints on its flat bottom, so its dovetail is cut straight down through the log, where the full logs' is cut across. Every face of the joint is still a vertical wall on the bed, and the dovetail shows on top of the log, not on its side.
+- **They go together from above.** Lower the tail into the socket. The flat-bottomed pieces join only with each other, not with the full-round ones.
+
 ## How to print
 
 ### 1. Get the files

@@ -68,4 +68,9 @@ shot('tall_house_smooth', itemsFor(B.smooth.house, PALETTES.red), { az: -62, el:
   // the same halves with one extender between them: a 5-notch, 13 5/8 in log
   const c = P.log_extender_1insert_3, step = 3 * IN, row = (gap, dy) => [at(a, -gap, dy), at(c, x0, dy), at(b, x0 + step + gap, dy)];
   shot('split_log_extender', itemsFor([...row(0, 30), ...row(14, 0)], PALETTES.classic, [0, 0, 0], 11), { az: -93, el: 58, dist: 300, target: [x0 + step / 2, 15, 9], fov: 30 }, { W: 1600, H: 620, radius: 260, aoR: 3 });
+  // the flat-bottomed pieces for the base course, lying as they print (flat side down, notches up): the dovetail is
+  // cut straight down, so here the tail goes into the socket from above
+  const ha = P['half_log_10-5_8_split_tongue'], hb = P['half_log_10-5_8_split_groove'], hc = P.half_log_extender_1insert_3;
+  const hrow = (gap, dy) => [at(ha, -gap, dy), at(hc, x0, dy), at(hb, x0 + step + gap, dy)];
+  shot('split_half_log_joint', itemsFor([...hrow(0, 30), ...hrow(14, 0)], PALETTES.classic, [0, 0, 0], 11), { az: -100, el: 52, dist: 250, target: [x0 + step / 2, 15, 7], fov: 30 }, { W: 1600, H: 700, radius: 200, aoR: 3 });
 }
