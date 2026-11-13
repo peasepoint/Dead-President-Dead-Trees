@@ -65,6 +65,7 @@ The 270 mm log does not fit a 256 mm bed, so every log set also has it as two ha
 - **The joint is a dovetail,** the joint of a hewn-log cabin corner, turned to join two logs end to end. A tail on one half, wider at its tip than at its neck, sits in a matching socket in the other. It is halfway between the two middle notches, so all four notches stay where they are on the whole log.
 - **It prints upright.** The dovetail is cut straight through the log from one printing flat to the other, so on the bed every face of it is a vertical wall. No supports.
 - **It goes together sideways.** Slide the tail into the socket across the log, not endways. Once the log is in a wall, the dovetail stops the halves pulling apart and the logs crossing in the notches stop them sliding sideways.
+- **The edges are rounded.** Every corner of the tail and the socket has a radius of about 1 mm, and so do the rims where the two pieces meet. The joint looks like the worn corner of a hewn log, and nothing sharp is left for small hands. Change the radius with `--splice-round`; `0` gives square edges.
 - **The fit is loose:** 0.3 mm of clearance on each face. Change it with `--splice-clearance` (see [Regenerating the files](#regenerating-the-files)).
 
 **Longer logs.** `log_extender_1insert_3` goes between the two halves: its socket takes the tongue half's tail, and its tail goes into the groove half. Each extender adds one notch and 3 in, so one makes a 5-notch log of 13 5/8 in (346 mm), two a 6-notch log of 16 5/8 in, and so on. The notches stay on 3 in centres.
@@ -204,6 +205,8 @@ This rewrites all five `stl/` folders and checks that every mesh is watertight a
 |---|---|---|
 | `--clearance` | `0.2` | Gap on each side between a notch and the part sitting in it, in mm |
 | `--flat` | `0.8` | Total width taken off round logs, in mm, as an equal flat on each side. The parts that sit in notches are narrower by this much, and the notches follow |
+| `--splice-clearance` | `0.3` | Gap on each face of the dovetail between the pieces of the two-piece log, in mm |
+| `--splice-round` | `0.8` | Radius on the edges of that dovetail, in mm. `0` leaves them square |
 | `--set` | `all` | `all`, or one folder: `roof_parts`, `ball_end_round`, `flat_end_round`, `flat_end_octagonal` or `smooth` |
 | `--out` | `stl` | Parent folder for the five folders |
 
