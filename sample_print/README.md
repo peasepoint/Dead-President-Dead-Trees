@@ -31,7 +31,7 @@ Bambu Studio warns that a round groove half has floating regions. These are the 
 
 ## Log style reference sample
 
-`log_styles_p2s.3mf` prints two of each kind of log from every log set, to compare the four styles side by side and to cross the pairs at their notches. It holds 16 parts on one plate, all in their STL orientation: logs lying on their flats, half logs flat side down. Nothing stands on end and nothing needs support.
+`log_styles_p2s.3mf` prints two of each kind of log from every log set, to compare the four styles side by side and to cross the pairs at their notches. It holds 16 parts on one plate, all in their STL orientation: logs lying on their flats, base logs flat side down. Nothing stands on end and nothing needs support.
 
 ![Plate preview](log_styles_preview.png)
 
@@ -40,7 +40,7 @@ Rows run from the back of the bed to the front, two parts in each:
 | Rows | Part | Sets, in order |
 |---|---|---|
 | 1 to 4 | `log_2insert_4-1_2` (2 notches, 4 1/2 in) | Ball-End-Round, Flat-End-Round, Flat-End-Octagonal, Smooth |
-| 5 to 8 | `half_log_4-1_2` (4 1/2 in) | Ball-End-Round, Flat-End-Round, Flat-End-Octagonal, Smooth |
+| 5 to 8 | `base_log_4-1_2` (4 1/2 in) | Ball-End-Round, Flat-End-Round, Flat-End-Octagonal, Smooth |
 
 The print settings are chosen to save filament:
 
@@ -73,7 +73,7 @@ Bambu Studio's CLI estimates about 5 h 19 min and about 166 g. With the fit test
 | H2 `log_1insert_1-5_8` | branch `lying-equal-flats` | lying | wood grain |
 | H3 `log_2insert_4-1_2` | branch `lying-equal-flats` | lying | smooth |
 | H4 `log_2insert_4-1_2` | branch `lying-equal-flats` | lying | wood grain |
-| H5 `half_log_4-1_2` | branch `lying-equal-flats` | flat side down | wood grain |
+| H5 `base_log_4-1_2` | branch `lying-equal-flats` | flat side down | wood grain |
 
 The standing logs (V) have a 5 mm brim set on each object; the lying parts use auto brim. The standing logs carry break-away support combs in their notches.
 

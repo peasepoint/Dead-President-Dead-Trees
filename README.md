@@ -28,9 +28,9 @@
 
 Every STL is in millimetres and already lies in its printing orientation. The [parts catalogue](PARTS.md) has a picture, the size and a download link for every part.
 
-| Logs | Half logs | Gables | Shingles | Chimney |
+| Logs | Base logs | Gables | Shingles | Chimney |
 |:---:|:---:|:---:|:---:|:---:|
-| <img src="images/flat_end_round/log_3insert_7-5_8.png" width="150" alt="3-notch log"> | <img src="images/flat_end_round/half_log_7-1_2.png" width="150" alt="Half log"> | <img src="images/roof_parts/gable_plastic_8-1_2.png" width="150" alt="Large stepped gable"> | <img src="images/roof_parts/shingle_ridge_9.png" width="150" alt="Ridge shingle"> | <img src="images/roof_parts/chimney.png" width="150" alt="Chimney"> |
+| <img src="images/flat_end_round/log_3insert_7-5_8.png" width="150" alt="3-notch log"> | <img src="images/flat_end_round/base_log_7-1_2.png" width="150" alt="Base log"> | <img src="images/roof_parts/gable_plastic_8-1_2.png" width="150" alt="Large stepped gable"> | <img src="images/roof_parts/shingle_ridge_9.png" width="150" alt="Ridge shingle"> | <img src="images/roof_parts/chimney.png" width="150" alt="Chimney"> |
 | 1 to 4 notches, 1 1/2 to 10 5/8 in | 4 1/2 and 7 1/2 in; the base course | Two stepped sizes and a plain triangle | Flat and ridge, 5 5/8 to 11 in | Sits astride the roof ridge |
 
 The files are in five folders under `stl/`. A building needs the roof parts plus the logs from one log set.
@@ -43,7 +43,7 @@ The files are in five folders under `stl/`. A building needs the roof parts plus
 
 ### Log sets
 
-Four finishes of the same 10 logs: five notched logs, two half logs, a beveled end and two solid logs. Choose one. Each set also has the longest log as [two shorter halves](#the-two-piece-4-notch-log).
+Four finishes of the same 10 logs: five notched logs, two base logs, a beveled end and two solid logs. Choose one. Each set also has the longest log as [two shorter halves](#the-two-piece-4-notch-log).
 
 | Set | Folder | Shape | Ends | Surface | Looks like |
 |---|---|---|---|---|:---:|
@@ -72,11 +72,11 @@ The 270 mm log does not fit a 256 mm bed, so every log set also has it as two ha
 
 ![The two halves with one extender between them: joined, and moved apart](images/examples/split_log_extender.png)
 
-**For the base course.** The same three pieces also come as half logs, flat underneath with notches on top: `half_log_10-5_8_split_tongue`, `half_log_10-5_8_split_groove` and `half_log_extender_1insert_3`. They are the same lengths and have their notches in the same places, so they go under a wall of two-piece or extended logs. No whole half log this long exists; the two halves joined make a 4-notch half log of 10 5/8 in.
+**For the base course.** The same three pieces also come as base logs, flat underneath with notches on top: `base_log_10-5_8_split_tongue`, `base_log_10-5_8_split_groove` and `base_log_extender_1insert_3`. They are the same lengths and have their notches in the same places, so they go under a wall of two-piece or extended logs. No whole base log this long exists; the two halves joined make a 4-notch base log of 10 5/8 in.
 
-![The flat-bottomed halves with one extender between them: joined, and moved apart](images/examples/split_half_log_joint.png)
+![The flat-bottomed halves with one extender between them: joined, and moved apart](images/examples/split_base_log_joint.png)
 
-- **The dovetail is turned upright.** A half log prints on its flat bottom, so its dovetail is cut straight down through the log, where the full logs' is cut across. Every face of the joint is still a vertical wall on the bed, and the dovetail shows on top of the log, not on its side.
+- **The dovetail is turned upright.** A base log prints on its flat bottom, so its dovetail is cut straight down through the log, where the full logs' is cut across. Every face of the joint is still a vertical wall on the bed, and the dovetail shows on top of the log, not on its side.
 - **They go together from above.** Lower the tail into the socket. The flat-bottomed pieces join only with each other, not with the full-round ones.
 
 ## How to print
@@ -90,9 +90,9 @@ On GitHub, choose **Code > Download ZIP** and unzip it, or clone the repository.
 Printers and filaments vary, so check the notch fit before printing a building. Print:
 
 - 2 x `log_1insert_1-5_8`
-- 1 x `half_log_4-1_2`
+- 1 x `base_log_4-1_2`
 
-Cross the two logs at their notches, then seat one in a half-log notch. A log should seat fully and lift out freely, without rattling.
+Cross the two logs at their notches, then seat one in a base-log notch. A log should seat fully and lift out freely, without rattling.
 
 - **Too tight or too loose:** the default leaves 0.2 mm of clearance on each side (an 18.65 mm notch for an 18.25 mm log), which in PLA seated fully with a small amount of play. Change it in 0.05 mm steps with `--clearance` (see [Regenerating the files](#regenerating-the-files)) or the `Clearance` parameter in the [Fusion design](fusion/README.md).
 - **PETG:** start at 0.3 mm.
@@ -120,7 +120,7 @@ How each part sits on the bed:
 |---|---|
 | Round logs, beveled end | Lying on a 0.4 mm flat, notches facing sideways |
 | Octagonal logs | Lying on one face, notches facing sideways |
-| Half logs | Flat side down, notches up |
+| Base logs | Flat side down, notches up |
 | Solid logs | Standing on end |
 | Gables, shingles, door, window | Flat on a face |
 | Chimney | Upside down: open top on the bed, V-cut facing up |
@@ -136,8 +136,8 @@ How many of each part the six [example buildings](#example-buildings) need. Logs
 | Part | Cabin | Shed | Cottage | Porch cabin | Tall house | Watchtower |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
 | **Footprint** | 6 x 9 in | 3 x 6 in | 3 x 6 in | 6 x 6 in + porch | 6 x 6 in | 3 x 3 in |
-| `half_log_7-1_2` | 2 | | | 3 | 2 | |
-| `half_log_4-1_2` | | 2 | 2 | | | 2 |
+| `base_log_7-1_2` | 2 | | | 3 | 2 | |
+| `base_log_4-1_2` | | 2 | 2 | | | 2 |
 | `log_4insert_10-5_8` | 8 | | | 2 | | |
 | `log_3insert_7-5_8` | 3 | 8 | 8 | 9 | 14 | |
 | `log_2insert_4-1_2` | 3 | 6 | 6 | 3 | 8 | 21 |
@@ -159,7 +159,7 @@ How many of each part the six [example buildings](#example-buildings) need. Logs
 
 ### 5. Assemble
 
-1. Lay two **half logs** flat side down as the end walls. They are the only parts that touch the table.
+1. Lay two **base logs** flat side down as the end walls. They are the only parts that touch the table.
 2. Cross two side-wall logs over them, notch into notch.
 3. Keep alternating end walls and side walls. Each course adds 3/8 in. Use the short 1- and 2-notch logs to leave gaps for a door or window.
 4. Set a gable where the next end-wall log would go, its bottom notches over the side-wall logs.
@@ -240,7 +240,7 @@ The other scripts:
 |---|---|
 | **Checked in software** | In all six buildings no parts overlap, every part is supported and every wall log is locked by its notches, with each of the four log sets |
 | **Test-printed** | The notch fit only. Pairs of 1-notch logs were printed in PLA with notches from 18.65 to 19.65 mm wide; 18.65 mm fit best and is the default ([details](fit_test/README.md)) |
-| **Not checked** | Everything else in the real world. No octagonal or ball-end log, half log, gable, shingle, chimney or whole building has been printed |
+| **Not checked** | Everything else in the real world. No octagonal or ball-end log, base log, gable, shingle, chimney or whole building has been printed |
 
 If you print these, the most useful things to report are:
 

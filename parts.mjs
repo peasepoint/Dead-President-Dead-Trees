@@ -5,16 +5,16 @@
 //                 print  = the same solid rotated to its printing orientation (what goes in the STL)
 //                 info   = listing name, quantity, notch centres, etc.
 // Frames:
-//  - logs, half logs, beveled pieces: axis along +x from 0 to length; the section is centred on z = 0, and in y the
+//  - logs, base logs, beveled pieces: axis along +x from 0 to length; the section is centred on z = 0, and in y the
 //    width that sits in a notch (the round section less its printing flat) is centred on y = 0
-//    (a half log keeps that virtual centre; its flat bottom is at z = -h)
+//    (a base log keeps that virtual centre; its flat bottom is at z = -h)
 //  - gables: width along x from 0, thickness centred on y = 0, bottom at z = 0
 //  - shingles: length along x, width along y, thickness along z (groove up)
 export const IN = 25.4;
 export const D = 0.75 * IN;            // log diameter
 export const R = D / 2;
 export const NOTCH_D = (3 / 16) * IN;  // notch depth, top and bottom
-export const h = R - NOTCH_D;          // half-height kept through a notch (also: half-log flat is at z = -h)
+export const h = R - NOTCH_D;          // half-height kept through a notch (also: base-log flat is at z = -h)
 export const PITCH = (3 / 8) * IN;     // course-to-course rise
 export const CENTERS = 3 * IN;         // notch centre spacing
 const EPS = 1e-9;
@@ -219,7 +219,7 @@ function filletPath(P, radii, n = 8) {
 }
 // base: CCW cross-section (y, z) already containing exact vertices on z = +/-h.
 // tex (optional): { grain, rings: [end at 0, end at L], smooth(p) } from texFor
-// pivotZ: the section shrinks towards (0, pivotZ) at chamfered ends (a half log passes -h so its bottom stays flat)
+// pivotZ: the section shrinks towards (0, pivotZ) at chamfered ends (a base log passes -h so its bottom stays flat)
 // joints (optional): [end at 0, end at L], each null or a dovetail splice that replaces the plain end. Both are cut
 // straight across the log (along y), so the joint has the same outline all the way through and prints as upright walls:
 //   { type: 'tongue', len, prof, ease }  a tail sticks out len. prof = [[d, g], ...]: its half-height g at distance d
@@ -361,7 +361,7 @@ export function makeParts({ clearance = 0.2, flat = 0.8, texture = true, set = '
   const oct = set === 'octagonal', ball = set === 'rounded';
   const ends = ball ? ROUNDED_ENDS : null; // chamfer profile for every log end
   // Every part that sits in a notch is MATE wide there: the round logs are, because of their flats, and the
-  // octagonal log, half logs and gables are trimmed to match. The notch is that width plus the clearance on each side.
+  // octagonal log, base logs and gables are trimmed to match. The notch is that width plus the clearance on each side.
   // `flat` is the total width taken off the log, split into an equal flat on each side: the bed side and the side
   // opposite it, so the log lies on the bed the same way it would stand on the other flat.
   // (Fit-tested in PLA: an 18.65 mm notch round an 18.25 mm log, 0.2 mm per side, seats fully with slight play.)
@@ -374,7 +374,7 @@ export function makeParts({ clearance = 0.2, flat = 0.8, texture = true, set = '
   const onFlat = (a, b) => (a[0] <= yf + 1e-6 && b[0] <= yf + 1e-6) || (a[0] >= yTop - 1e-6 && b[0] >= yTop - 1e-6), onBottom = (a, b) => a[1] <= -h + 1e-6 && b[1] <= -h + 1e-6;
   const roundBase = subdivide(withCuts(bothFlats(circle(NC, R))), onFlat);       // round log with an equal flat on each side
   const octBase = subdivide(withCuts(bothFlats(octagon(D))), () => true);       // flats top, bottom and sides; the two side flats are cut to the same depth as the round logs' flats
-  // the octagonal set uses octBase for every log; its half logs are the same octagon cut at the bottom-notch floor
+  // the octagonal set uses octBase for every log; its base logs are the same octagon cut at the bottom-notch floor
   const halfBase = oct ? subdivide(insertLine(clipPoly(bothFlats(octagon(D)), 1, -h, true), 1, h), () => true)
     : subdivide(insertLine(clipPoly(bothFlats(circle(NC, R)), 1, -h, true), 1, h), (a, b) => onBottom(a, b) || onFlat(a, b)); // flat bottom at the bottom-notch floor; equal side flats like the round logs, so it fits a notch
   // wood texture: grain on the outside, rings on the ends; the face on the print bed stays smooth
@@ -438,7 +438,7 @@ export function makeParts({ clearance = 0.2, flat = 0.8, texture = true, set = '
       prof[0][0] = 0; prof.at(-1)[0] = lj;
     }
     const gTail = tailProf.map((q) => q[1]), gSocket = socketProf.map((q) => q[1]);
-    // flatBottom: the same piece as a half log, for the base course. It prints on its flat bottom, so its dovetail is
+    // flatBottom: the same piece as a base log, for the base course. It prints on its flat bottom, so its dovetail is
     // cut straight down through the log instead of across it: the same outline, seen from above. Every face of the
     // joint is again an upright wall on the bed, and the two pieces go together from above, not from the side.
     const piece = (base_, type, listing, note, x0, Lp, centers, joints, levels, flatBottom = false) => {
@@ -465,12 +465,12 @@ export function makeParts({ clearance = 0.2, flat = 0.8, texture = true, set = '
     // In its own frame x = 0 is the tips of its tines, e past the shoulder line of the piece before it.
     piece('log_extender_1insert_3', 'extender', 'Extender for the two-piece log, 1 insert, 3', 'goes between the two halves of the two-piece log; each one adds a notch and 3 in',
       xs + e, CENTERS + SPLICE.len - 2 * e, [SPLICE.len / 2 - e + CENTERS / 2], [socket, tail], [...new Set([...socketLevels, ...tailLevels])]);
-    // the same three pieces as half logs: flat underneath, notches on top only, the same lengths and notch places.
-    // Not in the reference lot either, which has no half log this long.
+    // the same three pieces as base logs: flat underneath, notches on top only, the same lengths and notch places.
+    // Not in the reference lot either, which has no base log this long.
     const baseNote = 'flat underneath, for the base course; joins only with the other flat-bottomed pieces';
-    piece('half_log_10-5_8_split_tongue', 'tongue', 'Half Log, 10 5/8: tongue half', baseNote, 0, xs + lj, all.slice(0, 2), [null, tail], tailLevels, true);
-    piece('half_log_10-5_8_split_groove', 'groove', 'Half Log, 10 5/8: groove half', baseNote, xs + e, L - xs - e, all.slice(2).map((c) => c - xs - e), [socket, null], socketLevels, true);
-    piece('half_log_extender_1insert_3', 'extender', 'Extender for the two-piece half log, 1 insert, 3', 'flat underneath; goes between the two halves of the two-piece half log',
+    piece('base_log_10-5_8_split_tongue', 'tongue', 'Base Log, 10 5/8: tongue half', baseNote, 0, xs + lj, all.slice(0, 2), [null, tail], tailLevels, true);
+    piece('base_log_10-5_8_split_groove', 'groove', 'Base Log, 10 5/8: groove half', baseNote, xs + e, L - xs - e, all.slice(2).map((c) => c - xs - e), [socket, null], socketLevels, true);
+    piece('base_log_extender_1insert_3', 'extender', 'Extender for the two-piece base log, 1 insert, 3', 'flat underneath; goes between the two halves of the two-piece base log',
       xs + e, CENTERS + SPLICE.len - 2 * e, [SPLICE.len / 2 - e + CENTERS / 2], [socket, tail], [...new Set([...socketLevels, ...tailLevels])], true);
   }
 
@@ -480,8 +480,8 @@ export function makeParts({ clearance = 0.2, flat = 0.8, texture = true, set = '
     add(name, { listing: listing + O, length: L, centers, kind: 'half', replaces: [std] }, centred(logMesh({ L, centers, base: halfBase, notchW, bottom: false, chamfer: ends, pivotZ: -h, tex: tex(name, halfSmooth) })), ([x, y, z]) => [x, y - yShift, z + h]);
     parts[name].toModel = ([X, Y, Z]) => [X, Y + yShift, Z - h];
   };
-  half('half_log_4-1_2', 'Half Log, 4 1/2', 4.5, 2);
-  half('half_log_7-1_2', 'Half Log, 7 1/2', 7.5, 3);
+  half('base_log_4-1_2', 'Base Log, 4 1/2', 4.5, 2);
+  half('base_log_7-1_2', 'Base Log, 7 1/2', 7.5, 3);
 
   // short log with one end cut at the roof angle of the wooden triangle (about 39 deg in the photos)
   const bev = 'beveled_end_1-1_2' + sfx; // the square end is the one rounded in the rounded set

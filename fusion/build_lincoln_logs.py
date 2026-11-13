@@ -14,7 +14,7 @@
 #   - Every sketch dimension and feature distance is an expression of those parameters.
 #   - Each body is modelled in its printing orientation, sitting on Z = 0, at the same coordinates as its STL:
 #     notched logs and the beveled end lying along X on one of their two equal flats with the notches facing
-#     sideways (+/-Y), half logs flat side down, solid logs standing, gables and shingles flat.
+#     sideways (+/-Y), base logs flat side down, solid logs standing, gables and shingles flat.
 #   - The wood grain and end rings are not parametric. In the wood-grain sets each component also holds its STL as
 #     a mesh body, which carries them.
 import os
@@ -37,10 +37,10 @@ LOG_PARAMS = [
     ('NotchCenters', '3 in', 'mm', 'Spacing between notch centres'),
     ('Clearance', '0.2 mm', 'mm', 'Fit clearance per side. Try 0.3 mm for PETG'),
     ('PrintFlat', '0.8 mm', 'mm', 'Total width taken off a log, as an equal flat on each side; one is the bed side'),
-    ('MateWidth', 'LogDia - PrintFlat', 'mm', 'Width of a log, half log or gable where it sits in a notch'),
+    ('MateWidth', 'LogDia - PrintFlat', 'mm', 'Width of a log, base log or gable where it sits in a notch'),
     ('NotchWidth', 'MateWidth + 2 * Clearance', 'mm', 'Notch width (mating width plus clearance on each side)'),
     ('CourseRise', 'LogDia - 2 * NotchDepth', 'mm', 'Height gained per crossing course'),
-    ('HalfLogHeight', 'LogDia - NotchDepth', 'mm', 'Half-log height (flat sits at the notch floor)'),
+    ('BaseLogHeight', 'LogDia - NotchDepth', 'mm', 'Base-log height (flat sits at the notch floor)'),
 ]
 ROOF_PARAMS = [
     ('GableThk', 'MateWidth', 'mm', 'Gable thickness (fills a notch like a log)'),
@@ -61,8 +61,8 @@ LOGS = [
     ('L2', 'log_2insert_4-1_2', '4.5 in', 2, 'log', 'set'),
     ('L3', 'log_3insert_7-5_8', '7.625 in', 3, 'log', 'set'),
     ('L4', 'log_4insert_10-5_8', '10.625 in', 4, 'log', 'set'),
-    ('Half2', 'half_log_4-1_2', '4.5 in', 2, 'half', 'set'),
-    ('Half3', 'half_log_7-1_2', '7.5 in', 3, 'half', 'set'),
+    ('Half2', 'base_log_4-1_2', '4.5 in', 2, 'half', 'set'),
+    ('Half3', 'base_log_7-1_2', '7.5 in', 3, 'half', 'set'),
     ('Bev', 'beveled_end_1-1_2', '1.5 in', 0, 'bevel', 'set'),
     ('Solid1', 'solid_log_1-3_8', '1.375 in', 0, 'solid', 'set'),
     ('Solid2', 'solid_log_1-5_8', '1.625 in', 0, 'solid', 'set'),
@@ -87,8 +87,8 @@ RIDGE_SHINGLES = [('ShRidge5', 'shingle_ridge_5-5_8', '5.625 in'), ('ShRidge6', 
 
 # Where each component sits in the layout (cm), so nothing overlaps. Logs are placed by base name.
 LAYOUT = {
-    'log_4insert_10-5_8': (0, 0), 'log_3insert_7-5_8': (0, 3.5), 'half_log_7-1_2': (0, 7), 'log_2insert_4-1_2': (0, 10.5),
-    'half_log_4-1_2': (0, 14), 'log_1insert_1-5_8': (0, 17.5), 'log_1insert_1-1_2_round': (6, 17.5),
+    'log_4insert_10-5_8': (0, 0), 'log_3insert_7-5_8': (0, 3.5), 'base_log_7-1_2': (0, 7), 'log_2insert_4-1_2': (0, 10.5),
+    'base_log_4-1_2': (0, 14), 'log_1insert_1-5_8': (0, 17.5), 'log_1insert_1-1_2_round': (6, 17.5),
     'beveled_end_1-1_2': (12, 17.5),
     'solid_log_1-3_8': (1, 21.5), 'solid_log_1-5_8': (5, 21.5),
     'shingle_flat_11': (32, 0), 'shingle_flat_9': (32, 3.5), 'shingle_flat_6': (32, 7),
@@ -314,8 +314,8 @@ class Builder:
                     body = self.extrude(comp, s.profiles(), L, NEW, 'Log').bodies.item(0)
                 if rounded:
                     self.round_ends(comp, body, lambda a, b: abs(a.z - b.z) < 1e-6 and (abs(a.z) < 1e-6 or abs(a.z - Lv) < 1e-6))
-            else:  # half log: flat side on the bed, notches on top, an equal side flat each side
-                body = self.lying_body(comp, sec, L, 'HalfLogHeight - LogDia / 2', neg('NotchDepth'))
+            else:  # base log: flat side on the bed, notches on top, an equal side flat each side
+                body = self.lying_body(comp, sec, L, 'BaseLogHeight - LogDia / 2', neg('NotchDepth'))
                 if rounded:
                     # all but the bottom edge, so the flat side stays on the bed
                     self.round_ends(comp, body, lambda a, b: x_end(a, b) and b.z > 1e-6)
@@ -323,8 +323,8 @@ class Builder:
                                                          (('MateWidth / 2', neg('1 mm')), (big, 'LogDia + 1 mm')),
                                                          ((neg('MateWidth / 2'), neg('1 mm')), (neg(big), 'LogDia + 1 mm'))])
                 n = Sk(self, comp, 'xz', 'Notch')
-                n.rect((f'{code}_FirstNotch - NotchWidth / 2', 'HalfLogHeight - NotchDepth'),
-                       (f'{code}_FirstNotch + NotchWidth / 2', 'HalfLogHeight + 1 mm'))
+                n.rect((f'{code}_FirstNotch - NotchWidth / 2', 'BaseLogHeight - NotchDepth'),
+                       (f'{code}_FirstNotch + NotchWidth / 2', 'BaseLogHeight + 1 mm'))
                 cut = self.extrude(comp, n.profiles(), 'LogDia + 2 mm', CUT, 'Notch cut', symmetric=True)
                 self.pattern(comp, cut, comp.xConstructionAxis, f'max({code}_Notches; 2)', f'{code}_NotchStep', 'Notch pattern')
             if grain and self.stl_dir:

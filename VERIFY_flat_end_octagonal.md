@@ -9,19 +9,19 @@ Checks per part: **interference** (volume shared with another part; any shared v
 - Parts: **30**; lowest point z = 0.000 mm
 - Interference over 1 mm3: **none**
 - Unsupported parts: **none**
-- Touching the table: half_log_7-1_2 (everything else is carried by other parts)
+- Touching the table: base_log_7-1_2 (everything else is carried by other parts)
 - Wall logs locked against all four sideways pushes: **19/19**
 - Voxel columns skipped (ray hit an edge): 0
 
 | # | Part | Volume (mm3) | Supported (CoM margin) | Rests on | Pushes blocked |
 |---|---|---|---|---|---|
-| 1 | half_log_7-1_2 | 41532 | yes (8.6 mm) | table | +x -x +y -y |
-| 2 | half_log_7-1_2 | 41552 | yes (8.6 mm) | table | +x -x +y -y |
-| 3 | log_4insert_10-5_8 | 70717 | yes (8.9 mm) | half_log_7-1_2 | +x -x +y -y |
-| 4 | log_4insert_10-5_8 | 69667 | yes (8.7 mm) | half_log_7-1_2 | +x -x +y -y |
-| 5 | log_1insert_1-1_2_round | 8937 | yes (9.0 mm) | half_log_7-1_2, log_4insert_10-5_8 | +x -x +y -y |
-| 6 | log_2insert_4-1_2 | 28952 | yes (7.2 mm) | half_log_7-1_2, log_4insert_10-5_8 | +x -x +y -y |
-| 7 | log_3insert_7-5_8 | 50014 | yes (9.0 mm) | half_log_7-1_2, log_4insert_10-5_8 | +x -x +y -y |
+| 1 | base_log_7-1_2 | 41532 | yes (8.6 mm) | table | +x -x +y -y |
+| 2 | base_log_7-1_2 | 41552 | yes (8.6 mm) | table | +x -x +y -y |
+| 3 | log_4insert_10-5_8 | 70717 | yes (8.9 mm) | base_log_7-1_2 | +x -x +y -y |
+| 4 | log_4insert_10-5_8 | 69667 | yes (8.7 mm) | base_log_7-1_2 | +x -x +y -y |
+| 5 | log_1insert_1-1_2_round | 8937 | yes (9.0 mm) | base_log_7-1_2, log_4insert_10-5_8 | +x -x +y -y |
+| 6 | log_2insert_4-1_2 | 28952 | yes (7.2 mm) | base_log_7-1_2, log_4insert_10-5_8 | +x -x +y -y |
+| 7 | log_3insert_7-5_8 | 50014 | yes (9.0 mm) | base_log_7-1_2, log_4insert_10-5_8 | +x -x +y -y |
 | 8 | log_4insert_10-5_8 | 70428 | yes (8.9 mm) | log_4insert_10-5_8, log_1insert_1-1_2_round, log_3insert_7-5_8 | +x -x +y -y |
 | 9 | log_4insert_10-5_8 | 69679 | yes (8.7 mm) | log_4insert_10-5_8, log_2insert_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
 | 10 | log_1insert_1-1_2_round | 8990 | yes (9.0 mm) | log_1insert_1-1_2_round, log_4insert_10-5_8 | +x -x +y -y |
@@ -51,18 +51,18 @@ Checks per part: **interference** (volume shared with another part; any shared v
 - Parts: **24**; lowest point z = 0.000 mm
 - Interference over 1 mm3: **none**
 - Unsupported parts: **none**
-- Touching the table: half_log_4-1_2 (everything else is carried by other parts)
+- Touching the table: base_log_4-1_2 (everything else is carried by other parts)
 - Wall logs locked against all four sideways pushes: **16/16**
 - Voxel columns skipped (ray hit an edge): 0
 
 | # | Part | Volume (mm3) | Supported (CoM margin) | Rests on | Pushes blocked |
 |---|---|---|---|---|---|
-| 1 | half_log_4-1_2 | 24749 | yes (8.6 mm) | table | +x -x +y -y |
-| 2 | half_log_4-1_2 | 24303 | yes (8.7 mm) | table | +x -x +y -y |
-| 3 | log_3insert_7-5_8 | 50338 | yes (8.9 mm) | half_log_4-1_2 | +x -x +y -y |
-| 4 | log_3insert_7-5_8 | 50262 | yes (8.9 mm) | half_log_4-1_2 | +x -x +y -y |
-| 5 | log_2insert_4-1_2 | 29123 | yes (9.0 mm) | half_log_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
-| 6 | log_2insert_4-1_2 | 28831 | yes (8.7 mm) | half_log_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
+| 1 | base_log_4-1_2 | 24749 | yes (8.6 mm) | table | +x -x +y -y |
+| 2 | base_log_4-1_2 | 24303 | yes (8.7 mm) | table | +x -x +y -y |
+| 3 | log_3insert_7-5_8 | 50338 | yes (8.9 mm) | base_log_4-1_2 | +x -x +y -y |
+| 4 | log_3insert_7-5_8 | 50262 | yes (8.9 mm) | base_log_4-1_2 | +x -x +y -y |
+| 5 | log_2insert_4-1_2 | 29123 | yes (9.0 mm) | base_log_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
+| 6 | log_2insert_4-1_2 | 28831 | yes (8.7 mm) | base_log_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
 | 7 | log_3insert_7-5_8 | 50136 | yes (9.0 mm) | log_3insert_7-5_8, log_2insert_4-1_2 | +x -x +y -y |
 | 8 | log_3insert_7-5_8 | 50124 | yes (9.0 mm) | log_3insert_7-5_8, log_2insert_4-1_2 | +x -x +y -y |
 | 9 | log_2insert_4-1_2 | 29330 | yes (9.0 mm) | log_2insert_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
@@ -87,18 +87,18 @@ Checks per part: **interference** (volume shared with another part; any shared v
 - Parts: **25**; lowest point z = 0.000 mm
 - Interference over 1 mm3: **none**
 - Unsupported parts: **none**
-- Touching the table: half_log_4-1_2 (everything else is carried by other parts)
+- Touching the table: base_log_4-1_2 (everything else is carried by other parts)
 - Wall logs locked against all four sideways pushes: **16/16**
 - Voxel columns skipped (ray hit an edge): 0
 
 | # | Part | Volume (mm3) | Supported (CoM margin) | Rests on | Pushes blocked |
 |---|---|---|---|---|---|
-| 1 | half_log_4-1_2 | 24749 | yes (8.6 mm) | table | +x -x +y -y |
-| 2 | half_log_4-1_2 | 24303 | yes (8.7 mm) | table | +x -x +y -y |
-| 3 | log_3insert_7-5_8 | 50338 | yes (8.9 mm) | half_log_4-1_2 | +x -x +y -y |
-| 4 | log_3insert_7-5_8 | 50262 | yes (8.9 mm) | half_log_4-1_2 | +x -x +y -y |
-| 5 | log_2insert_4-1_2 | 29123 | yes (9.0 mm) | half_log_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
-| 6 | log_2insert_4-1_2 | 28831 | yes (8.7 mm) | half_log_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
+| 1 | base_log_4-1_2 | 24749 | yes (8.6 mm) | table | +x -x +y -y |
+| 2 | base_log_4-1_2 | 24303 | yes (8.7 mm) | table | +x -x +y -y |
+| 3 | log_3insert_7-5_8 | 50338 | yes (8.9 mm) | base_log_4-1_2 | +x -x +y -y |
+| 4 | log_3insert_7-5_8 | 50262 | yes (8.9 mm) | base_log_4-1_2 | +x -x +y -y |
+| 5 | log_2insert_4-1_2 | 29123 | yes (9.0 mm) | base_log_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
+| 6 | log_2insert_4-1_2 | 28831 | yes (8.7 mm) | base_log_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
 | 7 | log_3insert_7-5_8 | 50136 | yes (9.0 mm) | log_3insert_7-5_8, log_2insert_4-1_2 | +x -x +y -y |
 | 8 | log_3insert_7-5_8 | 50124 | yes (9.0 mm) | log_3insert_7-5_8, log_2insert_4-1_2 | +x -x +y -y |
 | 9 | log_2insert_4-1_2 | 29330 | yes (9.0 mm) | log_2insert_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
@@ -124,24 +124,24 @@ Checks per part: **interference** (volume shared with another part; any shared v
 - Parts: **43**; lowest point z = 0.000 mm
 - Interference over 1 mm3: **none**
 - Unsupported parts: **none**
-- Touching the table: half_log_7-1_2 (everything else is carried by other parts)
+- Touching the table: base_log_7-1_2 (everything else is carried by other parts)
 - Wall logs locked against all four sideways pushes: **32/32**
 - Voxel columns skipped (ray hit an edge): 0
 
 | # | Part | Volume (mm3) | Supported (CoM margin) | Rests on | Pushes blocked |
 |---|---|---|---|---|---|
-| 1 | half_log_7-1_2 | 41532 | yes (8.6 mm) | table | +x -x +y -y |
-| 2 | half_log_7-1_2 | 40784 | yes (8.7 mm) | table | +x -x +y -y |
-| 3 | half_log_7-1_2 | 41552 | yes (8.6 mm) | table | +x -x +y -y |
-| 4 | log_3insert_7-5_8 | 50339 | yes (8.9 mm) | half_log_7-1_2 | +x -x +y -y |
-| 5 | log_3insert_7-5_8 | 49577 | yes (8.7 mm) | half_log_7-1_2 | +x -x +y -y |
-| 6 | log_1insert_1-5_8 | 9975 | yes (8.9 mm) | half_log_7-1_2 | +x -x +y -y |
-| 7 | log_1insert_1-5_8 | 9811 | yes (8.7 mm) | half_log_7-1_2 | +x -x +y -y |
-| 8 | log_1insert_1-5_8 | 9896 | yes (9.0 mm) | half_log_7-1_2, log_1insert_1-5_8 | +x -x +y -y |
-| 9 | log_1insert_1-5_8 | 9771 | yes (9.0 mm) | half_log_7-1_2, log_1insert_1-5_8 | +x -x +y -y |
-| 10 | log_1insert_1-1_2_round | 8822 | yes (8.7 mm) | half_log_7-1_2, log_3insert_7-5_8 | +x -x +y -y |
-| 11 | log_2insert_4-1_2 | 28658 | yes (7.2 mm) | half_log_7-1_2, log_3insert_7-5_8 | +x -x +y -y |
-| 12 | log_3insert_7-5_8 | 50014 | yes (9.0 mm) | half_log_7-1_2, log_3insert_7-5_8 | +x -x +y -y |
+| 1 | base_log_7-1_2 | 41532 | yes (8.6 mm) | table | +x -x +y -y |
+| 2 | base_log_7-1_2 | 40784 | yes (8.7 mm) | table | +x -x +y -y |
+| 3 | base_log_7-1_2 | 41552 | yes (8.6 mm) | table | +x -x +y -y |
+| 4 | log_3insert_7-5_8 | 50339 | yes (8.9 mm) | base_log_7-1_2 | +x -x +y -y |
+| 5 | log_3insert_7-5_8 | 49577 | yes (8.7 mm) | base_log_7-1_2 | +x -x +y -y |
+| 6 | log_1insert_1-5_8 | 9975 | yes (8.9 mm) | base_log_7-1_2 | +x -x +y -y |
+| 7 | log_1insert_1-5_8 | 9811 | yes (8.7 mm) | base_log_7-1_2 | +x -x +y -y |
+| 8 | log_1insert_1-5_8 | 9896 | yes (9.0 mm) | base_log_7-1_2, log_1insert_1-5_8 | +x -x +y -y |
+| 9 | log_1insert_1-5_8 | 9771 | yes (9.0 mm) | base_log_7-1_2, log_1insert_1-5_8 | +x -x +y -y |
+| 10 | log_1insert_1-1_2_round | 8822 | yes (8.7 mm) | base_log_7-1_2, log_3insert_7-5_8 | +x -x +y -y |
+| 11 | log_2insert_4-1_2 | 28658 | yes (7.2 mm) | base_log_7-1_2, log_3insert_7-5_8 | +x -x +y -y |
+| 12 | log_3insert_7-5_8 | 50014 | yes (9.0 mm) | base_log_7-1_2, log_3insert_7-5_8 | +x -x +y -y |
 | 13 | log_3insert_7-5_8 | 50138 | yes (9.0 mm) | log_3insert_7-5_8, log_1insert_1-1_2_round | +x -x +y -y |
 | 14 | log_3insert_7-5_8 | 49635 | yes (8.7 mm) | log_3insert_7-5_8, log_2insert_4-1_2 | +x -x +y -y |
 | 15 | log_1insert_1-5_8 | 9935 | yes (9.0 mm) | log_1insert_1-5_8 | +x -x +y -y |
@@ -179,19 +179,19 @@ Checks per part: **interference** (volume shared with another part; any shared v
 - Parts: **43**; lowest point z = 0.000 mm
 - Interference over 1 mm3: **none**
 - Unsupported parts: **none**
-- Touching the table: half_log_7-1_2 (everything else is carried by other parts)
+- Touching the table: base_log_7-1_2 (everything else is carried by other parts)
 - Wall logs locked against all four sideways pushes: **32/32**
 - Voxel columns skipped (ray hit an edge): 0
 
 | # | Part | Volume (mm3) | Supported (CoM margin) | Rests on | Pushes blocked |
 |---|---|---|---|---|---|
-| 1 | half_log_7-1_2 | 41532 | yes (8.6 mm) | table | +x -x +y -y |
-| 2 | half_log_7-1_2 | 40790 | yes (8.7 mm) | table | +x -x +y -y |
-| 3 | log_3insert_7-5_8 | 50338 | yes (8.9 mm) | half_log_7-1_2 | +x -x +y -y |
-| 4 | log_3insert_7-5_8 | 49575 | yes (8.7 mm) | half_log_7-1_2 | +x -x +y -y |
-| 5 | log_1insert_1-5_8 | 9896 | yes (9.0 mm) | half_log_7-1_2, log_3insert_7-5_8 | +x -x +y -y |
-| 6 | log_2insert_4-1_2 | 28952 | yes (7.2 mm) | half_log_7-1_2, log_3insert_7-5_8 | +x -x +y -y |
-| 7 | log_3insert_7-5_8 | 49493 | yes (8.7 mm) | half_log_7-1_2, log_3insert_7-5_8 | +x -x +y -y |
+| 1 | base_log_7-1_2 | 41532 | yes (8.6 mm) | table | +x -x +y -y |
+| 2 | base_log_7-1_2 | 40790 | yes (8.7 mm) | table | +x -x +y -y |
+| 3 | log_3insert_7-5_8 | 50338 | yes (8.9 mm) | base_log_7-1_2 | +x -x +y -y |
+| 4 | log_3insert_7-5_8 | 49575 | yes (8.7 mm) | base_log_7-1_2 | +x -x +y -y |
+| 5 | log_1insert_1-5_8 | 9896 | yes (9.0 mm) | base_log_7-1_2, log_3insert_7-5_8 | +x -x +y -y |
+| 6 | log_2insert_4-1_2 | 28952 | yes (7.2 mm) | base_log_7-1_2, log_3insert_7-5_8 | +x -x +y -y |
+| 7 | log_3insert_7-5_8 | 49493 | yes (8.7 mm) | base_log_7-1_2, log_3insert_7-5_8 | +x -x +y -y |
 | 8 | log_3insert_7-5_8 | 50136 | yes (9.0 mm) | log_3insert_7-5_8, log_1insert_1-5_8 | +x -x +y -y |
 | 9 | log_3insert_7-5_8 | 49632 | yes (8.7 mm) | log_3insert_7-5_8, log_2insert_4-1_2 | +x -x +y -y |
 | 10 | log_1insert_1-1_2_round | 8990 | yes (9.0 mm) | log_1insert_1-5_8, log_3insert_7-5_8 | +x -x +y -y |
@@ -234,18 +234,18 @@ Checks per part: **interference** (volume shared with another part; any shared v
 - Parts: **41**; lowest point z = 0.000 mm
 - Interference over 1 mm3: **none**
 - Unsupported parts: **none**
-- Touching the table: half_log_4-1_2 (everything else is carried by other parts)
+- Touching the table: base_log_4-1_2 (everything else is carried by other parts)
 - Wall logs locked against all four sideways pushes: **33/33**
 - Voxel columns skipped (ray hit an edge): 0
 
 | # | Part | Volume (mm3) | Supported (CoM margin) | Rests on | Pushes blocked |
 |---|---|---|---|---|---|
-| 1 | half_log_4-1_2 | 24749 | yes (8.6 mm) | table | +x -x +y -y |
-| 2 | half_log_4-1_2 | 24305 | yes (8.7 mm) | table | +x -x +y -y |
-| 3 | log_2insert_4-1_2 | 29249 | yes (8.9 mm) | half_log_4-1_2 | +x -x +y -y |
-| 4 | log_2insert_4-1_2 | 29271 | yes (8.9 mm) | half_log_4-1_2 | +x -x +y -y |
-| 5 | log_2insert_4-1_2 | 29123 | yes (9.0 mm) | half_log_4-1_2, log_2insert_4-1_2 | +x -x +y -y |
-| 6 | log_2insert_4-1_2 | 28828 | yes (8.7 mm) | half_log_4-1_2, log_2insert_4-1_2 | +x -x +y -y |
+| 1 | base_log_4-1_2 | 24749 | yes (8.6 mm) | table | +x -x +y -y |
+| 2 | base_log_4-1_2 | 24305 | yes (8.7 mm) | table | +x -x +y -y |
+| 3 | log_2insert_4-1_2 | 29249 | yes (8.9 mm) | base_log_4-1_2 | +x -x +y -y |
+| 4 | log_2insert_4-1_2 | 29271 | yes (8.9 mm) | base_log_4-1_2 | +x -x +y -y |
+| 5 | log_2insert_4-1_2 | 29123 | yes (9.0 mm) | base_log_4-1_2, log_2insert_4-1_2 | +x -x +y -y |
+| 6 | log_2insert_4-1_2 | 28828 | yes (8.7 mm) | base_log_4-1_2, log_2insert_4-1_2 | +x -x +y -y |
 | 7 | log_2insert_4-1_2 | 29157 | yes (9.0 mm) | log_2insert_4-1_2 | +x -x +y -y |
 | 8 | log_2insert_4-1_2 | 29165 | yes (9.0 mm) | log_2insert_4-1_2 | +x -x +y -y |
 | 9 | log_1insert_1-5_8 | 9959 | yes (9.0 mm) | log_2insert_4-1_2 | +x -x +y -y |
