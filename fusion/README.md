@@ -48,10 +48,10 @@ Change one and every part in the design follows.
 | `HalfLogHeight` | `LogDia - NotchDepth` | Half-log height |
 | `EndRadius` | 4 mm | Radius of the rounded ends (ball-end design only) |
 | `GableThk` | `MateWidth` | Gable thickness (roof design) |
-| `ShingleThk`, `FlatShingleWidth`, `RidgeShingleWidth` | 0.125, 0.8, 1.125 in | Shingle sizes (roof design) |
+| `ShingleThk`, `FlatShingleWidth`, `RidgeShingleWidth` | 0.125 in, 18.5 mm, 1.125 in | Shingle sizes (roof design) |
 | `RidgeGrooveWidth`, `RidgeGrooveDepth` | 1.6, 0.8 mm | Ridge shingle groove (roof design) |
 | `PanelThk` | 0.125 in | Door and window thickness (roof design) |
-| `PlasticRoofAngle` | from the large gable (27.1 deg) | The small gable's height and the chimney's V follow it (roof design) |
+| `PlasticRoofAngle` | from the large gable (24.0 deg) | The angle the shingles lie at; the chimney's V follows it (roof design) |
 
 ## Per-part parameters
 
@@ -73,9 +73,10 @@ Each part's parameters start with its code.
 
 Notes:
 - Notches stay centred on the part: set `_Notches` and `_Length` and the row re-centres.
-- `_FirstNotch`, `_NotchStep`, `_StepRun`, `_TreadRise`, `_StepPitch` and `Chimney_VDepth` are derived. Leave them alone.
+- `_FirstNotch`, `_NotchStep`, `_StepRun`, `_TreadRise`, `_StepPitch`, `_TreadLen` and `Chimney_VDepth` are derived. Leave them alone.
 - `_NotchStep` exists because Fusion cannot pattern a single copy. The notch pattern always makes at least two; with one notch the step drops to 0.001 mm so the second copy lands on the first.
-- `GableS_Height` is an expression that keeps the large gable's pitch. Type a number over it to set the height directly.
+- `GableS_Height` is an expression that keeps the small gable's treads as long as the large one's. Type a number over it to set the height directly.
+- A flat shingle lies on each tread, so `_TreadLen` must stay a little longer than `FlatShingleWidth` (18.7 against 18.5 mm).
 
 ## How the shapes are modelled
 

@@ -74,39 +74,17 @@ export function layRoof(prof, xMax, startX, widths, t, gap) {
   return { poses, reach };
 }
 
-// Stepped gables: one slat per step, lapped like clapboards (as in photos of the 1970s toy). Each slat's upper edge
-// sits in the inside corner where a tread meets the riser above it, and the slat tips downhill until it rests on the
-// gable (the eave lip, for the lowest one) or on the top edge of the slat below. Returns null if a slat would not
-// rest stably (its centre of mass beyond its lower contact).
-export function layLapped(prof, startX, width, t) {
-  const yAt_ = (x) => yAt(prof, x);
-  const x0 = prof[0][0], x1 = prof.at(-1)[0];
-  // inside corners: tread ends, i.e. points followed by a riser going up, plus the peak
-  const corners = prof.filter((p, i) => p[0] > startX + 1e-9 && (i === prof.length - 1 || (Math.abs(prof[i + 1][0] - p[0]) < 1e-9 && prof[i + 1][1] > p[1])));
-  const ground = [];
-  for (let x = x0; x <= x1 + 1e-9; x += 0.25) ground.push([x, yAt_(x)]);
-  ground.push(...prof);
-  const poses = [];
-  let prevTop = [];
-  for (const A of corners) {
-    let phi = Infinity, S = null;
-    for (const p of [...ground, ...prevTop]) {
-      const dx = A[0] - p[0];
-      if (dx <= 1e-6) continue;
-      const a = Math.atan2(A[1] - p[1], dx);
-      if (Math.hypot(dx, A[1] - p[1]) > width + 1e-6) continue; // beyond the slat's lower edge
-      if (a < phi) { phi = a; S = p; }
-    }
-    if (!S || phi <= 0) return null;
-    const dS = Math.hypot(A[0] - S[0], A[1] - S[1]);
-    if (dS < width / 2) return null; // would tip over its lower contact
-    const d = [Math.cos(phi), Math.sin(phi)], n = [-d[1], d[0]], C = [A[0] - width * d[0], A[1] - width * d[1]];
-    poses.push({ C, phi, contacts: [width - dS, width] });
-    // the slat below's top face, sampled along its length, so a steeper slat cannot dip into a flatter one
-    const T0 = [C[0] + t * n[0], C[1] + t * n[1]], T1 = [A[0] + t * n[0], A[1] + t * n[1]], m = Math.ceil(width / 0.25);
-    prevTop = Array.from({ length: m + 1 }, (_, i) => [T0[0] + (i / m) * (T1[0] - T0[0]), T0[1] + (i / m) * (T1[1] - T0[1])]);
-  }
-  return { poses, reach: x1 };
+// Stepped gables: one flat shingle per step, lying flat on its tread, as on the 1974 Frontiersman set. A tread is a
+// little longer than a shingle is wide and the riser between treads is lower than a shingle is thick, so each shingle's
+// edges face its neighbours' (or the eave lip's) and the row cannot slide: they butt edge to edge, never overlap.
+// Each shingle is centred on its tread, leaving half the spare length at each edge.
+export function layTreads(treads, width) {
+  const poses = treads.map(([a, b]) => {
+    const len = Math.hypot(b[0] - a[0], b[1] - a[1]), d = [(b[0] - a[0]) / len, (b[1] - a[1]) / len], s = (len - width) / 2;
+    if (s < 0) throw new Error(`a ${width} mm shingle does not fit a ${len.toFixed(2)} mm step`);
+    return { C: [a[0] + s * d[0], a[1] + s * d[1]], phi: Math.atan2(d[1], d[0]) };
+  });
+  return { poses, reach: treads.at(-1)[1][0] };
 }
 
 export function buildings(P) {
@@ -129,10 +107,9 @@ export function buildings(P) {
     const g = P[gName].info, gap = 0.5;
     const flat = P[`shingle_flat_${len}`].info, ridge = P[`shingle_ridge_${len}`].info;
     let best = null;
-    // stepped gables: one flat slat per step, lapped
-    if (g.steps) {
-      const lay = layLapped(g.profile, g.startX, flat.width, flat.t);
-      if (!lay) throw new Error(`lapped slats do not rest stably on ${gName}`);
+    // stepped gables: one flat shingle on each step, edge to edge
+    if (g.treads) {
+      const lay = layTreads(g.treads, flat.width);
       best = { seq: lay.poses.map(() => ['flat', flat]), lay };
     }
     // plain slopes: try k flats followed by one ridge shingle (or flats only); keep the layout that reaches closest to the peak
