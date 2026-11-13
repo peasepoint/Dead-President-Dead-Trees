@@ -4,6 +4,8 @@ Three Bambu Studio projects for a Bambu Lab P2S, 0.4 mm nozzle, Bambu PLA Basic,
 
 ## Dovetail splice sample
 
+**This plate holds the first, loose version of the joint** (0.3 mm clearance on every face). Printed, its pieces went together freely but sagged at every joint. The STLs in `stl/` now have a press fit; the plate has not been rebuilt from them, so load the new STLs into Bambu Studio with the settings below.
+
 `dovetail_p2s.3mf` prints every dovetail piece: the tongue half and groove half of the two-piece `log_4insert_10-5_8`, and the `log_extender_1insert_3`, from each of the four log sets. That is 12 parts on one plate, all lying on their flats as in the STLs. `dovetail_p2s_Dovetail pieces.gcode.3mf` is the same plate already sliced, ready to send to the printer.
 
 ![Plate preview](dovetail_preview.png)
