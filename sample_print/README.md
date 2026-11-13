@@ -2,6 +2,12 @@
 
 Three Bambu Studio projects for a Bambu Lab P2S, 0.4 mm nozzle, Bambu PLA Basic, Cool Plate.
 
+## Dovetail pair test plate
+
+`dovetail_pair_p2s.3mf` is the quick fit check: one pair, the Flat-End-Round tongue half and groove half of `log_4insert_10-5_8`, built from the current press-fit STLs. Both lie on their flats side by side, centred on the P2S bed. It uses the same print settings as the dovetail splice sample below (0.24 mm layers, 2 walls, 8% gyroid, no supports). Print it, slide the halves together, and check that the joint is snug with no sag and that the tine tips are clean.
+
+It is not pre-sliced. Bambu Studio is not available here, so slice it yourself. If the joint is too tight or too loose, see the fit ladder in `fit_test/dovetail/`.
+
 ## Dovetail splice sample
 
 **This plate holds the first, loose version of the joint** (0.3 mm clearance on every face). Printed, its pieces went together freely but sagged at every joint. The STLs in `stl/` now have a press fit; the plate has not been rebuilt from them, so load the new STLs into Bambu Studio with the settings below.
