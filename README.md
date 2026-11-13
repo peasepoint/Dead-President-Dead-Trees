@@ -146,12 +146,11 @@ How many of each part the six [example buildings](#example-buildings) need. Logs
 | `gable_plastic_8-1_2` | 2 | | | 2 | 2 | |
 | `gable_plastic_small_2notch` | | | 2 | | | |
 | `gable_wood_triangle_4x2` | | 2 | | | | 2 |
-| `shingle_flat_9` | 6 | | | 6 | 6 | |
-| `shingle_ridge_9` | 2 | | | 2 | 2 | |
-| `shingle_flat_6` | | 4 | 6 | | | 4 |
+| `shingle_flat_9` | 14 | | | 14 | 14 | |
+| `shingle_flat_6` | | 4 | 10 | | | 4 |
 | `shingle_ridge_6` | | 2 | | | | 2 |
 | `chimney` | 1 | | 1 | 1 | 1 | |
-| **Total** | **30** | **24** | **25** | **43** | **43** | **41** |
+| **Total** | **36** | **24** | **29** | **49** | **49** | **41** |
 
 - **Easiest first builds:** the shed, cottage and watchtower. Their longest part is 194 mm or less. The cabin and porch cabin need the 270 mm logs.
 - **The 1-notch logs are interchangeable,** so any mix of them works.
@@ -163,7 +162,7 @@ How many of each part the six [example buildings](#example-buildings) need. Logs
 2. Cross two side-wall logs over them, notch into notch.
 3. Keep alternating end walls and side walls. Each course adds 3/8 in. Use the short 1- and 2-notch logs to leave gaps for a door or window.
 4. Set a gable where the next end-wall log would go, its bottom notches over the side-wall logs.
-5. Lay shingles across the two gables from the eave upward, then drop the chimney over the ridge. The chimney fits the stepped gables only; the triangle's roof is steeper.
+5. Lay shingles across the two gables from the eave upward, then drop the chimney over the ridge. On the stepped gables, put one flat shingle on each step: its upper edge goes against the step above and its lower edge lies over the shingle below, like clapboards. The lowest one rests on the eave lip. On the triangle gables, lay them edge to edge with a ridge shingle at the top. The chimney fits the stepped gables only; the triangle's roof is steeper.
 
 ## Example buildings
 

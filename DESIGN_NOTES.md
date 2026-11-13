@@ -192,7 +192,7 @@ Everything else agrees with the spec within its stated confidence. Known differe
 | End walls | 3-insert logs; a doorway (front) and window (back) framed with 1- and 2-insert logs | 2-insert logs | 2-insert logs |
 | Side walls | 4-insert logs | 3-insert logs | 3-insert logs |
 | Gables | 2 x large stepped gable | 2 x triangle gable | 2 x small stepped gable |
-| Shingles per slope | 3 flat 9 in + 1 ridge 9 in | 2 flat 6 in + 1 ridge 6 in | 3 flat 6 in |
+| Shingles per slope | 7 flat 9 in, one per step, lapped | 2 flat 6 in + 1 ridge 6 in | 5 flat 6 in, one per step, lapped |
 | Chimney | Yes | No: its 39 deg roof doesn't match the chimney's 27 deg V | Yes |
 
 | | Porch cabin | Tall house | Watchtower |
@@ -205,13 +205,23 @@ Everything else agrees with the spec within its stated confidence. Known differe
 | Shingles | 9 in, flush with the gables | 9 in, overhanging 1 1/2 in at each gable | 6 in, overhanging 1 1/2 in at each gable |
 | Chimney | Yes | Yes | No |
 
-**Shingle positions are computed, not placed by hand.** Each shingle is lowered onto the gable's top edge the way a real board settles:
+**Shingle positions are computed, not placed by hand.** Each shingle is lowered onto the gable's top edge the way a real board settles.
 
-1. Its lower edge starts just clear of the eave lip or the shingle below.
+On the **stepped gables** the shingles are lapped like clapboards, one per step, as in photos of built 1970s roofs (an end view of a 1974 set shows each slat on its own step, overlapping the one below):
+
+1. A shingle's upper edge sits in the inside corner where a step meets the riser above it.
+2. It tips downhill until it rests on the gable (the eave lip, for the lowest one) or on the top face of the shingle below.
+3. A shingle whose centre of mass would be past its lower contact would tip over, and the layout is rejected.
+
+A shingle is 20.3 mm wide and a step only 15.4 mm long, so each one overlaps the one below by about 5 mm. On the large gable they lie at about 16 deg; the overall roof line is 27 deg. The two top shingles meet at the peak, so the ridge is closed. The lowest shingle lies almost flat on the eave lip, about 3 deg. In the photos it sits behind a hook at the eave and follows the roof, which this gable's measured lip and first step do not allow.
+
+On the **triangle gable**, a plain slope, the shingles lie edge to edge:
+
+1. Its lower edge starts just clear of the shingle below.
 2. It rotates down until it touches the edge again.
 3. If its centre of mass would be past that second contact, it tips forward until its far edge lands.
 
-The layout that reaches closest to the peak without crossing it is kept. On the stepped gable this gives a slightly stepped, overlapping-looking roof, as in the photos.
+The layout that reaches closest to the peak without crossing it is kept.
 
 **The chimney is placed the same way.** It is centred on the ridge and lowered until its V-cut base first touches the shingles.
 
@@ -231,8 +241,8 @@ What holds the parts that are not wall logs:
 
 - Gables are locked by their bottom notches.
 - Chimneys are held across the ridge by their V.
-- The lowest shingles on the stepped gables are stopped by the eave lip.
-- Other shingles, and every shingle on the triangle gable, can slide downhill if pushed. They rely on friction, as the originals do.
+- On the stepped gables each shingle's upper edge rests against a riser and its lower part on the shingle below; the lowest lies on the eave lip.
+- They can still slide downhill if pushed, as can every shingle on the triangle gable. They rely on friction, as the originals do.
 
 Per-part results, one file per log set: [flat-end round](VERIFY_flat_end_round.md), [ball-end round](VERIFY_ball_end_round.md), [flat-end octagonal](VERIFY_flat_end_octagonal.md), [smooth](VERIFY_smooth.md).
 
@@ -244,7 +254,7 @@ Per-part results, one file per log set: [flat-end round](VERIFY_flat_end_round.m
   - Chimney depth and socket.
   - The meaning of "1 1/2 x 1 1/4" on the beveled end.
   - The small gable's height: 1.56 in, derived from the large gable's pitch, against about 1.6 in measured.
-- **One cabin shingle row is marginal.** Its centre of mass is only about 1 mm inside its supports. It is stable on paper, but a light knock could tip it.
+- **Shingle ends bear on half a gable.** The 9 in and 6 in shingles are exactly as long as the wall-centre spacing they cover, so each end rests on half the gable's thickness. Photos show the original slats reaching the gable's outer face, and the reference lists a 9 3/4 in slat (9 in plus a 3/4 in gable), which is not modelled.
 - **The door and window** are not in any photo and are not used in the verified buildings.
 
 ## Printing notes
