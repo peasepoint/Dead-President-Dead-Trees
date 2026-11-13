@@ -37,15 +37,15 @@ Both columns appear in listings. The 7/16 column matches more measured originals
 | 2-notch | round | 4.5 in | 2, at the ends | #3 | 9001.001 | High |
 | 3-notch | round | 7.5 in | 3: both ends and centre | #4 | 9002.001 | Medium |
 | 4-notch | round | 10.5 in | 4: ends and two inside | #11 | not found | Medium |
-| 2-notch flat (half log) | flat bottom, notches on top | 4.5 in | 2 | #5 | 9003.001 (inferred) | Medium |
-| 3-notch flat (half log) | flat bottom, notches on top | 7.5 in | 3 | #8 | 9004.001 (inferred) | Medium |
+| 2-notch flat (base log) | flat bottom, notches on top | 4.5 in | 2 | #5 | 9003.001 (inferred) | Medium |
+| 3-notch flat (base log) | flat bottom, notches on top | 7.5 in | 3 | #8 | 9004.001 (inferred) | Medium |
 | 4-notch flat | flat bottom | 10.5 in | 4 | not seen | not seen | Low (handmade sets only) |
 | 2-insert 6 in log | round | 6 in | 2, non-standard layout | n/a | n/a | Low (one vintage lot, see `RESEARCH.md`) |
 
 Notes:
 - #-numbers come from the Playskool *Log Cabin* sheet (1996: #1, #3, #4, #5) and the K'NEX *Discovery* 00902 sheet (1999: #1, #3, #5, #8, #11). Lengths were matched by scaling the sheets' parts drawings against each other (e.g. #4 draws at 1.64x #3, close to 7.5/4.5; #11 at 2.3x, close to 10.5/4.5). The sheets give no lengths.
 - K'NEX numbers come from the 2019 *On The Trail* 00821 and *Fun On The Farm* 00858 parts legends. The flat-log mapping is read from the legend drawings and should be checked against a real part.
-- Half-log height: measured at about 0.53 in from photos (`RESEARCH.md`). A half log ripped exactly through the centre would be 3/8 in, so the originals are cut above centre.
+- Base-log height: measured at about 0.53 in from photos (`RESEARCH.md`). A base log ripped exactly through the centre would be 3/8 in, so the originals are cut above centre.
 
 ## 3. Roof, gable and accessory pieces
 

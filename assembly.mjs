@@ -3,10 +3,10 @@
 //  SHED:  3 in x 6 in between wall centres, wooden triangle gables, 6 in shingles.
 //  COTTAGE, PORCH CABIN, TALL HOUSE, WATCHTOWER: described where they are built below.
 // Wall rules (as in the brand's own builds): end walls (along x) take the even courses, side walls (along y) the odd
-// courses; course 0 of the end walls is half logs, so every building sits flat on the table.
+// courses; course 0 of the end walls is base logs, so every building sits flat on the table.
 import { h, R, PITCH, CENTERS } from './parts.mjs';
 
-export const zc = (c) => h + c * PITCH; // centre height of course c (course 0 = half logs, flat bottom on z = 0)
+export const zc = (c) => h + c * PITCH; // centre height of course c (course 0 = base logs, flat bottom on z = 0)
 
 // ---- where a rigid shingle comes to rest on a gable's top edge (2D, gable-local x/z, left slope rising to +x) ----
 // profile: polyline of the left half of the top edge, eave to peak (vertical risers allowed).
@@ -134,7 +134,7 @@ export function buildings(P) {
   {
     const WID = 2 * CENTERS, LEN = 3 * CENTERS, K = 8, front = 0, back = LEN;
     const q = (c) => `WALLS: COURSE ${c + 1}/${K}`;
-    cabin.push(xLog('half_log_7-1_2', 0, front, 0, 0, 'HALF LOGS: FLAT BASE'), xLog('half_log_7-1_2', 0, back, 0, 0, 'HALF LOGS: FLAT BASE'));
+    cabin.push(xLog('base_log_7-1_2', 0, front, 0, 0, 'BASE LOGS: FLAT BASE'), xLog('base_log_7-1_2', 0, back, 0, 0, 'BASE LOGS: FLAT BASE'));
     for (let c = 1; c < K; c++) {
       if (c % 2) { cabin.push(yLog('log_4insert_10-5_8', c, 0, 0, 0, q(c)), yLog('log_4insert_10-5_8', c, WID, 0, 0, q(c))); continue; }
       // front wall: doorway in the left bay on courses 2 and 4 (short logs at the corner, 2-insert across the right bay)
@@ -155,7 +155,7 @@ export function buildings(P) {
   const shed = [];
   {
     const WID = CENTERS, LEN = 2 * CENTERS, K = 8, front = 0, back = LEN;
-    shed.push(xLog('half_log_4-1_2', 0, front, 0), xLog('half_log_4-1_2', 0, back, 0));
+    shed.push(xLog('base_log_4-1_2', 0, front, 0), xLog('base_log_4-1_2', 0, back, 0));
     for (let c = 1; c < K; c++) {
       if (c % 2) shed.push(yLog('log_3insert_7-5_8', c, 0, 0), yLog('log_3insert_7-5_8', c, WID, 0));
       else shed.push(xLog('log_2insert_4-1_2', c, front, 0), xLog('log_2insert_4-1_2', c, back, 0));
@@ -170,7 +170,7 @@ export function buildings(P) {
   const cottage = [];
   {
     const WID = CENTERS, LEN = 2 * CENTERS, K = 8, front = 0, back = LEN;
-    cottage.push(xLog('half_log_4-1_2', 0, front, 0), xLog('half_log_4-1_2', 0, back, 0));
+    cottage.push(xLog('base_log_4-1_2', 0, front, 0), xLog('base_log_4-1_2', 0, back, 0));
     for (let c = 1; c < K; c++) {
       if (c % 2) cottage.push(yLog('log_3insert_7-5_8', c, 0, 0), yLog('log_3insert_7-5_8', c, WID, 0));
       else cottage.push(xLog('log_2insert_4-1_2', c, front, 0), xLog('log_2insert_4-1_2', c, back, 0));
@@ -183,11 +183,11 @@ export function buildings(P) {
 
   // ---------------- PORCH CABIN ----------------
   // 6 x 6 in room with a 3 in deep porch in front: the top side-wall logs run forward over two posts, each a stack of
-  // crossed 1-notch logs standing on a half-log sill, and the roof covers room and porch.
+  // crossed 1-notch logs standing on a base-log sill, and the roof covers room and porch.
   const porch = [];
   {
     const WID = 2 * CENTERS, K = 8, sill = 0, front = CENTERS, back = 3 * CENTERS, POST = 'log_1insert_1-5_8';
-    for (const y of [sill, front, back]) porch.push(xLog('half_log_7-1_2', 0, y, 0));
+    for (const y of [sill, front, back]) porch.push(xLog('base_log_7-1_2', 0, y, 0));
     for (let c = 1; c < K; c++) {
       if (c === K - 1) { porch.push(yLog('log_4insert_10-5_8', c, 0, sill), yLog('log_4insert_10-5_8', c, WID, sill)); continue; }
       if (c % 2) { // side walls of the room, and the posts
@@ -217,7 +217,7 @@ export function buildings(P) {
     const ONE = ['log_1insert_1-5_8', 'log_1insert_1-1_2_round', 'log_1insert_1-1_2_round'], TWO = 'log_2insert_4-1_2', THREE = 'log_3insert_7-5_8';
     let n1 = 0;
     const one = () => ONE[n1++ % 3];
-    house.push(xLog('half_log_7-1_2', 0, front, 0), xLog('half_log_7-1_2', 0, back, 0));
+    house.push(xLog('base_log_7-1_2', 0, front, 0), xLog('base_log_7-1_2', 0, back, 0));
     for (let c = 1; c < K; c++) {
       if (c % 2) {
         // left wall: window in the front bay on course 5; right wall: window in the back bay on course 7
@@ -245,7 +245,7 @@ export function buildings(P) {
   const tower = [];
   {
     const WID = CENTERS, LEN = CENTERS, K = 14, TWO = 'log_2insert_4-1_2', ONE = 'log_1insert_1-5_8';
-    tower.push(xLog('half_log_4-1_2', 0, 0, 0), xLog('half_log_4-1_2', 0, LEN, 0));
+    tower.push(xLog('base_log_4-1_2', 0, 0, 0), xLog('base_log_4-1_2', 0, LEN, 0));
     for (let c = 1; c < K; c++) {
       if (c % 2) {
         if (c === 9) tower.push(yLog(ONE, c, WID, 0), yLog(ONE, c, WID, LEN)); else tower.push(yLog(TWO, c, WID, 0));

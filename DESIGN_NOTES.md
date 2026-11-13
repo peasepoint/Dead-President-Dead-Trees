@@ -34,7 +34,7 @@ Where the seller's sheet gives a length, that figure is used. Where a photo and 
 |---|---|---|
 | Log diameter | 3/4 in (19.05 mm) | Photos (end grain about 0.76 in) and the published spec |
 | Printing flats | 0.4 mm off each side, 0.8 mm in total | Round logs print lying down with no supports. The bed flat matches the one opposite, so a log is the same width either way up |
-| Mating width | 18.25 mm (3/4 in less the two flats) | The width of a log where it sits in a notch. Octagonal logs, half logs and gables are trimmed to the same width, so they fit the same notch |
+| Mating width | 18.25 mm (3/4 in less the two flats) | The width of a log where it sits in a notch. Octagonal logs, base logs and gables are trimmed to the same width, so they fit the same notch |
 | Notch width | 18.65 mm (mating width + 0.2 mm clearance per side) | The [fit test](fit_test/README.md) in PLA. The photos show about 0.76 in |
 | Notch depth | 3/16 in, top and bottom | Hobbyist plans; consistent with the photos |
 | Notch centres | 3 in | Photos: 245 to 260 px between notches on every log |
@@ -53,7 +53,7 @@ One folder of roof parts that every building uses, and four log sets to choose b
 | [`stl/flat_end_octagonal/`](stl/flat_end_octagonal) | Octagonal logs, wood grain, flat ends | `makeParts({ set: 'octagonal' })` |
 | [`stl/smooth/`](stl/smooth) | Round logs, plain, flat ends | `makeParts({ texture: false })` |
 
-"Logs" means the notched logs, half logs, beveled end and solid logs. Two folders were renamed: `flat_end_round` was `woodgrain`, and `ball_end_round` was `rounded_woodgrain`.
+"Logs" means the notched logs, base logs, beveled end and solid logs. Two folders were renamed: `flat_end_round` was `woodgrain`, and `ball_end_round` was `rounded_woodgrain`.
 
 ### Flat-End-Round and Smooth
 
@@ -68,7 +68,7 @@ The standard logs with rounded ends. Each STL is named like its flat-end counter
 | End shape | The cross-section steps down to 95% of full size 1.5 mm in from the end, 82% at 3.5 mm and 60% at the end face (`ROUNDED_ENDS` in `parts.mjs`) |
 | Lengths, notches, fit | The same as the matching flat-end log; the rounding sits in the end shoulders, outside the notches |
 | Logs and beveled end | They shrink towards the log's axis, so the last 1.5 mm of each end lifts slightly off the bed. The beveled end is rounded only at its square end |
-| Half logs | Rounded over the top and sides only, so the flat side stays flat on the bed |
+| Base logs | Rounded over the top and sides only, so the flat side stays flat on the bed |
 | Solid logs | Both ends rounded |
 
 ### Flat-End-Octagonal
@@ -82,7 +82,7 @@ The standard logs with an eight-sided section. Each STL is named like its round 
 | Fit | Notches, clearance and course rise are unchanged; the corners stay inside the round log's 3/4 in square |
 | Grain | Streaks on six faces; the two side faces stay smooth, like the round logs' flats |
 | 1 1/2 in log | Octagonal like the rest, so it is named `log_1insert_1-1_2_oct` rather than `..._round_oct` |
-| Half logs | The octagon cut at the bottom-notch floor, with the same side faces |
+| Base logs | The octagon cut at the bottom-notch floor, with the same side faces |
 | Solid logs | Octagonal prisms standing on end, a full 3/4 in across the flats (they sit in no notch) |
 
 ### The two-piece 4-notch log
@@ -105,7 +105,7 @@ Every log set also holds `log_4insert_10-5_8` as two halves, `..._split_tongue` 
 - **Strength.** The neck is 4.6 mm thick and the full 18.25 mm wide, with the layers running along it. It is the weakest point of the joined log. The radius where it meets the shoulder makes it thicker than a square corner would (4.0 mm) and spreads the load.
 - **Grain.** The joint faces are smooth. The grain stops at the cut lines, so the texture does not change the fit.
 - **Extender.** `log_extender_1insert_3` has the same socket at one end and the same tail at the other, 3 in apart, with one notch between them. It goes between the two halves and adds 3 in, so every notch of the longer log stays on 3 in centres; several can be chained. It is 81.95 mm long. Each joint adds its own endways play (about 1.2 mm), and no building longer than the 4-notch log exists to use it yet.
-- **Half-log versions.** `half_log_10-5_8_split_tongue`, `half_log_10-5_8_split_groove` and `half_log_extender_1insert_3` are the same three pieces as half logs for the base course: flat underneath at the bottom-notch floor, notches on top only, the same lengths and notch places. The reference lot has no half log this long. Their dovetail has the same outline, clearance and radii but is cut straight down through the log, because a half log prints on its flat bottom and the joint's faces must stay upright on the bed. The tail goes into the socket from above. The tail is the full height of the half log (14.3 mm) and the tines are 5.5 mm thick at their thinnest, either side of it, and reach the bed all along. The rounded rims are on the sides of the log, not on its bottom edge, which stays square on the bed. The two kinds of piece do not join with each other.
+- **Base-log versions.** `base_log_10-5_8_split_tongue`, `base_log_10-5_8_split_groove` and `base_log_extender_1insert_3` are the same three pieces as base logs for the base course: flat underneath at the bottom-notch floor, notches on top only, the same lengths and notch places. The reference lot has no base log this long. Their dovetail has the same outline, clearance and radii but is cut straight down through the log, because a base log prints on its flat bottom and the joint's faces must stay upright on the bed. The tail goes into the socket from above. The tail is the full height of the base log (14.3 mm) and the tines are 5.5 mm thick at their thinnest, either side of it, and reach the bed all along. The rounded rims are on the sides of the log, not on its bottom edge, which stays square on the bed. The two kinds of piece do not join with each other.
 - **Not in the other files.** The Fusion designs and `verify.mjs` do not include the halves or the extenders, and no example building uses them.
 
 ## Wood texture
@@ -117,7 +117,7 @@ Three log sets carry a shallow wood grain, built into the mesh by `parts.mjs`: `
 | Side grain | Lengthwise streaks, up to 0.25 mm deep and 1.1 to 1.8 mm wide, that wander slightly and fade in and out | The wooden originals are stained dowels with the grain running along the log |
 | End grain | Growth rings 0.2 mm deep, about 1.2 to 1.7 mm apart, round a slightly off-centre pith; they fade out 0.6 mm from the rim | The originals show ring arcs on their sawn ends |
 | Direction | Grooves only, never raised | Diameter, length and notch fit are unchanged, so the sets can be mixed |
-| Left smooth | Notch floors and walls, both side flats of each log, the half-log underside, the octagon's two side faces | Mating surfaces and bed adhesion |
+| Left smooth | Notch floors and walls, both side flats of each log, the base-log underside, the octagon's two side faces | Mating surfaces and bed adhesion |
 | Slopes | Smooth groove profile, about 35 deg at its steepest | Prints without supports in any orientation |
 | Variation | Each part name seeds its own pattern; the two ends of a log differ | The output is the same on every run |
 
@@ -136,7 +136,7 @@ What each part was modelled from and where the sources disagree. Names are the F
 | `log_2insert_4-1_2` | 2 Insert Log, 4 1/2 | Round, 2 notches | Photo measured 4.57 in |
 | `log_3insert_7-5_8` | 3 Insert Log, 7 3/4 | Round, 3 notches, 7 5/8 in | The sheet says 7 3/4, but the photo measured about 7.6 in and the length rule in [`PARTS_SPEC.md`](PARTS_SPEC.md) gives 7 5/8, in line with the 1 5/8 and 10 5/8 in logs |
 | `log_4insert_10-5_8` | 4 Insert Log, 10 5/8 | Round, 4 notches | |
-| `half_log_4-1_2`, `half_log_7-1_2` | Half Log, 4 1/2 and 7 1/2 | Flat bottom at the bottom-notch floor (9/16 in tall), notches on top only | Photo: about 0.53 in tall |
+| `base_log_4-1_2`, `base_log_7-1_2` | Base Log, 4 1/2 and 7 1/2 | Flat bottom at the bottom-notch floor (9/16 in tall), notches on top only | Photo: about 0.53 in tall |
 | `beveled_end_1-1_2` | Beveled End, 1 1/2 x 1 1/4 | 1 1/2 in log, one end cut at 39 deg | The angle is from the photos and matches the triangle gable. The "1 1/4" is not explained by the photos |
 | `solid_log_1-3_8`, `solid_log_1-5_8` | Solid Log, 1 3/8 and 1 5/8 | Plain 3/4 in cylinders | Purpose unknown; not used in the test buildings |
 | (dropped) | 1 Insert Log (Hex), 1 1/2 | Not included | The end grain shows flats top and bottom. It is the same size as the round 1 1/2 in log and does the same job, so the 1 1/2 in log covers it; the [Flat-End-Octagonal](#flat-end-octagonal) set gives octagonal logs of every length |
@@ -170,8 +170,8 @@ Every part was re-rendered and its dimensions compared with [the spec](PARTS_SPE
 
 Everything else agrees with the spec within its stated confidence. Known differences that were kept:
 
-- **End shoulders are mixed.** The 1 1/2 and 4 1/2 in logs and the half logs use 3/8 in; the 1 5/8, 7 5/8 and 10 5/8 in logs use 7/16 in. Both appear in the spec, and each length follows the measured pieces.
-- **Half-log height** is 9/16 in against about 0.53 in measured, so the flat sits exactly at the notch floor. The difference is inside the photo error.
+- **End shoulders are mixed.** The 1 1/2 and 4 1/2 in logs and the base logs use 3/8 in; the 1 5/8, 7 5/8 and 10 5/8 in logs use 7/16 in. Both appear in the spec, and each length follows the measured pieces.
+- **Base-log height** is 9/16 in against about 0.53 in measured, so the flat sits exactly at the notch floor. The difference is inside the photo error.
 - **Width across the notch faces.** The spec's 11/16 in (low confidence, from one compatible build) is not used. Logs stay 3/4 in round and are 18.25 mm wide where they sit in a notch.
 - **Two logs were dropped** because their shoulders don't follow the length rule: the 4 3/4 in rounded-end log (its ends live on in the ball-end set) and the 6 in 2-insert log.
 - **The 1 1/2 in "hex" log was dropped** because it duplicates the round 1 1/2 in log: same length, same notch, same job. The Flat-End-Octagonal set gives octagonal logs of every length instead.
@@ -181,14 +181,14 @@ Everything else agrees with the spec within its stated confidence. Known differe
 
 `assembly.mjs` lays out six buildings using only parts from the reference photos. Part counts for each are in the [README](README.md#4-print-a-building). The buildings follow the toy's own rules:
 
-- End walls take the even courses, starting with **half logs**.
+- End walls take the even courses, starting with **base logs**.
 - Side walls take the odd courses.
 - Each gable sits where the next end-wall log would go, with its bottom notches over the crossing side-wall logs.
 
 | | Cabin | Shed | Cottage |
 |---|---|---|---|
 | Size between wall centres | 6 x 9 in | 3 x 6 in | 3 x 6 in |
-| Base | `half_log_7-1_2` | `half_log_4-1_2` | `half_log_4-1_2` |
+| Base | `base_log_7-1_2` | `base_log_4-1_2` | `base_log_4-1_2` |
 | End walls | 3-insert logs; a doorway (front) and window (back) framed with 1- and 2-insert logs | 2-insert logs | 2-insert logs |
 | Side walls | 4-insert logs | 3-insert logs | 3-insert logs |
 | Gables | 2 x large stepped gable | 2 x triangle gable | 2 x small stepped gable |
@@ -199,7 +199,7 @@ Everything else agrees with the spec within its stated confidence. Known differe
 |---|---|---|---|
 | Size between wall centres | 6 x 6 in room + 3 in porch | 6 x 6 in | 3 x 3 in |
 | Courses | 8 | 12 | 14 |
-| Base | 3 x `half_log_7-1_2` (the third is the porch sill) | `half_log_7-1_2` | `half_log_4-1_2` |
+| Base | 3 x `base_log_7-1_2` (the third is the porch sill) | `base_log_7-1_2` | `base_log_4-1_2` |
 | Walls | 3-insert logs; the top side-wall course is 4-insert logs that run forward over two posts, each seven crossed 1-insert logs | 3-insert logs; a doorway three courses high and a window in each wall, framed with 1- and 2-insert logs | 2-insert logs; five look-out slits, each a pair of 1-insert logs |
 | Gables | 2 x large stepped gable (one over the porch) | 2 x large stepped gable | 2 x triangle gable |
 | Shingles | 9 in, flush with the gables | 9 in, overhanging 1 1/2 in at each gable | 6 in, overhanging 1 1/2 in at each gable |
@@ -222,7 +222,7 @@ Each placed part is voxelised at 0.5 mm from the same geometry as the STLs. All 
 | Check | Method | Result |
 |---|---|---|
 | Interference | Volume shared between parts; any shared voxel counts | None. Parts touch but never overlap |
-| Support | Each part's centre of mass must lie inside the convex hull of its contacts below. A contact is another part, or the table, within 1 mm (two voxels) directly below | Every part is supported. Only the half logs touch the table, so every building sits flat |
+| Support | Each part's centre of mass must lie inside the convex hull of its contacts below. A contact is another part, or the table, within 1 mm (two voxels) directly below | Every part is supported. Only the base logs touch the table, so every building sits flat |
 | Interlock | Each part is pushed 1.5 mm in each sideways direction to see whether a neighbour blocks it | All 51 wall logs are locked in all four directions by their notches |
 
 Two voxels are allowed for a contact because rounding to a 0.5 mm grid can open a false gap at a line contact, such as a shingle corner resting on a step.
