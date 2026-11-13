@@ -6,7 +6,7 @@ Checks per part: **interference** (volume shared with another part; any shared v
 
 ## Cabin (6 x 9 in, large plastic gables, chimney)
 
-- Parts: **30**; lowest point z = 0.000 mm
+- Parts: **34**; lowest point z = 0.000 mm
 - Interference over 1 mm3: **none**
 - Unsupported parts: **none**
 - Touching the table: base_log_7-1_2 (everything else is carried by other parts)
@@ -34,17 +34,21 @@ Checks per part: **interference** (volume shared with another part; any shared v
 | 17 | log_3insert_7-5_8 | 48468 | yes (8.5 mm) | log_1insert_1-5_8, log_4insert_10-5_8, log_2insert_4-1_2 | +x -x +y -y |
 | 18 | log_4insert_10-5_8 | 68030 | yes (8.1 mm) | log_4insert_10-5_8, log_3insert_7-5_8 | +x -x +y -y |
 | 19 | log_4insert_10-5_8 | 67192 | yes (8.2 mm) | log_4insert_10-5_8, log_3insert_7-5_8 | +x -x +y -y |
-| 20 | gable_plastic_8-1_2 | 119986 | yes (9.0 mm) | log_3insert_7-5_8, log_4insert_10-5_8 | +x -x +y -y |
-| 21 | gable_plastic_8-1_2 | 119986 | yes (9.0 mm) | log_3insert_7-5_8, log_4insert_10-5_8 | +x -x +y -y |
-| 22 | shingle_flat_9 | 14771 | yes (7.7 mm) | gable_plastic_8-1_2 | +x -x |
-| 23 | shingle_flat_9 | 14713 | yes (7.5 mm) | gable_plastic_8-1_2 | +x -x |
-| 24 | shingle_flat_9 | 14828 | yes (1.1 mm) | gable_plastic_8-1_2 | +x |
-| 25 | shingle_flat_9 | 14828 | yes (0.9 mm) | gable_plastic_8-1_2 | -x |
-| 26 | shingle_flat_9 | 14713 | yes (8.3 mm) | gable_plastic_8-1_2 | +x |
-| 27 | shingle_flat_9 | 14828 | yes (8.2 mm) | gable_plastic_8-1_2 | -x |
-| 28 | shingle_ridge_9 | 20725 | yes (3.1 mm) | gable_plastic_8-1_2 | +x -x |
-| 29 | shingle_ridge_9 | 20610 | yes (2.8 mm) | gable_plastic_8-1_2 | +x -x |
-| 30 | chimney | 16028 | yes (12.5 mm) | shingle_ridge_9 | +x -x |
+| 20 | gable_plastic_8-1_2 | 119875 | yes (9.0 mm) | log_3insert_7-5_8, log_4insert_10-5_8 | +x -x +y -y |
+| 21 | gable_plastic_8-1_2 | 119875 | yes (9.0 mm) | log_3insert_7-5_8, log_4insert_10-5_8 | +x -x +y -y |
+| 22 | shingle_flat_9 | 13282 | yes (8.6 mm) | gable_plastic_8-1_2 | +x -x |
+| 23 | shingle_flat_9 | 13626 | yes (8.8 mm) | gable_plastic_8-1_2 | +x -x |
+| 24 | shingle_flat_9 | 13568 | yes (7.5 mm) | gable_plastic_8-1_2 | +x -x |
+| 25 | shingle_flat_9 | 13397 | yes (7.8 mm) | gable_plastic_8-1_2 | +x -x |
+| 26 | shingle_flat_9 | 13454 | yes (7.7 mm) | gable_plastic_8-1_2 | +x -x |
+| 27 | shingle_flat_9 | 13511 | yes (7.4 mm) | gable_plastic_8-1_2 | +x -x |
+| 28 | shingle_flat_9 | 13511 | yes (7.6 mm) | gable_plastic_8-1_2 | +x -x |
+| 29 | shingle_flat_9 | 13454 | yes (7.6 mm) | gable_plastic_8-1_2 | +x -x |
+| 30 | shingle_flat_9 | 13568 | yes (7.8 mm) | gable_plastic_8-1_2 | +x -x |
+| 31 | shingle_flat_9 | 13397 | yes (7.7 mm) | gable_plastic_8-1_2 | +x -x |
+| 32 | shingle_flat_9 | 13339 | yes (7.9 mm) | gable_plastic_8-1_2 | +x -x |
+| 33 | shingle_flat_9 | 13626 | yes (7.8 mm) | gable_plastic_8-1_2 | +x -x |
+| 34 | chimney | 16548 | yes (12.5 mm) | shingle_flat_9 | +x -x |
 
 ## Shed (3 x 6 in, wooden triangle gables)
 
@@ -75,16 +79,16 @@ Checks per part: **interference** (volume shared with another part; any shared v
 | 16 | log_3insert_7-5_8 | 48520 | yes (8.1 mm) | log_3insert_7-5_8, log_2insert_4-1_2 | +x -x +y -y |
 | 17 | gable_wood_triangle_4x2 | 54964 | yes (9.0 mm) | log_2insert_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
 | 18 | gable_wood_triangle_4x2 | 53478 | yes (8.8 mm) | log_2insert_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
-| 19 | shingle_flat_6 | 9874 | yes (6.4 mm) | gable_wood_triangle_4x2 | +x |
-| 20 | shingle_flat_6 | 9798 | yes (6.5 mm) | gable_wood_triangle_4x2 | -x |
-| 21 | shingle_flat_6 | 9836 | yes (6.6 mm) | gable_wood_triangle_4x2 | +x |
-| 22 | shingle_flat_6 | 9798 | yes (6.7 mm) | gable_wood_triangle_4x2 | -x |
-| 23 | shingle_ridge_6 | 13763 | yes (10.0 mm) | gable_wood_triangle_4x2 | +x |
-| 24 | shingle_ridge_6 | 13725 | yes (10.1 mm) | gable_wood_triangle_4x2 | -x |
+| 19 | shingle_flat_6 | 8998 | yes (5.7 mm) | gable_wood_triangle_4x2 | +x |
+| 20 | shingle_flat_6 | 8959 | yes (5.8 mm) | gable_wood_triangle_4x2 | -x |
+| 21 | shingle_flat_6 | 8998 | yes (6.5 mm) | gable_wood_triangle_4x2 | +x |
+| 22 | shingle_flat_6 | 8959 | yes (6.6 mm) | gable_wood_triangle_4x2 | -x |
+| 23 | shingle_ridge_6 | 13687 | yes (10.2 mm) | gable_wood_triangle_4x2 | +x |
+| 24 | shingle_ridge_6 | 13725 | yes (10.3 mm) | gable_wood_triangle_4x2 | -x |
 
 ## Cottage (3 x 6 in, small plastic gables, chimney)
 
-- Parts: **25**; lowest point z = 0.000 mm
+- Parts: **27**; lowest point z = 0.000 mm
 - Interference over 1 mm3: **none**
 - Unsupported parts: **none**
 - Touching the table: base_log_4-1_2 (everything else is carried by other parts)
@@ -109,19 +113,21 @@ Checks per part: **interference** (volume shared with another part; any shared v
 | 14 | log_2insert_4-1_2 | 27878 | yes (8.2 mm) | log_2insert_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
 | 15 | log_3insert_7-5_8 | 48521 | yes (8.1 mm) | log_3insert_7-5_8, log_2insert_4-1_2 | +x -x +y -y |
 | 16 | log_3insert_7-5_8 | 48520 | yes (8.1 mm) | log_3insert_7-5_8, log_2insert_4-1_2 | +x -x +y -y |
-| 17 | gable_plastic_small_2notch | 58474 | yes (9.0 mm) | log_2insert_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
-| 18 | gable_plastic_small_2notch | 56894 | yes (8.8 mm) | log_2insert_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
-| 19 | shingle_flat_6 | 9874 | yes (6.6 mm) | gable_plastic_small_2notch | +x -x |
-| 20 | shingle_flat_6 | 9874 | yes (6.6 mm) | gable_plastic_small_2notch | +x -x |
-| 21 | shingle_flat_6 | 9836 | yes (2.7 mm) | gable_plastic_small_2notch | +x |
-| 22 | shingle_flat_6 | 9798 | yes (2.8 mm) | gable_plastic_small_2notch | -x |
-| 23 | shingle_flat_6 | 9874 | yes (6.9 mm) | gable_plastic_small_2notch | +x -x |
-| 24 | shingle_flat_6 | 9874 | yes (6.9 mm) | gable_plastic_small_2notch | +x -x |
-| 25 | chimney | 16000 | yes (12.4 mm) | shingle_flat_6 | +x -x |
+| 17 | gable_plastic_small_2notch | 59602 | yes (9.0 mm) | log_2insert_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
+| 18 | gable_plastic_small_2notch | 57992 | yes (8.8 mm) | log_2insert_4-1_2, log_3insert_7-5_8 | +x -x +y -y |
+| 19 | shingle_flat_6 | 8959 | yes (8.6 mm) | gable_plastic_small_2notch | +x -x |
+| 20 | shingle_flat_6 | 8959 | yes (8.7 mm) | gable_plastic_small_2notch | +x -x |
+| 21 | shingle_flat_6 | 8959 | yes (7.7 mm) | gable_plastic_small_2notch | +x -x |
+| 22 | shingle_flat_6 | 8959 | yes (7.7 mm) | gable_plastic_small_2notch | +x -x |
+| 23 | shingle_flat_6 | 8959 | yes (7.7 mm) | gable_plastic_small_2notch | +x -x |
+| 24 | shingle_flat_6 | 8998 | yes (7.8 mm) | gable_plastic_small_2notch | +x -x |
+| 25 | shingle_flat_6 | 8998 | yes (7.8 mm) | gable_plastic_small_2notch | +x -x |
+| 26 | shingle_flat_6 | 8959 | yes (7.8 mm) | gable_plastic_small_2notch | +x -x |
+| 27 | chimney | 16373 | yes (12.4 mm) | shingle_flat_6 | +x -x |
 
 ## Porch cabin (6 x 6 in room, 3 in porch on two posts, chimney)
 
-- Parts: **43**; lowest point z = 0.000 mm
+- Parts: **47**; lowest point z = 0.000 mm
 - Interference over 1 mm3: **none**
 - Unsupported parts: **none**
 - Touching the table: base_log_7-1_2 (everything else is carried by other parts)
@@ -162,21 +168,25 @@ Checks per part: **interference** (volume shared with another part; any shared v
 | 30 | log_3insert_7-5_8 | 48468 | yes (8.5 mm) | log_2insert_4-1_2, log_3insert_7-5_8, log_1insert_1-1_2_round | +x -x +y -y |
 | 31 | log_4insert_10-5_8 | 68030 | yes (8.1 mm) | log_1insert_1-5_8, log_3insert_7-5_8 | +x -x +y -y |
 | 32 | log_4insert_10-5_8 | 67192 | yes (8.2 mm) | log_1insert_1-5_8, log_3insert_7-5_8 | +x -x +y -y |
-| 33 | gable_plastic_8-1_2 | 119986 | yes (9.0 mm) | log_1insert_1-5_8, log_4insert_10-5_8 | +x -x +y -y |
-| 34 | gable_plastic_8-1_2 | 119986 | yes (9.0 mm) | log_3insert_7-5_8, log_4insert_10-5_8 | +x -x +y -y |
-| 35 | shingle_flat_9 | 14771 | yes (7.7 mm) | gable_plastic_8-1_2 | +x -x |
-| 36 | shingle_flat_9 | 14713 | yes (7.5 mm) | gable_plastic_8-1_2 | +x -x |
-| 37 | shingle_flat_9 | 14828 | yes (1.1 mm) | gable_plastic_8-1_2 | +x |
-| 38 | shingle_flat_9 | 14828 | yes (0.9 mm) | gable_plastic_8-1_2 | -x |
-| 39 | shingle_flat_9 | 14713 | yes (8.3 mm) | gable_plastic_8-1_2 | +x |
-| 40 | shingle_flat_9 | 14828 | yes (8.2 mm) | gable_plastic_8-1_2 | -x |
-| 41 | shingle_ridge_9 | 20725 | yes (3.1 mm) | gable_plastic_8-1_2 | +x -x |
-| 42 | shingle_ridge_9 | 20610 | yes (2.8 mm) | gable_plastic_8-1_2 | +x -x |
-| 43 | chimney | 16028 | yes (12.5 mm) | shingle_ridge_9 | +x -x |
+| 33 | gable_plastic_8-1_2 | 119875 | yes (9.0 mm) | log_1insert_1-5_8, log_4insert_10-5_8 | +x -x +y -y |
+| 34 | gable_plastic_8-1_2 | 119875 | yes (9.0 mm) | log_3insert_7-5_8, log_4insert_10-5_8 | +x -x +y -y |
+| 35 | shingle_flat_9 | 13282 | yes (8.6 mm) | gable_plastic_8-1_2 | +x -x |
+| 36 | shingle_flat_9 | 13626 | yes (8.8 mm) | gable_plastic_8-1_2 | +x -x |
+| 37 | shingle_flat_9 | 13568 | yes (7.5 mm) | gable_plastic_8-1_2 | +x -x |
+| 38 | shingle_flat_9 | 13397 | yes (7.8 mm) | gable_plastic_8-1_2 | +x -x |
+| 39 | shingle_flat_9 | 13454 | yes (7.7 mm) | gable_plastic_8-1_2 | +x -x |
+| 40 | shingle_flat_9 | 13511 | yes (7.4 mm) | gable_plastic_8-1_2 | +x -x |
+| 41 | shingle_flat_9 | 13511 | yes (7.6 mm) | gable_plastic_8-1_2 | +x -x |
+| 42 | shingle_flat_9 | 13454 | yes (7.6 mm) | gable_plastic_8-1_2 | +x -x |
+| 43 | shingle_flat_9 | 13568 | yes (7.8 mm) | gable_plastic_8-1_2 | +x -x |
+| 44 | shingle_flat_9 | 13397 | yes (7.7 mm) | gable_plastic_8-1_2 | +x -x |
+| 45 | shingle_flat_9 | 13339 | yes (7.9 mm) | gable_plastic_8-1_2 | +x -x |
+| 46 | shingle_flat_9 | 13626 | yes (7.8 mm) | gable_plastic_8-1_2 | +x -x |
+| 47 | chimney | 16548 | yes (12.5 mm) | shingle_flat_9 | +x -x |
 
 ## Tall house (6 x 6 in, 12 courses, overhanging roof, chimney)
 
-- Parts: **43**; lowest point z = 0.000 mm
+- Parts: **47**; lowest point z = 0.000 mm
 - Interference over 1 mm3: **none**
 - Unsupported parts: **none**
 - Touching the table: base_log_7-1_2 (everything else is carried by other parts)
@@ -217,17 +227,21 @@ Checks per part: **interference** (volume shared with another part; any shared v
 | 30 | log_3insert_7-5_8 | 48358 | yes (8.2 mm) | log_2insert_4-1_2, log_3insert_7-5_8, log_1insert_1-5_8 | +x -x +y -y |
 | 31 | log_3insert_7-5_8 | 48479 | yes (8.4 mm) | log_3insert_7-5_8, log_2insert_4-1_2 | +x -x +y -y |
 | 32 | log_3insert_7-5_8 | 47860 | yes (8.3 mm) | log_3insert_7-5_8, log_1insert_1-1_2_round | +x -x +y -y |
-| 33 | gable_plastic_8-1_2 | 119843 | yes (9.0 mm) | log_2insert_4-1_2, log_3insert_7-5_8, log_1insert_1-1_2_round | +x -x +y -y |
-| 34 | gable_plastic_8-1_2 | 116604 | yes (8.8 mm) | log_3insert_7-5_8 | +x -x +y -y |
-| 35 | shingle_flat_9 | 14681 | yes (7.3 mm) | gable_plastic_8-1_2 | +x -x |
-| 36 | shingle_flat_9 | 14681 | yes (8.0 mm) | gable_plastic_8-1_2 | +x -x |
-| 37 | shingle_flat_9 | 14795 | yes (1.1 mm) | gable_plastic_8-1_2 | +x |
-| 38 | shingle_flat_9 | 14795 | yes (0.9 mm) | gable_plastic_8-1_2 | -x |
-| 39 | shingle_flat_9 | 14738 | yes (8.3 mm) | gable_plastic_8-1_2 | +x |
-| 40 | shingle_flat_9 | 14681 | yes (8.2 mm) | gable_plastic_8-1_2 | -x |
-| 41 | shingle_ridge_9 | 20622 | yes (3.0 mm) | gable_plastic_8-1_2 | +x -x |
-| 42 | shingle_ridge_9 | 20565 | yes (2.8 mm) | gable_plastic_8-1_2 | +x -x |
-| 43 | chimney | 15939 | yes (12.5 mm) | shingle_ridge_9 | +x -x |
+| 33 | gable_plastic_8-1_2 | 119732 | yes (9.0 mm) | log_2insert_4-1_2, log_3insert_7-5_8, log_1insert_1-1_2_round | +x -x +y -y |
+| 34 | gable_plastic_8-1_2 | 116496 | yes (8.8 mm) | log_3insert_7-5_8 | +x -x +y -y |
+| 35 | shingle_flat_9 | 13424 | yes (8.6 mm) | gable_plastic_8-1_2 | +x -x |
+| 36 | shingle_flat_9 | 13424 | yes (8.7 mm) | gable_plastic_8-1_2 | +x -x |
+| 37 | shingle_flat_9 | 13596 | yes (7.5 mm) | gable_plastic_8-1_2 | +x -x |
+| 38 | shingle_flat_9 | 13424 | yes (7.8 mm) | gable_plastic_8-1_2 | +x -x |
+| 39 | shingle_flat_9 | 13310 | yes (7.6 mm) | gable_plastic_8-1_2 | +x -x |
+| 40 | shingle_flat_9 | 13539 | yes (7.4 mm) | gable_plastic_8-1_2 | +x -x |
+| 41 | shingle_flat_9 | 13539 | yes (7.7 mm) | gable_plastic_8-1_2 | +x -x |
+| 42 | shingle_flat_9 | 13253 | yes (7.6 mm) | gable_plastic_8-1_2 | +x -x |
+| 43 | shingle_flat_9 | 13424 | yes (7.8 mm) | gable_plastic_8-1_2 | +x -x |
+| 44 | shingle_flat_9 | 13539 | yes (7.6 mm) | gable_plastic_8-1_2 | +x -x |
+| 45 | shingle_flat_9 | 13310 | yes (7.9 mm) | gable_plastic_8-1_2 | +x -x |
+| 46 | shingle_flat_9 | 13424 | yes (7.7 mm) | gable_plastic_8-1_2 | +x -x |
+| 47 | chimney | 16472 | yes (12.5 mm) | shingle_flat_9 | +x -x |
 
 ## Watchtower (3 x 3 in, 14 courses, wooden triangle gables)
 
@@ -275,10 +289,10 @@ Checks per part: **interference** (volume shared with another part; any shared v
 | 33 | log_2insert_4-1_2 | 28169 | yes (8.4 mm) | log_2insert_4-1_2 | +x -x +y -y |
 | 34 | gable_wood_triangle_4x2 | 54959 | yes (9.0 mm) | log_2insert_4-1_2 | +x -x +y -y |
 | 35 | gable_wood_triangle_4x2 | 53474 | yes (8.8 mm) | log_2insert_4-1_2 | +x -x +y -y |
-| 36 | shingle_flat_6 | 9798 | yes (6.4 mm) | gable_wood_triangle_4x2 | +x |
-| 37 | shingle_flat_6 | 9874 | yes (6.4 mm) | gable_wood_triangle_4x2 | -x |
-| 38 | shingle_flat_6 | 9836 | yes (7.1 mm) | gable_wood_triangle_4x2 | +x |
-| 39 | shingle_flat_6 | 9874 | yes (7.2 mm) | gable_wood_triangle_4x2 | -x |
-| 40 | shingle_ridge_6 | 13763 | yes (10.1 mm) | gable_wood_triangle_4x2 | +x |
-| 41 | shingle_ridge_6 | 13725 | yes (10.1 mm) | gable_wood_triangle_4x2 | -x |
+| 36 | shingle_flat_6 | 8921 | yes (5.7 mm) | gable_wood_triangle_4x2 | +x |
+| 37 | shingle_flat_6 | 8998 | yes (5.7 mm) | gable_wood_triangle_4x2 | -x |
+| 38 | shingle_flat_6 | 8959 | yes (6.0 mm) | gable_wood_triangle_4x2 | +x |
+| 39 | shingle_flat_6 | 8998 | yes (6.1 mm) | gable_wood_triangle_4x2 | -x |
+| 40 | shingle_ridge_6 | 13725 | yes (10.3 mm) | gable_wood_triangle_4x2 | +x |
+| 41 | shingle_ridge_6 | 13763 | yes (10.3 mm) | gable_wood_triangle_4x2 | -x |
 

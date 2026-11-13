@@ -115,7 +115,7 @@ const LOGS_ONLY = { flat_end_octagonal: 'octagonal', ball_end_round: 'rounded' }
 if (!['flat_end_round', 'smooth', ...Object.keys(LOGS_ONLY)].includes(FINISH)) { console.error(`--set must be flat_end_round, smooth, flat_end_octagonal or ball_end_round (got ${pick})`); process.exit(2); }
 const REPORT = `VERIFY_${FINISH}.md`;
 const P = makeParts({ texture: FINISH !== 'smooth' });
-if (LOGS_ONLY[FINISH]) for (const p of Object.values(makeParts({ set: LOGS_ONLY[FINISH] }))) for (const std of p.info.replaces) P[std] = p;
+if (LOGS_ONLY[FINISH]) for (const p of Object.values(makeParts({ set: LOGS_ONLY[FINISH] }))) for (const std of p.info.replaces ?? []) P[std] = p;
 const { cabin, shed, cottage, porch, house, tower } = buildings(P);
 const results = [
   analyse('Cabin (6 x 9 in, large plastic gables, chimney)', cabin),

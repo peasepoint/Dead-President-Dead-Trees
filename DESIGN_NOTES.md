@@ -145,12 +145,12 @@ What each part was modelled from and where the sources disagree. Names are the F
 
 | Part | Sold as | Modelled as | Notes |
 |---|---|---|---|
-| `gable_plastic_8-1_2` | Plastic Orange Roof, 2 1/4 x 8 1/2 | Symmetric; 3 bottom notches on 3 in centres; 7 steps per side; eave hook lips | Slope 27 deg |
-| `gable_plastic_small_2notch` | Second photo only | Symmetric; 2 bottom notches 3 in apart; 5 steps per side; eave hook lips; 5.8 x 1.56 in | Photo: about 5.8 x 1.6 in, notch centres about 1.4 in from each end. Same lip, riser and pitch as the large gable, so the height follows from the width |
+| `gable_plastic_8-1_2` | Plastic Orange Roof, 2 1/4 x 8 1/2 | Symmetric; 3 bottom notches on 3 in centres; 6 steps per side, one per flat shingle; eave hook lips | Shingles lie at 24 deg. Six steps counted in a resale photo of the 3-notch gable; the 1974 Frontiersman box shows six shingles a slope |
+| `gable_plastic_small_2notch` | Second photo only | Symmetric; 2 bottom notches 3 in apart; 4 steps per side; eave hook lips; 5.8 x 1.60 in | Photo: about 5.8 x 1.6 in, notch centres about 1.4 in from each end. Same lip, riser and step length as the large gable, so the height follows from the width. Four steps counted in a photo of a 1974 set |
 | `gable_wood_triangle_4x2` | Triangle, 4 x 2 | Straight 39 deg slopes, 2 bottom notches 3 in apart | Measures about 4 7/8 x 2 in: 3 in between notches plus about 0.9 in of overhang each side. The decorative log-row grooves are not modelled |
-| `shingle_flat_6`, `_9`, `_11` | Flat Shingle, 6, 9 and 11 | 0.8 x 1/8 in boards | Width measured 0.79 to 0.8 in |
+| `shingle_flat_6`, `_9`, `_11` | Flat Shingle, 6, 9 and 11 | 18.5 mm (0.73 in) x 1/8 in boards | Width measured 0.79 to 0.8 in in the listing photo, but six that wide do not fit the large gable's slope, and the Frontiersman box shows six. The width is set so six fit |
 | `shingle_ridge_5-5_8`, `_6`, `_9` | Shingle with Ridge | 1 1/8 in board with a centre groove | Measured 1.13 to 1.17 in wide. Both halves are lit identically, so it is flat, not folded |
-| `chimney` | Second photo only | Open-topped block, 1 3/8 in wide x 1.2 in tall x 1 in deep, inverted-V cut in the base | Photo: about 1.39 x 1.2 in, V about 0.36 in deep with 27 deg sides. Modelled V: 0.35 in, matched to the 27.1 deg roof |
+| `chimney` | Second photo only | Open-topped block, 1 3/8 in wide x 1.2 in tall x 1 in deep, inverted-V cut in the base | Photo: about 1.39 x 1.2 in, V about 0.36 in deep with 27 deg sides. Modelled V: 0.31 in, matched to the 24 deg the shingles lie at |
 | `extra_door`, `extra_window` | Not an original part | 1/8 in panels sized to a wall opening | Designed for this project; not used in the test buildings |
 
 Three dimensions are not visible in any photo and are assumed:
@@ -166,7 +166,7 @@ Every part was re-rendered and its dimensions compared with [the spec](PARTS_SPE
 | Part | Was | Now | Why |
 |---|---|---|---|
 | 3-insert log | 7 3/4 in (1/2 in shoulders) | 7 5/8 in (7/16 in shoulders); STL renamed `log_3insert_7-5_8` | 7 3/4 fits neither column of the spec's length rule; 7 5/8 fits the 7/16 in column and the photo |
-| Small plastic gable | 5 3/4 x 1.55 in | 5.8 x 1.56 in | Spec and photo give about 5.8 x 1.6 in, with notches 1.4 in from each end |
+| Small plastic gable | 5 3/4 x 1.55 in | 5.8 x 1.60 in | Spec and photo give about 5.8 x 1.6 in, with notches 1.4 in from each end |
 
 Everything else agrees with the spec within its stated confidence. Known differences that were kept:
 
@@ -192,8 +192,8 @@ Everything else agrees with the spec within its stated confidence. Known differe
 | End walls | 3-insert logs; a doorway (front) and window (back) framed with 1- and 2-insert logs | 2-insert logs | 2-insert logs |
 | Side walls | 4-insert logs | 3-insert logs | 3-insert logs |
 | Gables | 2 x large stepped gable | 2 x triangle gable | 2 x small stepped gable |
-| Shingles per slope | 3 flat 9 in + 1 ridge 9 in | 2 flat 6 in + 1 ridge 6 in | 3 flat 6 in |
-| Chimney | Yes | No: its 39 deg roof doesn't match the chimney's 27 deg V | Yes |
+| Shingles per slope | 6 flat 9 in, one per step, edge to edge | 2 flat 6 in + 1 ridge 6 in | 4 flat 6 in, one per step, edge to edge |
+| Chimney | Yes | No: its 39 deg roof doesn't match the chimney's 24 deg V | Yes |
 
 | | Porch cabin | Tall house | Watchtower |
 |---|---|---|---|
@@ -205,13 +205,23 @@ Everything else agrees with the spec within its stated confidence. Known differe
 | Shingles | 9 in, flush with the gables | 9 in, overhanging 1 1/2 in at each gable | 6 in, overhanging 1 1/2 in at each gable |
 | Chimney | Yes | Yes | No |
 
-**Shingle positions are computed, not placed by hand.** Each shingle is lowered onto the gable's top edge the way a real board settles:
+**Shingle positions are computed, not placed by hand.**
 
-1. Its lower edge starts just clear of the eave lip or the shingle below.
+On the **stepped gables** the shingles lie edge to edge, one flat shingle on each step, as on the 1974 Frontiersman set. Its box photo shows six shingles on each slope of the large gable, touching along their edges in one plane, none overlapping:
+
+1. Each step's tread is 18.7 mm long and a shingle is 18.5 mm wide, so a shingle lies flat on its tread with 0.1 mm to spare at each edge.
+2. The riser between two treads is 0.8 mm, a quarter of a shingle's thickness. So each shingle's lower edge faces the upper edge of the one below across most of its thickness, and the row butts together down to the eave lip.
+3. The lip's inner face leans back square to the first tread, so the lowest shingle's edge meets it face to face.
+
+The shingles lie at 24 deg and each is 0.7 mm higher than the one below, which shows as a fine line between them. The two top shingles meet at the peak along their lower corners, so the ridge is closed. The step count and shingle width come from photos, not from an original part: see [Limits](#limits).
+
+On the **triangle gable**, a plain slope, each shingle is lowered onto the gable's top edge the way a real board settles, edge to edge:
+
+1. Its lower edge starts just clear of the shingle below.
 2. It rotates down until it touches the edge again.
 3. If its centre of mass would be past that second contact, it tips forward until its far edge lands.
 
-The layout that reaches closest to the peak without crossing it is kept. On the stepped gable this gives a slightly stepped, overlapping-looking roof, as in the photos.
+The layout that reaches closest to the peak without crossing it is kept.
 
 **The chimney is placed the same way.** It is centred on the ridge and lowered until its V-cut base first touches the shingles.
 
@@ -231,8 +241,8 @@ What holds the parts that are not wall logs:
 
 - Gables are locked by their bottom notches.
 - Chimneys are held across the ridge by their V.
-- The lowest shingles on the stepped gables are stopped by the eave lip.
-- Other shingles, and every shingle on the triangle gable, can slide downhill if pushed. They rely on friction, as the originals do.
+- On the stepped gables each shingle lies on its own step, between the riser above and the shingle below. The lowest is stopped by the eave lip, so the row cannot slide down.
+- Shingles on the triangle gable can slide downhill if pushed. They rely on friction, as the originals do.
 
 Per-part results, one file per log set: [flat-end round](VERIFY_flat_end_round.md), [ball-end round](VERIFY_ball_end_round.md), [flat-end octagonal](VERIFY_flat_end_octagonal.md), [smooth](VERIFY_smooth.md).
 
@@ -243,8 +253,9 @@ Per-part results, one file per log set: [flat-end round](VERIFY_flat_end_round.m
   - Gable thickness and shingle thickness.
   - Chimney depth and socket.
   - The meaning of "1 1/2 x 1 1/4" on the beveled end.
-  - The small gable's height: 1.56 in, derived from the large gable's pitch, against about 1.6 in measured.
-- **One cabin shingle row is marginal.** Its centre of mass is only about 1 mm inside its supports. It is stable on paper, but a light knock could tip it.
+  - The small gable's height: 1.60 in, derived from the large gable's step length, against about 1.6 in measured.
+  - The flat shingle's width, 18.5 mm, and the 0.8 mm riser. Six shingles must fit between the lip and the peak of the large gable, which caps the width at about 18.7 mm (0.74 in). An original slat may be up to 3/4 in wide; one that wide would ride on the risers instead of sitting in a step.
+- **Shingle ends bear on half a gable.** The 9 in and 6 in shingles are exactly as long as the wall-centre spacing they cover, so each end rests on half the gable's thickness. Photos show the original slats reaching the gable's outer face, and the reference lists a 9 3/4 in slat (9 in plus a 3/4 in gable), which is not modelled.
 - **The door and window** are not in any photo and are not used in the verified buildings.
 
 ## Printing notes

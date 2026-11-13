@@ -74,6 +74,19 @@ export function layRoof(prof, xMax, startX, widths, t, gap) {
   return { poses, reach };
 }
 
+// Stepped gables: one flat shingle per step, lying flat on its tread, as on the 1974 Frontiersman set. A tread is a
+// little longer than a shingle is wide and the riser between treads is lower than a shingle is thick, so each shingle's
+// edges face its neighbours' (or the eave lip's) and the row cannot slide: they butt edge to edge, never overlap.
+// Each shingle is centred on its tread, leaving half the spare length at each edge.
+export function layTreads(treads, width) {
+  const poses = treads.map(([a, b]) => {
+    const len = Math.hypot(b[0] - a[0], b[1] - a[1]), d = [(b[0] - a[0]) / len, (b[1] - a[1]) / len], s = (len - width) / 2;
+    if (s < 0) throw new Error(`a ${width} mm shingle does not fit a ${len.toFixed(2)} mm step`);
+    return { C: [a[0] + s * d[0], a[1] + s * d[1]], phi: Math.atan2(d[1], d[0]) };
+  });
+  return { poses, reach: treads.at(-1)[1][0] };
+}
+
 export function buildings(P) {
   const mapT = (tris, f) => tris.map((t) => t.map(f));
   const place = (name, f, caption, mat) => ({ name, tris: mapT(P[name].model, f), caption, mat });
@@ -93,9 +106,14 @@ export function buildings(P) {
   const roofRows = (gName, K, xc, y0, len) => {
     const g = P[gName].info, gap = 0.5;
     const flat = P[`shingle_flat_${len}`].info, ridge = P[`shingle_ridge_${len}`].info;
-    // try k flats followed by one ridge shingle (or flats only); keep the layout that reaches closest to the peak
     let best = null;
-    for (let k = 0; k <= 10; k++) for (const withRidge of [true, false]) {
+    // stepped gables: one flat shingle on each step, edge to edge
+    if (g.treads) {
+      const lay = layTreads(g.treads, flat.width);
+      best = { seq: lay.poses.map(() => ['flat', flat]), lay };
+    }
+    // plain slopes: try k flats followed by one ridge shingle (or flats only); keep the layout that reaches closest to the peak
+    else for (let k = 0; k <= 10; k++) for (const withRidge of [true, false]) {
       const seq = [...Array(k).fill(['flat', flat]), ...(withRidge ? [['ridge', ridge]] : [])];
       if (!seq.length) continue;
       const lay = layRoof(g.profile, g.W / 2, g.startX, seq.map((s) => s[1]), flat.t, gap);
