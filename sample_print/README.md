@@ -29,7 +29,7 @@ The settings use less filament than the log style sample and print faster:
 
 Bambu Studio's CLI estimates about 3 h 50 min and about 130 g. With the log style sample's settings the same plate comes to about 4 h 36 min and 137 g. Lightning infill would cut it to about 3 h and 100 g but leaves the parts weak inside. The walls and infill are flow-limited (21 mm³/s for PLA Basic), so faster speed settings would not shorten the print much.
 
-Bambu Studio warns that a round groove half has floating regions. These are the inner edges of the tines, which lift up to 0.3 mm off the bed (see [DESIGN_NOTES.md](../DESIGN_NOTES.md)); the warning appears with the older settings too. Expect a slight droop under the tines.
+Bambu Studio warns that a round groove half on this plate has floating regions. These are the inner edges of the tines, which lift up to 0.3 mm off the bed, and they printed ragged and stringy. The current STLs have a foot under each tine instead (see [DESIGN_NOTES.md](../DESIGN_NOTES.md)).
 
 ## Log style reference sample
 

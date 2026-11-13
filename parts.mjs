@@ -230,6 +230,8 @@ function filletPath(P, radii, n = 8) {
 // the crown of the log there. The side flats are not moved, so the piece still lies flat on the bed.
 // base must then also contain exact vertices on z = +/-g for the first g of a tail's prof, and for the first, the
 // last and the smallest g of a socket's prof.
+// foot (optional, on a socket with axis 1): { bed, zIn, zOut, ramp } brings the underside of the tines down onto the bed
+// plane y = bed, so that they do not start printing in mid air (see feet below).
 // axis (optional, on a joint): 1 = as above, the default. 0 = the joint is cut straight down through the log instead
 // (along z), for a part that prints on its flat bottom: read y for z above, and the two pieces go together from above.
 function logMesh({ L, centers, base, notchW, top = true, bottom = true, chamfer = null, tex = null, pivotZ = 0, joints = [null, null] }) {
@@ -243,7 +245,19 @@ function logMesh({ L, centers, base, notchW, top = true, bottom = true, chamfer 
   const jointKind = (j) => { const ax = j.axis ?? 1; return j.type === 'tongue' ? { solid: [slice(gs(j)[0], ax)], cut: caps(gs(j)[0], true, true, ax), tail: true, ax } : { solid: caps(Math.min(...gs(j)), true, true, ax), cut: [slice(gs(j).at(-1), ax)], socket: true, ax }; };
   // rounded rims: within r of the plane x = at, every vertex beyond the level zc sinks towards it, the outermost by most
   const eases = [];
-  const eased = (x, q) => {
+  // feet: under a socket cut across a log that lies on a side flat, the tines' inner edges would start in mid air,
+  // because the socket is wider than the flat. From x0 to x1 the underside of the log comes down onto the bed plane
+  // out to zIn each side of the axis, then rises back to the log's own outline by zOut; past x1 it fades out over ramp.
+  const feet = [];
+  const footed = (x, q) => {
+    for (const { x0, x1, ramp, bed, zIn, zOut } of feet) {
+      const wx = x < x0 - ramp || x > x1 + ramp ? 0 : x < x0 ? (x - (x0 - ramp)) / ramp : x > x1 ? (x1 + ramp - x) / ramp : 1, a = Math.abs(q[1]);
+      if (wx > 0 && q[0] < 0 && a < zOut) { const w = wx * (a <= zIn ? 1 : (zOut - a) / (zOut - zIn)); return [bed + (q[0] - bed) * (1 - w), q[1]]; }
+    }
+    return q;
+  };
+  const eased = (x, q0) => {
+    const q = footed(x, q0);
     for (const { at, r, zc, ax, top } of eases) {
       const d = Math.abs(x - at), a = Math.abs(q[ax]);
       if (d < r && a > zc) { const o = [...q]; o[ax] = Math.sign(q[ax]) * (a - (r - Math.sqrt(r * r - (r - d) * (r - d))) * ((a - zc) / (top - zc))); return o; }
@@ -287,6 +301,7 @@ function logMesh({ L, centers, base, notchW, top = true, bottom = true, chamfer 
       if (!tongue && j.prof.some(([d, g]) => d < j.ease && g > g0 + EPS)) throw new Error('socket widens inside its rounded rim');
       eases.push({ at: xOf(0), r: j.ease, zc: g0, dir: end ? -1 : 1, ax: kind.ax, top: Math.max(...base.map((p) => Math.abs(p[kind.ax]))) });
     }
+    if (j.foot && !tongue) feet.push({ x0: Math.min(xOf(0), xOf(j.len)), x1: Math.max(xOf(0), xOf(j.len)), ...j.foot });
   };
   let x0, x1;
   if (j0) { jointSpans(j0, 0, j0.len); x0 = j0.len; }
@@ -298,13 +313,15 @@ function logMesh({ L, centers, base, notchW, top = true, bottom = true, chamfer 
   for (let i = 0; i < bounds.length - 1; i++) spans.push([bounds[i], 1, bounds[i + 1], 1, i % 2 === 1 ? notch : full]);
   if (j1) jointSpans(j1, 1, x1);
   else for (let k = st.length - 2; k >= 0; k--) spans.push([L - st[k + 1][0], st[k + 1][1], L - st[k][0], st[k][1], full]);
-  // a rounded rim is a quarter circle: cut the spans it runs through into short steps
-  for (const { at, r, dir } of eases) for (let k = 1; k <= EASE_STEPS; k++) {
-    const x = at + dir * r * (1 - Math.cos((k * Math.PI) / 2 / EASE_STEPS)), i = spans.findIndex((sp) => sp[0] < x - 1e-6 && x < sp[2] - 1e-6);
-    if (i < 0) continue;
+  const cutSpans = (x) => {
+    const i = spans.findIndex((sp) => sp[0] < x - 1e-6 && x < sp[2] - 1e-6);
+    if (i < 0) return;
     const [xa, sa, xb, sb, kind] = spans[i], sx = sa + ((x - xa) / (xb - xa)) * (sb - sa);
     spans.splice(i, 1, [xa, sa, x, sx, kind], [x, sx, xb, sb, kind]);
-  }
+  };
+  // a rounded rim is a quarter circle: cut the spans it runs through into short steps
+  for (const { at, r, dir } of eases) for (let k = 1; k <= EASE_STEPS; k++) cutSpans(at + dir * r * (1 - Math.cos((k * Math.PI) / 2 / EASE_STEPS)));
+  for (const { x0, x1, ramp } of feet) { cutSpans(x0 - ramp); cutSpans(x1 + ramp); } // a foot fades out in a straight line
   let last = null, prev = null;
   spans.forEach(([xa, sa, xb, sb, kind], si) => {
     const n = tex ? Math.max(1, Math.ceil((xb - xa) / TEX.step)) : 1;
@@ -423,8 +440,8 @@ export function makeParts({ clearance = 0.2, flat = 0.8, texture = true, set = '
   // 1.2 mm endways before the dovetail took up.)
   // len: the socket's depth; neck: the socket's height at the shoulder line; slope: how fast it widens (2 in 5, 22
   // deg). The steeper the sides, the less endways play a given gap leaves: gap / slope.
-  // The socket is wider than the printing flat on the round logs, so most of each tine's inner edge lifts off the bed,
-  // following the curve of the log.
+  // The socket is wider than the printing flat, so each tine gets a foot that brings its inner edge down onto the bed
+  // (printed without one, the tines of the round logs came out ragged along that edge).
   const SPLICE = { len: IN / 4, neck: 4.2, slope: 2 / 5, relief: 0.2 };
   const spliceBase = (base, levels, axis = 1) => levels.reduce((P, g) => insertLine(insertLine(P, axis, g), axis, -g), base);
   {
@@ -453,7 +470,8 @@ export function makeParts({ clearance = 0.2, flat = 0.8, texture = true, set = '
       const name = `${base_}${sfx}`, t = tex(name, flatBottom ? halfSmooth : logSmooth), axis = flatBottom ? 0 : 1;
       if (t) { t.levels = levels; t.levelAxis = axis; }
       const info = { listing: `${listing}${O}`, length: Lp, centers, kind: flatBottom ? 'half' : 'log', splice: { type, of: std, x0, len: SPLICE.len, tailLen: lt, round: rIn, tail: tailProf, socket: socketProf, axis }, note };
-      joints = joints.map((j) => j && { ...j, axis });
+      // lying on a side flat, the tines get a foot: without one their inner edges start above the bed (see logMesh)
+      joints = joints.map((j) => j && { ...j, axis, ...(j.type === 'groove' && !flatBottom ? { foot: { bed: yf, zIn: floor + 0.4, zOut: floor + 1.6, ramp: 1.5 } } : {}) });
       if (flatBottom) {
         add(name, info, centred(logMesh({ L: Lp, centers, base: spliceBase(halfBase, levels, 0), notchW, bottom: false, chamfer: ends, pivotZ: -h, joints, tex: t })), ([x, y, z]) => [x, y - yShift, z + h]);
         parts[name].toModel = ([X, Y, Z]) => [X, Y + yShift, Z - h];
