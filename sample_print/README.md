@@ -1,6 +1,33 @@
 # Sample plates (P2S)
 
-Two Bambu Studio projects for a Bambu Lab P2S, 0.4 mm nozzle, Bambu PLA Basic, Cool Plate.
+Three Bambu Studio projects for a Bambu Lab P2S, 0.4 mm nozzle, Bambu PLA Basic, Cool Plate.
+
+## Dovetail splice sample
+
+`dovetail_p2s.3mf` prints every dovetail piece: the tongue half and groove half of the two-piece `log_4insert_10-5_8`, and the `log_extender_1insert_3`, from each of the four log sets. That is 12 parts on one plate, all lying on their flats as in the STLs. `dovetail_p2s_Dovetail pieces.gcode.3mf` is the same plate already sliced, ready to send to the printer.
+
+![Plate preview](dovetail_preview.png)
+
+Rows run from the back of the bed to the front. Each set takes two rows: the tongue half beside its extender, then the groove half. The sets are in this order: Ball-End-Round, Flat-End-Round, Flat-End-Octagonal, Smooth.
+
+The settings use less filament than the log style sample and print faster:
+
+| Setting | Value | Log style sample |
+|---|---|---|
+| Layer height | 0.24 mm (first layer 0.2 mm) | 0.2 mm |
+| Walls | 2 | 2 |
+| Infill | 8%, gyroid | 10%, gyroid |
+| Top shell layers | 4 | 4 |
+| Bottom shell layers | 3 | 3 |
+| Outer wall and top surface speed | 250 mm/s | 200 mm/s |
+| Top surface acceleration | 4000 mm/s² | 2000 mm/s² |
+| Gap infill speed | 300 mm/s | 250 mm/s |
+| Supports | None | None |
+| Brim | Auto | Auto |
+
+Bambu Studio's CLI estimates about 3 h 50 min and about 130 g. With the log style sample's settings the same plate comes to about 4 h 36 min and 137 g. Lightning infill would cut it to about 3 h and 100 g but leaves the parts weak inside. The walls and infill are flow-limited (21 mm³/s for PLA Basic), so faster speed settings would not shorten the print much.
+
+Bambu Studio warns that a round groove half has floating regions. These are the inner edges of the tines, which lift up to 0.3 mm off the bed (see [DESIGN_NOTES.md](../DESIGN_NOTES.md)); the warning appears with the older settings too. Expect a slight droop under the tines.
 
 ## Log style reference sample
 
