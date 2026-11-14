@@ -4,7 +4,7 @@
 
 ![Cabin, shed and cottage built from the printable parts](cabin_build.gif)
 
-> **Only the notch fit has been test-printed.** Two crossed 1-notch logs in PLA fit well at the current notch width. The six example buildings are checked in software for overlap, support and interlocking, but nobody has printed a whole building yet. Do the [fit test](#2-print-the-fit-test) on your own printer before printing a full set.
+> **The logs, gables and shingles have been test-printed and fit well.** Crossed logs in PLA fit well at the current 18.65 mm notch width, and the gables and shingles fit as designed, with the shingles laid edge to edge, one per step. The six example buildings are checked in software for overlap, support and interlocking, but nobody has printed a whole building yet. Do the [fit test](#2-print-the-fit-test) on your own printer before printing a full set.
 
 ## Contents
 
@@ -252,13 +252,13 @@ The other scripts:
 | | |
 |---|---|
 | **Checked in software** | In all six buildings no parts overlap, every part is supported and every wall log is locked by its notches, with each of the four log sets |
-| **Test-printed** | The notch fit only. Pairs of 1-notch logs were printed in PLA with notches from 18.65 to 19.65 mm wide; 18.65 mm fit best and is the default ([details](fit_test/README.md)) |
-| **Not checked** | Everything else in the real world. No octagonal or ball-end log, base log, gable, shingle, chimney, dazzler or whole building has been printed |
+| **Test-printed** | The logs, gables and shingles, which fit well. Pairs of 1-notch logs were printed in PLA with notches from 18.65 to 19.65 mm wide; 18.65 mm fit best and is the default ([details](fit_test/README.md)). The gables and shingles fit with the shingles edge to edge, one per step |
+| **Not checked** | Everything else in the real world. No octagonal or ball-end log, base log, chimney, dazzler or whole building has been printed |
 
 If you print these, the most useful things to report are:
 
 1. The clearance that gave a good fit, with your printer and material.
-2. Whether shingles settle on the gables as in the animation, and whether the chimney sits on a stepped-gable ridge.
+2. Whether the chimney sits on a stepped-gable ridge.
 3. If you own original pieces: their gable thickness, shingle thickness and chimney depth. These three are assumptions (see [DESIGN_NOTES.md](DESIGN_NOTES.md#limits)).
 
 ## More documentation
