@@ -2,6 +2,9 @@
 
 The dovetail that joins the halves of the two-piece log is a press fit, and a press fit depends on the printer. These three files are the smooth `log_extender_1insert_3` with three gaps between the sloping sides of the tail and the socket. Everything else about them is the same.
 
+> [!IMPORTANT]
+> **The dovetail is a semi-permanent joint.** Once two pieces are pushed together they are meant to stay together. They are not meant to be taken apart, and pulling them apart can crack or loosen the tines. These test pieces are the exception: expect to wear them out trying the fit.
+
 | File | `--splice-clearance` | Expect |
 |---|:---:|---|
 | `log_extender_gap_0.00.stl` | 0 | Tightest. May need a hard push or not go in |

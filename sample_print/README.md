@@ -4,15 +4,19 @@ Three Bambu Studio projects for a Bambu Lab P2S, 0.4 mm nozzle, Bambu PLA Basic,
 
 ## Dovetail pair test plate
 
-`dovetail_pair_p2s.3mf` is the quick fit check: one pair, the Flat-End-Round tongue half and groove half of `log_4insert_10-5_8`, built from the current press-fit STLs. Both lie on their flats side by side, centred on the P2S bed. It uses the same print settings as the dovetail splice sample below (0.24 mm layers, 2 walls, 8% gyroid, no supports). Print it, slide the halves together, and check that the joint is snug with no sag and that the tine tips are clean.
+> [!IMPORTANT]
+> **The dovetail is a semi-permanent joint.** Once two pieces are pushed together they are meant to stay together. They are not meant to be taken apart, and pulling them apart can crack or loosen the tines. Join the pieces into the full-length log before building, and keep the joined log whole when the cabin is taken down.
 
-It is not pre-sliced. Bambu Studio is not available here, so slice it yourself. If the joint is too tight or too loose, see the fit ladder in `fit_test/dovetail/`.
+
+`dovetail_pair_p2s.3mf` is the quick fit check: one pair, the Flat-End-Round tongue half and groove half of `log_4insert_10-5_8`, built from the current press-fit STLs. Both lie on their flats side by side, centred on the P2S bed. It uses the same print settings as the dovetail splice sample below (0.24 mm layers, 2 walls, 8% gyroid, no supports). Print it, slide the halves together, and check that the joint is snug with no sag and that the tine tips are clean. This pair has been printed in PLA on a P2S and passed.
+
+It is not pre-sliced; slice it in Bambu Studio. If the joint is too tight or too loose, see the fit ladder in `fit_test/dovetail/`.
 
 ## Dovetail splice sample
 
-**This plate holds the first, loose version of the joint** (0.3 mm clearance on every face). Printed, its pieces went together freely but sagged at every joint. The STLs in `stl/` now have a press fit; the plate has not been rebuilt from them, so load the new STLs into Bambu Studio with the settings below.
+**This plate now holds the press-fit joint,** rebuilt from the current STLs. Its first version had the loose joint (0.3 mm clearance on every face), whose pieces sagged at every joint. The tongue halves and extenders are a little longer than before, so their positions on the bed moved by a fraction of a millimetre; the layout is otherwise the same.
 
-`dovetail_p2s.3mf` prints every dovetail piece: the tongue half and groove half of the two-piece `log_4insert_10-5_8`, and the `log_extender_1insert_3`, from each of the four log sets. That is 12 parts on one plate, all lying on their flats as in the STLs. `dovetail_p2s_Dovetail pieces.gcode.3mf` is the same plate already sliced, ready to send to the printer.
+`dovetail_p2s.3mf` prints every dovetail piece: the tongue half and groove half of the two-piece `log_4insert_10-5_8`, and the `log_extender_1insert_3`, from each of the four log sets. That is 12 parts on one plate, all lying on their flats as in the STLs. The pre-sliced `.gcode.3mf` of the loose version was removed; slice this plate in Bambu Studio before printing. Bambu Studio's estimates below are from the loose version and should be close.
 
 ![Plate preview](dovetail_preview.png)
 
@@ -35,7 +39,7 @@ The settings use less filament than the log style sample and print faster:
 
 Bambu Studio's CLI estimates about 3 h 50 min and about 130 g. With the log style sample's settings the same plate comes to about 4 h 36 min and 137 g. Lightning infill would cut it to about 3 h and 100 g but leaves the parts weak inside. The walls and infill are flow-limited (21 mm³/s for PLA Basic), so faster speed settings would not shorten the print much.
 
-Bambu Studio warns that a round groove half on this plate has floating regions. These are the inner edges of the tines, which lift up to 0.3 mm off the bed, and they printed ragged and stringy. The current STLs have a foot under each tine instead (see [DESIGN_NOTES.md](../DESIGN_NOTES.md)).
+In the loose version, Bambu Studio warned that a round groove half had floating regions: the inner edges of the tines lifted up to 0.3 mm off the bed and printed ragged and stringy. The rebuilt plate has a foot under each tine instead (see [DESIGN_NOTES.md](../DESIGN_NOTES.md)).
 
 ## Log style reference sample
 

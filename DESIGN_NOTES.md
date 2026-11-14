@@ -88,7 +88,11 @@ The standard logs with an eight-sided section. Each STL is named like its round 
 
 ### The two-piece 4-notch log
 
-Every log set also holds `log_4insert_10-5_8` as two halves, `..._split_tongue` and `..._split_groove`, for beds shorter than 270 mm. Neither is in the reference lot. The first version of the joint (0.3 mm clearance on every face, sides sloping 1 in 4) was printed in PLA on a P2S: it went together freely but a row of five pieces sagged and bent at every joint. The press fit below replaces it and has not been printed.
+Every log set also holds `log_4insert_10-5_8` as two halves, `..._split_tongue` and `..._split_groove`, for beds shorter than 270 mm. Neither is in the reference lot. The first version of the joint (0.3 mm clearance on every face, sides sloping 1 in 4) was printed in PLA on a P2S: it went together freely but a row of five pieces sagged and bent at every joint. The press fit below replaces it. A test pair of the press fit (Flat-End-Round halves, PLA, P2S) printed with clean tines and joined snug and straight.
+
+> [!IMPORTANT]
+> **The dovetail is a semi-permanent joint.** Once two pieces are pushed together they are meant to stay together. They are not meant to be taken apart, and pulling them apart can crack or loosen the tines. The tines are stiff and the fit has almost no give, so taking a joint apart wears it; the design accepts that in exchange for a joint that does not sag.
+
 
 | Feature | Value | Reason |
 |---|---|---|

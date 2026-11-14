@@ -4,6 +4,9 @@ Every printable part, with a picture and a link to its STL. All files are in mil
 
 A building needs the [roof parts](#roof-parts) plus the logs from **one** of the four log sets. Every log set holds the same 10 logs with the same notches, so the sets can be mixed in one building. Each set also has the 4-notch log as [two halves](README.md#the-two-piece-4-notch-log) that join with a dovetail, for printers with a bed shorter than 270 mm. An extender that goes between the halves makes longer logs. The halves and the extender also come as base logs, flat underneath, for the base course.
 
+> [!IMPORTANT]
+> **The dovetail is a semi-permanent joint.** Once two pieces are pushed together they are meant to stay together. They are not meant to be taken apart, and pulling them apart can crack or loosen the tines. Join the pieces into the full-length log before building, and keep the joined log whole when the cabin is taken down.
+
 | Jump to | Folder | Parts |
 |---|---|:---:|
 | [Log download table](#the-10-logs) | All four log sets side by side | 40 |
