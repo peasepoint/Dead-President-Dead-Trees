@@ -58,15 +58,19 @@ Four finishes of the same 10 logs: five notched logs, two base logs, a beveled e
 
 ### The two-piece 4-notch log
 
-The 270 mm log does not fit a 256 mm bed, so every log set also has it as two halves of 138 mm, `log_4insert_10-5_8_split_tongue` and `log_4insert_10-5_8_split_groove`. Print one of each in place of one whole log. They have not been test-printed yet.
+The 270 mm log does not fit a 256 mm bed, so every log set also has it as two halves of 138 mm, `log_4insert_10-5_8_split_tongue` and `log_4insert_10-5_8_split_groove`. Print one of each in place of one whole log. The first version of the joint was printed and was too loose; the press fit described here was test-printed in PLA on a P2S and went together snug and straight.
+
+> [!IMPORTANT]
+> **The dovetail is a semi-permanent joint.** Once two pieces are pushed together they are meant to stay together. They are not meant to be taken apart, and pulling them apart can crack or loosen the tines. Join the pieces into the full-length log before building, and keep the joined log whole when the cabin is taken down.
 
 ![The two halves lying as they print: joined, and moved apart to show the dovetail](images/examples/split_log_joint.png)
 
 - **The joint is a dovetail,** the joint of a hewn-log cabin corner, turned to join two logs end to end. A tail on one half, wider at its tip than at its neck, sits in a matching socket in the other. It is halfway between the two middle notches, so all four notches stay where they are on the whole log.
-- **It prints upright.** The dovetail is cut straight through the log from one printing flat to the other, so on the bed every face of it is a vertical wall. No supports.
+- **It prints upright.** The dovetail is cut straight through the log from one printing flat to the other, so on the bed every face of it is a vertical wall. No supports. The printing flat is a little wider under the socket, so its two tines start on the bed.
 - **It goes together sideways.** Slide the tail into the socket across the log, not endways. Once the log is in a wall, the dovetail stops the halves pulling apart and the logs crossing in the notches stop them sliding sideways.
-- **The edges are rounded.** Every corner of the tail and the socket has a radius of about 1 mm, and so do the rims where the two pieces meet. The joint looks like the worn corner of a hewn log, and nothing sharp is left for small hands. Change the radius with `--splice-round`; `0` gives square edges.
-- **The fit is loose:** 0.3 mm of clearance on each face. Change it with `--splice-clearance` (see [Regenerating the files](#regenerating-the-files)).
+- **The edges are rounded.** Every corner of the tail and the socket has a radius of 0.8 to 1 mm, and so do the rims where the two pieces meet. The joint looks like the worn corner of a hewn log, and nothing sharp is left for small hands. Change the radius with `--splice-round`; `0` gives square edges.
+- **The fit is a press fit,** so a row of joined pieces stays straight when you pick it up. It is semi-permanent: join the pieces once and leave them joined. The shoulders of the two pieces meet with no gap, and the sloping sides of the tail are only 0.05 mm inside the socket's. Push the tail in firmly; a first-layer flare (elephant foot) makes it tighter, so turn on your slicer's elephant foot compensation.
+- **Tune it to your printer.** If the joint is too tight to push together or still loose, print two each of the three extenders in [fit_test/dovetail](fit_test/dovetail/README.md) and pick a gap, then regenerate with `--splice-clearance` (see [Regenerating the files](#regenerating-the-files)).
 
 **Longer logs.** `log_extender_1insert_3` goes between the two halves: its socket takes the tongue half's tail, and its tail goes into the groove half. Each extender adds one notch and 3 in, so one makes a 5-notch log of 13 5/8 in (346 mm), two a 6-notch log of 16 5/8 in, and so on. The notches stay on 3 in centres.
 
@@ -225,8 +229,8 @@ This rewrites all six `stl/` folders and checks that every mesh is watertight an
 |---|---|---|
 | `--clearance` | `0.2` | Gap on each side between a notch and the part sitting in it, in mm |
 | `--flat` | `0.8` | Total width taken off round logs, in mm, as an equal flat on each side. The parts that sit in notches are narrower by this much, and the notches follow |
-| `--splice-clearance` | `0.3` | Gap on each face of the dovetail between the pieces of the two-piece log, in mm |
-| `--splice-round` | `0.8` | Radius on the edges of that dovetail, in mm. `0` leaves them square |
+| `--splice-clearance` | `0.05` | Gap on each sloping side of the dovetail between the pieces of the two-piece log, in mm. `0` is tighter, `0.1` looser |
+| `--splice-round` | `0.8` | Radius in the inside corners of that dovetail, in mm; the edges that stick out get 0.2 mm more. `0` leaves them all square |
 | `--set` | `all` | `all`, or one folder: `roof_parts`, `dazzlers`, `ball_end_round`, `flat_end_round`, `flat_end_octagonal` or `smooth` |
 | `--out` | `stl` | Parent folder for the six folders |
 
@@ -269,7 +273,8 @@ If you print these, the most useful things to report are:
 | [DESIGN_NOTES.md](DESIGN_NOTES.md) | How each part was measured, what is assumed, the wood texture, and how the buildings are verified |
 | [fusion/README.md](fusion/README.md) | The Fusion designs and their parameters |
 | [fit_test/README.md](fit_test/README.md) | The notch fit test print and its result |
-| [sample_print/README.md](sample_print/README.md) | The log style sample plate, the dovetail splice sample plate and their print settings, plus an earlier plate comparing standing and lying logs |
+| [fit_test/dovetail/README.md](fit_test/dovetail/README.md) | Extenders with three dovetail gaps, to choose the press fit for your printer |
+| [sample_print/README.md](sample_print/README.md) | The log style sample plate, the dovetail splice and dovetail pair plates and their print settings, plus an earlier plate comparing standing and lying logs |
 | [PARTS_SPEC.md](PARTS_SPEC.md) | The pieces sold commercially since 1916, with dimensions and confidence |
 | [RESEARCH.md](RESEARCH.md) | Sources: existing models, original dimensions, printing tolerances |
 | Verification results | Per-part results for each log set (generated): [flat-end round](VERIFY_flat_end_round.md), [ball-end round](VERIFY_ball_end_round.md), [flat-end octagonal](VERIFY_flat_end_octagonal.md), [smooth](VERIFY_smooth.md) |

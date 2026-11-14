@@ -233,6 +233,8 @@ function filletPath(P, radii, n = 8) {
 // the crown of the log there. The side flats are not moved, so the piece still lies flat on the bed.
 // base must then also contain exact vertices on z = +/-g for the first g of a tail's prof, and for the first, the
 // last and the smallest g of a socket's prof.
+// foot (optional, on a socket with axis 1): { bed, zIn, zOut, ramp } brings the underside of the tines down onto the bed
+// plane y = bed, so that they do not start printing in mid air (see feet below).
 // axis (optional, on a joint): 1 = as above, the default. 0 = the joint is cut straight down through the log instead
 // (along z), for a part that prints on its flat bottom: read y for z above, and the two pieces go together from above.
 function logMesh({ L, centers, base, notchW, top = true, bottom = true, chamfer = null, tex = null, pivotZ = 0, joints = [null, null] }) {
@@ -246,7 +248,19 @@ function logMesh({ L, centers, base, notchW, top = true, bottom = true, chamfer 
   const jointKind = (j) => { const ax = j.axis ?? 1; return j.type === 'tongue' ? { solid: [slice(gs(j)[0], ax)], cut: caps(gs(j)[0], true, true, ax), tail: true, ax } : { solid: caps(Math.min(...gs(j)), true, true, ax), cut: [slice(gs(j).at(-1), ax)], socket: true, ax }; };
   // rounded rims: within r of the plane x = at, every vertex beyond the level zc sinks towards it, the outermost by most
   const eases = [];
-  const eased = (x, q) => {
+  // feet: under a socket cut across a log that lies on a side flat, the tines' inner edges would start in mid air,
+  // because the socket is wider than the flat. From x0 to x1 the underside of the log comes down onto the bed plane
+  // out to zIn each side of the axis, then rises back to the log's own outline by zOut; past x1 it fades out over ramp.
+  const feet = [];
+  const footed = (x, q) => {
+    for (const { x0, x1, ramp, bed, zIn, zOut } of feet) {
+      const wx = x < x0 - ramp || x > x1 + ramp ? 0 : x < x0 ? (x - (x0 - ramp)) / ramp : x > x1 ? (x1 + ramp - x) / ramp : 1, a = Math.abs(q[1]);
+      if (wx > 0 && q[0] < 0 && a < zOut) { const w = wx * (a <= zIn ? 1 : (zOut - a) / (zOut - zIn)); return [bed + (q[0] - bed) * (1 - w), q[1]]; }
+    }
+    return q;
+  };
+  const eased = (x, q0) => {
+    const q = footed(x, q0);
     for (const { at, r, zc, ax, top } of eases) {
       const d = Math.abs(x - at), a = Math.abs(q[ax]);
       if (d < r && a > zc) { const o = [...q]; o[ax] = Math.sign(q[ax]) * (a - (r - Math.sqrt(r * r - (r - d) * (r - d))) * ((a - zc) / (top - zc))); return o; }
@@ -290,6 +304,7 @@ function logMesh({ L, centers, base, notchW, top = true, bottom = true, chamfer 
       if (!tongue && j.prof.some(([d, g]) => d < j.ease && g > g0 + EPS)) throw new Error('socket widens inside its rounded rim');
       eases.push({ at: xOf(0), r: j.ease, zc: g0, dir: end ? -1 : 1, ax: kind.ax, top: Math.max(...base.map((p) => Math.abs(p[kind.ax]))) });
     }
+    if (j.foot && !tongue) feet.push({ x0: Math.min(xOf(0), xOf(j.len)), x1: Math.max(xOf(0), xOf(j.len)), ...j.foot });
   };
   let x0, x1;
   if (j0) { jointSpans(j0, 0, j0.len); x0 = j0.len; }
@@ -301,13 +316,15 @@ function logMesh({ L, centers, base, notchW, top = true, bottom = true, chamfer 
   for (let i = 0; i < bounds.length - 1; i++) spans.push([bounds[i], 1, bounds[i + 1], 1, i % 2 === 1 ? notch : full]);
   if (j1) jointSpans(j1, 1, x1);
   else for (let k = st.length - 2; k >= 0; k--) spans.push([L - st[k + 1][0], st[k + 1][1], L - st[k][0], st[k][1], full]);
-  // a rounded rim is a quarter circle: cut the spans it runs through into short steps
-  for (const { at, r, dir } of eases) for (let k = 1; k <= EASE_STEPS; k++) {
-    const x = at + dir * r * (1 - Math.cos((k * Math.PI) / 2 / EASE_STEPS)), i = spans.findIndex((sp) => sp[0] < x - 1e-6 && x < sp[2] - 1e-6);
-    if (i < 0) continue;
+  const cutSpans = (x) => {
+    const i = spans.findIndex((sp) => sp[0] < x - 1e-6 && x < sp[2] - 1e-6);
+    if (i < 0) return;
     const [xa, sa, xb, sb, kind] = spans[i], sx = sa + ((x - xa) / (xb - xa)) * (sb - sa);
     spans.splice(i, 1, [xa, sa, x, sx, kind], [x, sx, xb, sb, kind]);
-  }
+  };
+  // a rounded rim is a quarter circle: cut the spans it runs through into short steps
+  for (const { at, r, dir } of eases) for (let k = 1; k <= EASE_STEPS; k++) cutSpans(at + dir * r * (1 - Math.cos((k * Math.PI) / 2 / EASE_STEPS)));
+  for (const { x0, x1, ramp } of feet) { cutSpans(x0 - ramp); cutSpans(x1 + ramp); } // a foot fades out in a straight line
   let last = null, prev = null;
   spans.forEach(([xa, sa, xb, sb, kind], si) => {
     const n = tex ? Math.max(1, Math.ceil((xb - xa) / TEX.step)) : 1;
@@ -360,7 +377,7 @@ function bevelMesh({ Ltop, base, phi, tex = null, chamfer = null }) {
 export const ROUNDED_ENDS = [[0, 0.6], [1.5, 0.82], [3.5, 0.95], [5, 1]];
 // set: 'standard' (every part: the 10 logs, smooth or wood grain, and the roof parts), or one of two logs-only sets
 // with the same 10 logs: 'rounded' (round, with rounded ends) or 'octagonal' (octagonal section, flat ends)
-export function makeParts({ clearance = 0.2, flat = 0.8, texture = true, set = 'standard', spliceClearance = 0.3, spliceRound = 0.8 } = {}) {
+export function makeParts({ clearance = 0.2, flat = 0.8, texture = true, set = 'standard', spliceClearance = 0.05, spliceRound = 0.8 } = {}) {
   const oct = set === 'octagonal', ball = set === 'rounded';
   const ends = ball ? ROUNDED_ENDS : null; // chamfer profile for every log end
   // Every part that sits in a notch is MATE wide there: the round logs are, because of their flats, and the
@@ -415,30 +432,38 @@ export function makeParts({ clearance = 0.2, flat = 0.8, texture = true, set = '
   // end to end, and from outside the wall it shows as a dovetail on the face of the log.
   // The joint is cut straight through from one printing flat to the other, so on the bed (logs lie on a flat) every
   // face of it is an upright wall: no overhangs, no supports. In the wall the tines above and below the tail keep the
-  // two pieces level and the dovetail stops them pulling apart. The fit is loose; the crossing logs set the spacing.
-  // A middle piece with a socket at one end and a tail at the other would extend the log by 3 in per notch.
-  // len: the tail's length; neck: the socket's height at the shoulder line; slope: how fast it widens (1 in 4, 14 deg).
-  // The tail is the socket less spliceClearance on each side. The socket is a little wider than the printing flat on
-  // the round logs, so most of each tine's inner edge lifts off the bed, by up to 0.3 mm.
-  const SPLICE = { len: IN / 4, neck: 4.6, slope: 1 / 4 };
+  // two pieces level and the dovetail stops them pulling apart.
+  // A middle piece with a socket at one end and a tail at the other extends the log by 3 in per notch.
+  // The fit is a press fit, so a row of joined pieces stays straight when it is picked up. The joint bears on two
+  // pairs of faces only: the sloping sides of the tail against the sides of the socket, and the tips of the tines
+  // against the other piece's shoulder. The shoulders meet with no gap; they are what stops the joint hinging. The
+  // tail's sides are spliceClearance inside the socket's (0.05 mm: printed PLA closes that up). The tail's tip stops
+  // SPLICE.relief short of the socket's floor, so it can never hold the shoulders apart.
+  // (Printed in PLA with 0.3 mm on every face and a 1 in 4 slope, a row of five pieces sagged: each joint could open
+  // 1.2 mm endways before the dovetail took up.)
+  // len: the socket's depth; neck: the socket's height at the shoulder line; slope: how fast it widens (2 in 5, 22
+  // deg). The steeper the sides, the less endways play a given gap leaves: gap / slope.
+  // The socket is wider than the printing flat, so each tine gets a foot that brings its inner edge down onto the bed
+  // (printed without one, the tines of the round logs came out ragged along that edge).
+  const SPLICE = { len: IN / 4, neck: 4.2, slope: 2 / 5, relief: 0.2 };
   const spliceBase = (base, levels, axis = 1) => levels.reduce((P, g) => insertLine(insertLine(P, axis, g), axis, -g), base);
   {
     const std = 'log_4insert_10-5_8', L = 10.625 * IN, all = centersFor(L, 4), xs = L / 2 - SPLICE.len / 2; // xs: the shoulder line on the whole log
-    const e = spliceClearance; // each piece stops this far short of the other along the log, so the notches set the spacing
+    const lt = SPLICE.len - SPLICE.relief;                      // the tail's length: it stops short of the socket's floor
     const socketAt = (d) => SPLICE.neck / 2 + d * SPLICE.slope; // socket half-height, d from the shoulder line
-    const root = socketAt(0) - spliceClearance, tip = socketAt(SPLICE.len - e) - spliceClearance, mouth = socketAt(e), floor = socketAt(SPLICE.len);
+    const root = socketAt(0) - spliceClearance, tip = socketAt(lt) - spliceClearance, mouth = socketAt(0), floor = socketAt(SPLICE.len);
     if (floor >= h) throw new Error('splice socket is deeper than the notches: the tines would be too thin');
     // Every edge of the joint is rounded, as the corners of a hewn log are, and so nothing sharp is left for small
-    // hands. Edges that stick out (the tail's tip, the tips of the tines) get the radius spliceRound; the inside corner
-    // each one fits into (the socket's floor, the tail's neck) gets that plus the clearance, so the gap between the two
-    // pieces is the same all the way round. The rims where the shoulder and the tines meet the outside of the log are
-    // rounded too.
-    const lj = SPLICE.len - e, rOut = spliceRound, rIn = rOut > 0 ? rOut + spliceClearance : 0, far = 4 * h;
-    const tailProf = filletPath([[0, far], [0, root], [lj, tip], [lj, -far]], [rIn, rOut]);     // from the shoulder to the tip
-    const socketProf = filletPath([[0, far], [0, mouth], [lj, floor], [lj, -far]], [rOut, rIn]); // from the tine tips to the floor
-    for (const prof of [tailProf, socketProf]) {
+    // hands. The inside corners (the socket's floor, the tail's neck) get the radius spliceRound. The edges that stick
+    // out (the tail's tip, the tips of the tines) get a little more, so each stands clear of the corner it fits into
+    // and the joint closes on its flat faces, not on its corners. The rims where the shoulder and the tines meet the
+    // outside of the log are rounded too.
+    const rIn = spliceRound, rOut = rIn > 0 ? rIn + SPLICE.relief : 0, far = 4 * h;
+    const tailProf = filletPath([[0, far], [0, root], [lt, tip], [lt, -far]], [rIn, rOut]);                     // from the shoulder to the tip
+    const socketProf = filletPath([[0, far], [0, mouth], [SPLICE.len, floor], [SPLICE.len, -far]], [rOut, rIn]); // from the tine tips to the floor
+    for (const [prof, len] of [[tailProf, lt], [socketProf, SPLICE.len]]) {
       if (prof.some((q, k) => k && q[0] < prof[k - 1][0] - 1e-9) || prof.at(-1)[1] <= 0) throw new Error('splice-round is too large for the dovetail');
-      prof[0][0] = 0; prof.at(-1)[0] = lj;
+      prof[0][0] = 0; prof.at(-1)[0] = len;
     }
     const gTail = tailProf.map((q) => q[1]), gSocket = socketProf.map((q) => q[1]);
     // flatBottom: the same piece as a base log, for the base course. It prints on its flat bottom, so its dovetail is
@@ -447,8 +472,9 @@ export function makeParts({ clearance = 0.2, flat = 0.8, texture = true, set = '
     const piece = (base_, type, listing, note, x0, Lp, centers, joints, levels, flatBottom = false) => {
       const name = `${base_}${sfx}`, t = tex(name, flatBottom ? halfSmooth : logSmooth), axis = flatBottom ? 0 : 1;
       if (t) { t.levels = levels; t.levelAxis = axis; }
-      const info = { listing: `${listing}${O}`, length: Lp, centers, kind: flatBottom ? 'half' : 'log', splice: { type, of: std, x0, len: SPLICE.len, round: rOut, tail: tailProf, socket: socketProf, axis }, note };
-      joints = joints.map((j) => j && { ...j, axis });
+      const info = { listing: `${listing}${O}`, length: Lp, centers, kind: flatBottom ? 'half' : 'log', splice: { type, of: std, x0, len: SPLICE.len, tailLen: lt, round: rIn, tail: tailProf, socket: socketProf, axis }, note };
+      // lying on a side flat, the tines get a foot: without one their inner edges start above the bed (see logMesh)
+      joints = joints.map((j) => j && { ...j, axis, ...(j.type === 'groove' && !flatBottom ? { foot: { bed: yf, zIn: floor + 0.4, zOut: floor + 1.6, ramp: 1.5 } } : {}) });
       if (flatBottom) {
         add(name, info, centred(logMesh({ L: Lp, centers, base: spliceBase(halfBase, levels, 0), notchW, bottom: false, chamfer: ends, pivotZ: -h, joints, tex: t })), ([x, y, z]) => [x, y - yShift, z + h]);
         parts[name].toModel = ([X, Y, Z]) => [X, Y + yShift, Z - h];
@@ -457,24 +483,25 @@ export function makeParts({ clearance = 0.2, flat = 0.8, texture = true, set = '
       add(name, info, centred(logMesh({ L: Lp, centers, base: spliceBase(logBase, levels), notchW, chamfer: ends, joints, tex: t })), logPrint);
       parts[name].toModel = logModelFromPrint;
     };
-    // tongue piece: the whole log's 0 .. L/2 + len/2 (less e at the tip); groove piece: L/2 - len/2 (plus e) .. L
+    // tongue piece: the whole log's 0 .. L/2 - len/2 (its shoulder) plus the tail; groove piece: L/2 - len/2 .. L
     const halfNote = `half of the two-piece ${std}; the pair replaces one whole log`;
-    const tail = { type: 'tongue', len: lj, prof: tailProf, ease: rOut }, socket = { type: 'groove', len: lj, prof: socketProf, ease: rOut };
+    const tail = { type: 'tongue', len: lt, prof: tailProf, ease: rIn }, socket = { type: 'groove', len: SPLICE.len, prof: socketProf, ease: rIn };
     const tailLevels = [gTail[0]], socketLevels = [...new Set([gSocket[0], Math.min(...gSocket), gSocket.at(-1)])];
-    piece(`${std}_split_tongue`, 'tongue', '4 Insert Log, 10 5/8: tongue half', halfNote, 0, xs + lj, all.slice(0, 2), [null, tail], tailLevels);
-    piece(`${std}_split_groove`, 'groove', '4 Insert Log, 10 5/8: groove half', halfNote, xs + e, L - xs - e, all.slice(2).map((c) => c - xs - e), [socket, null], socketLevels);
+    const extL = CENTERS + lt, extCentres = [SPLICE.len / 2 + CENTERS / 2];
+    piece(`${std}_split_tongue`, 'tongue', '4 Insert Log, 10 5/8: tongue half', halfNote, 0, xs + lt, all.slice(0, 2), [null, tail], tailLevels);
+    piece(`${std}_split_groove`, 'groove', '4 Insert Log, 10 5/8: groove half', halfNote, xs, L - xs, all.slice(2).map((c) => c - xs), [socket, null], socketLevels);
     // extender: goes between the two halves (socket towards the tongue half, tail towards the groove half) and adds one
     // notch and 3 in, so the notches stay on 3 in centres. Several can be chained. Not in the reference lot.
-    // In its own frame x = 0 is the tips of its tines, e past the shoulder line of the piece before it.
+    // In its own frame x = 0 is the tips of its tines, on the shoulder line of the piece before it.
     piece('log_extender_1insert_3', 'extender', 'Extender for the two-piece log, 1 insert, 3', 'goes between the two halves of the two-piece log; each one adds a notch and 3 in',
-      xs + e, CENTERS + SPLICE.len - 2 * e, [SPLICE.len / 2 - e + CENTERS / 2], [socket, tail], [...new Set([...socketLevels, ...tailLevels])]);
+      xs, extL, extCentres, [socket, tail], [...new Set([...socketLevels, ...tailLevels])]);
     // the same three pieces as base logs: flat underneath, notches on top only, the same lengths and notch places.
     // Not in the reference lot either, which has no base log this long.
     const baseNote = 'flat underneath, for the base course; joins only with the other flat-bottomed pieces';
-    piece('base_log_10-5_8_split_tongue', 'tongue', 'Base Log, 10 5/8: tongue half', baseNote, 0, xs + lj, all.slice(0, 2), [null, tail], tailLevels, true);
-    piece('base_log_10-5_8_split_groove', 'groove', 'Base Log, 10 5/8: groove half', baseNote, xs + e, L - xs - e, all.slice(2).map((c) => c - xs - e), [socket, null], socketLevels, true);
+    piece('base_log_10-5_8_split_tongue', 'tongue', 'Base Log, 10 5/8: tongue half', baseNote, 0, xs + lt, all.slice(0, 2), [null, tail], tailLevels, true);
+    piece('base_log_10-5_8_split_groove', 'groove', 'Base Log, 10 5/8: groove half', baseNote, xs, L - xs, all.slice(2).map((c) => c - xs), [socket, null], socketLevels, true);
     piece('base_log_extender_1insert_3', 'extender', 'Extender for the two-piece base log, 1 insert, 3', 'flat underneath; goes between the two halves of the two-piece base log',
-      xs + e, CENTERS + SPLICE.len - 2 * e, [SPLICE.len / 2 - e + CENTERS / 2], [socket, tail], [...new Set([...socketLevels, ...tailLevels])], true);
+      xs, extL, extCentres, [socket, tail], [...new Set([...socketLevels, ...tailLevels])], true);
   }
 
   const half = (std, listing, Lin, n) => {
