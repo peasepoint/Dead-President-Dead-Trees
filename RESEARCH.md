@@ -21,11 +21,12 @@ Gathered with Tavily searches in November 2026. The extraction of four model pag
   - **"Hex" 1-insert:** faceted end with flats top and bottom.
   - **Beveled End 4 3/4:** a 2-insert log with rounded ends; the small beveled pieces are cut at about 39 deg.
   - **Wooden triangle:** about 4 7/8 x 2 in, straight 39 deg slopes, two bottom notches 3 in apart.
-  - **Plastic gable:** symmetric, 3 bottom notches 3 in apart, about 7 steps per side, eave lips.
+  - **Plastic gable:** symmetric, 3 bottom notches 3 in apart, about 7 steps per side, eave lips. (Later corrected to 6 from sharper photos; see the 1974 Frontiersman note below.)
   - **Shingles:** flat shingles about 0.8 in wide; ridge shingles about 1 1/8 in wide with a centre groove.
   - Full table in `DESIGN_NOTES.md`.
 - Roof pieces in sets: a 371-piece set lists "6 roof eaves, 28 roof slats" ([TTPM review](https://www.youtube.com/watch?v=NlhMvjbtn2k)); some 1970s sets had clips to hold slats together ([Architoys](https://www.architoys.net/toys/toypages/linclogs.html)); a roof-support model on [Printables](https://www.printables.com/model/659905-lincoln-logs-roof-supports-84-variations-different) says the original lip design lets slats fall off.
 - A second photo (supplied directly) shows nine orange plastic gables in two sizes and two yellow chimneys. Scaled from the large gable's 8 1/2 in width: the small gable is about 5.8 x 1.6 in with two bottom notches 3 in apart. The chimney is about 1 3/8 x 1.2 in with an open top and an inverted-V base cut at the roof pitch (about 27 deg), so it sits astride the ridge.
+- **How the slats lie (1974 Playskool Frontiersman set).** The set's box photo shows a built roof on the large plastic gables: six green slats on each slope, lying edge to edge in one plane without overlapping, the lowest against the hooked eave lip, the top two meeting at the ridge under two yellow chimneys, and every slat overhanging the gable faces by about half a slat's width. Resale close-ups agree on the gables: six steps a side on the 3-notch gable ([eBay photo with a tape measure](https://i.ebayimg.com/images/g/mk8AAOSwAFBmNPoN/s-l1600.jpg)) and four on the 2-notch gable ([1974 Explorer set](https://i.ebayimg.com/images/g/9V0AAOSwUqNoRKBS/s-l1600.jpg)), each step a long sloping tread with a low riser, and one slat per step ([Frontiersman roof, end view](https://i.pinimg.com/736x/79/1a/11/791a113ec19946a72aca6f11ae8e59c1.jpg)). Six slats between the lip and the peak of an 8 1/2 x 2 1/4 in gable can be no wider than about 0.74 in, so the 0.8 in measured from the listing photo is too wide.
 - No exact original dimensions found for doors or windows.
 
 ## Printing tolerances (general FDM guidance)

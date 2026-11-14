@@ -511,29 +511,38 @@ export function makeParts({ clearance = 0.2, flat = 0.8, texture = true, set = '
     parts[name].print = extrudeShell(poly, 0, T);
   };
   const nw = notchW, nd = NOTCH_D;
-  // Orange plastic gables: mirror-symmetric, flat bottom with notches on 3 in centres, stepped slopes, hooked eave lips.
-  // The large one is measured from the listing photo; the small one from a second photo of several gables, which
-  // shows it with two notches, the same step shape and the same pitch. Both share e0, lip and riser sizes.
-  const e0 = 7.5, lipT = 5.4, lipH = 3.6, rr = 2.9;
-  const plasticGable = (name, info, W, n, notchOffsets, Hfixed) => {
+  // Shingles: 1/8 in thick. A flat shingle is 18.5 mm wide (0.73 in), so that six lie edge to edge between the eave lip
+  // and the peak of the large gable and four on the small one. (The listing photo measured 0.79 to 0.8 in, but six that
+  // wide would be 7 mm longer than the gable's slope.)
+  const tS = IN / 8, wFlat = 18.5, wRidge = 1.125 * IN;
+  // Orange (or red) plastic gables: mirror-symmetric, flat bottom with notches on 3 in centres, stepped slopes, hooked
+  // eave lips. The large one is measured from the listing photo; the small one from a second photo of several gables,
+  // which shows it with two notches and the same step shape. Both share e0, lip and riser sizes.
+  // Steps: one per flat shingle, as on the 1974 Frontiersman set, whose box shows six shingles on each slope of the
+  // large gable lying edge to edge in one plane; close-ups of the gables show six steps a side on the large one and
+  // four on the small. Each tread is as long as a shingle is wide (plus `seat`), and the riser between treads is much
+  // lower than a shingle is thick, so neighbouring shingles butt edge to edge and the lowest one butts the eave lip.
+  // The lip's inner face leans back square to the first tread, so the shingle's edge meets it face to face.
+  const e0 = 7.5, lipT = 5.4, lipH = 3.6, rr = 0.8;
+  const plasticGable = (name, info, W, n, notchOffsets, Hfixed, treadLen) => {
     const half_ = W / 2, ph = (half_ - lipT) / n;
-    // tread rise: from the listed height for the large gable; for others, the same overall nose slope as the large one
-    const tr = Hfixed ? (Hfixed - e0 - (n - 1) * rr) / n : plasticSlope * ph - rr;
-    const H = e0 + n * tr + (n - 1) * rr;
-    const Lp = [[0, e0 + lipH], [lipT, e0 + lipH], [lipT, e0]];
-    for (let k = 0; k < n; k++) { const x = lipT + k * ph, y = e0 + k * (tr + rr); Lp.push([x + ph, y + tr]); if (k < n - 1) Lp.push([x + ph, y + tr + rr]); }
+    // tread rise: from the listed height for the large gable; for the small one, whatever makes its treads as long as the large one's
+    const tr = Hfixed ? (Hfixed - e0 - (n - 1) * rr) / n : Math.sqrt(treadLen ** 2 - ph ** 2);
+    const H = e0 + n * tr + (n - 1) * rr, len = Math.hypot(ph, tr);
+    if (len < wFlat + 0.1) throw new Error(`${name}: a ${wFlat} mm shingle does not fit its ${len.toFixed(2)} mm steps`);
+    const Lp = [[0, e0 + lipH], [lipT - (lipH * tr) / ph, e0 + lipH], [lipT, e0]], treads = [];
+    for (let k = 0; k < n; k++) { const x = lipT + k * ph, y = e0 + k * (tr + rr); treads.push([[x, y], [x + ph, y + tr]]); Lp.push([x + ph, y + tr]); if (k < n - 1) Lp.push([x + ph, y + tr + rr]); }
     const bottom = [[0, 0]];
     for (const o of notchOffsets) { const cx = half_ + o; bottom.push([cx - nw / 2, 0], [cx - nw / 2, nd], [cx + nw / 2, nd], [cx + nw / 2, 0]); }
     bottom.push([W, 0]);
     const poly = [...bottom, ...Lp.map((p) => [W - p[0], p[1]]), ...Lp.slice(0, -1).reverse()];
-    const m = (tr + rr) / ph, th = Math.atan(m), c = Math.cos(th), s = Math.sin(th);
-    const plane = (right, sv, hh = 0) => (right ? [W - lipT - sv * c + hh * s, e0 + sv * s + hh * c] : [lipT + sv * c - hh * s, e0 + sv * s + hh * c]);
-    gableAdd(name, { ...info, kind: 'gable', W, H, T, steps: n, notchXs: notchOffsets.map((o) => half_ + o), th, plane, sApex: (half_ - lipT) / c, profile: Lp, startX: lipT }, poly);
-    return m;
+    // th: the angle a shingle lies at (the tread's); treads: each tread's lower and upper end, left slope, eave to peak
+    gableAdd(name, { ...info, kind: 'gable', W, H, T, steps: n, notchXs: notchOffsets.map((o) => half_ + o), th: Math.atan2(tr, ph), treads, treadLen: len, riser: rr, profile: Lp, startX: lipT }, poly);
+    return { slope: tr / ph, len };
   };
-  let plasticSlope = 0;
-  plasticSlope = plasticGable('gable_plastic_8-1_2', { listing: 'Plastic Orange Roof, 2 1/4 x 8 1/2', source: 'listing' }, 8.5 * IN, 7, [-CENTERS, 0, CENTERS], 2.25 * IN);
-  plasticGable('gable_plastic_small_2notch', { listing: 'Small plastic gable, 2 notches (from a second photo; about 5.8 x 1.6)', source: 'gable photo' }, 5.8 * IN, 5, [-CENTERS / 2, CENTERS / 2], null);
+  const large = plasticGable('gable_plastic_8-1_2', { listing: 'Plastic Orange Roof, 2 1/4 x 8 1/2', source: 'listing' }, 8.5 * IN, 6, [-CENTERS, 0, CENTERS], 2.25 * IN);
+  const plasticSlope = large.slope;
+  plasticGable('gable_plastic_small_2notch', { listing: 'Small plastic gable, 2 notches (from a second photo; about 5.8 x 1.6)', source: 'gable photo' }, 5.8 * IN, 4, [-CENTERS / 2, CENTERS / 2], null, large.len);
   { // wooden triangle, measured from the photo (listed 4 x 2; measures about 4 7/8 x 2)
     const W = 4.875 * IN, H = 2 * IN, half_ = W / 2;
     const bottom = [[0, 0]];
@@ -545,8 +554,7 @@ export function makeParts({ clearance = 0.2, flat = 0.8, texture = true, set = '
     gableAdd('gable_wood_triangle_4x2', { listing: 'Triangle, 4 x 2', kind: 'gable', W, H, T, notchXs: [half_ - CENTERS / 2, half_ + CENTERS / 2], th, plane, sApex: Math.hypot(half_, H), profile: [[0, 0], [half_, H]], startX: null }, poly);
   }
 
-  // ---- shingles
-  const tS = IN / 8, wFlat = 0.8 * IN, wRidge = 1.125 * IN;
+  // ---- shingles (sizes are set above, with the gables)
   for (const [Lin, listing] of [[6, 'Flat Shingle, 6'], [9, 'Flat Shingle, 9'], [11, 'Flat Shingle, 11']]) {
     const name = `shingle_flat_${Lin}`;
     add(name, { listing, kind: 'shingle', length: Lin * IN, width: wFlat, t: tS }, plate(Lin * IN, wFlat, 0, tS), (p) => p);
@@ -561,11 +569,11 @@ export function makeParts({ clearance = 0.2, flat = 0.8, texture = true, set = '
   }
 
   // ---- chimney (yellow, from the gable photo): open-topped block with an inverted-V cut in its base that straddles
-  // the ridge. The V's sides are cut at the plastic gables' pitch (photo: about 27 deg).
+  // the ridge. The V's sides are cut at the angle the shingles lie at on the plastic gables (24 deg; photo: about 27 deg).
   // Model frame: width along x centred on 0, depth along y centred on 0, V apex... bottom prong tips at z = 0.
   {
     const Wc = 1.375 * IN, Dc = 1.0 * IN, Hc = 1.2 * IN, wall = 0.12 * IN, pocket = 0.5 * IN;
-    const Vd = (Wc / 2) * plasticSlope;                 // V depth so its sides match the roof pitch (photo: about 0.36 in)
+    const Vd = (Wc / 2) * plasticSlope;                 // V depth so its sides match the shingles' slope (photo: about 0.36 in)
     const zp = Hc - pocket;
     const prof = [[0, 0], [Wc / 2, Vd], [Wc, 0], [Wc, zp], [0, zp]];
     const lower = extrudeShell(prof, 0, Dc).map((t) => t.map(([u, v, w]) => [u, Dc - w, v]));          // V-cut solid base

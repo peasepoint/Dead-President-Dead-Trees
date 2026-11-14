@@ -46,7 +46,7 @@ LOG_PARAMS = [
 ROOF_PARAMS = [
     ('GableThk', 'MateWidth', 'mm', 'Gable thickness (fills a notch like a log)'),
     ('ShingleThk', '0.125 in', 'mm', 'Shingle thickness'),
-    ('FlatShingleWidth', '0.8 in', 'mm', 'Flat shingle width'),
+    ('FlatShingleWidth', '18.5 mm', 'mm', 'Flat shingle width: one fits each step of a plastic gable'),
     ('RidgeShingleWidth', '1.125 in', 'mm', 'Ridge shingle width'),
     ('RidgeGrooveWidth', '1.6 mm', 'mm', 'Ridge shingle centre groove width'),
     ('RidgeGrooveDepth', '0.8 mm', 'mm', 'Ridge shingle centre groove depth'),
@@ -364,18 +364,20 @@ class Builder:
         self.param(f'{code}_EaveHeight', '7.5 mm', 'mm', 'Height of the slope start above the base')
         self.param(f'{code}_LipThk', '5.4 mm', 'mm', 'Eave lip thickness')
         self.param(f'{code}_LipHeight', '3.6 mm', 'mm', 'Eave lip height above the slope start')
-        self.param(f'{code}_Riser', '2.9 mm', 'mm', 'Vertical riser of each roof step')
-        self.param(f'{code}_Height', height.replace('@', code), 'mm', 'Overall height at the peak', True)
+        self.param(f'{code}_Riser', '0.8 mm', 'mm', 'Vertical riser of each roof step; lower than a shingle is thick, so shingles butt edge to edge')
         self.param(f'{code}_StepRun', f'({code}_Width / 2 - {code}_LipThk) / {code}_Steps', 'mm', 'Horizontal run of one step')
+        self.param(f'{code}_Height', height.replace('@', code), 'mm', 'Overall height at the peak', True)
         self.param(f'{code}_TreadRise', f'({code}_Height - {code}_EaveHeight - ({code}_Steps - 1) * {code}_Riser) / {code}_Steps', 'mm', 'Rise of one sloped tread')
         self.param(f'{code}_StepPitch', f'sqrt({code}_StepRun ^ 2 + ({code}_TreadRise + {code}_Riser) ^ 2)', 'mm', 'Step spacing measured along the slope')
+        self.param(f'{code}_TreadLen', f'sqrt({code}_StepRun ^ 2 + {code}_TreadRise ^ 2)', 'mm', 'Length of one tread: a flat shingle lies on it, so it must exceed FlatShingleWidth')
 
     def plastic_gable(self, code, name):
         def build(comp):
             e0, lip = f'{code}_EaveHeight', f'{code}_LipThk'
             s = Sk(self, comp, 'xy', 'Half profile')
             s.poly([(0, 0), (f'{code}_Width / 2', 0), (f'{code}_Width / 2', f'{code}_Height + {code}_Riser'),
-                                 (lip, e0), (lip, f'{e0} + {code}_LipHeight'), (0, f'{e0} + {code}_LipHeight')])
+                                 (lip, e0), (f'{lip} - {code}_LipHeight * {code}_TreadRise / {code}_StepRun', f'{e0} + {code}_LipHeight'),
+                                 (0, f'{e0} + {code}_LipHeight')])  # the lip's inner face leans back square to the first tread
             self.extrude(comp, s.profiles(), 'GableThk', NEW, 'Half gable')
             t = Sk(self, comp, 'xy', 'Step')
             # The first edge of the step triangle runs up the slope; the pattern follows it.
@@ -477,11 +479,12 @@ class Builder:
     def build_roof(self):
         for name, expr, units, comment in LOG_PARAMS + ROOF_PARAMS:
             self.param(name, expr, units, comment, True)
-        self.plastic_gable_params('GableL', '8.5 in', 7, 3, '2.25 in')
-        self.param('PlasticRoofAngle', 'atan((GableL_Height + GableL_Riser - GableL_EaveHeight) / (GableL_Width / 2 - GableL_LipThk))',
-                   'deg', 'Pitch of the large plastic gable. The small gable and the chimney follow it', True)
-        # Small gable: same pitch as the large one, so its height follows from its width.
-        self.plastic_gable_params('GableS', '5.8 in', 5, 2, '@_EaveHeight + tan(PlasticRoofAngle) * (@_Width / 2 - @_LipThk) - @_Riser')
+        # One step per flat shingle (1974 Frontiersman set): six a side on the large gable, four on the small.
+        self.plastic_gable_params('GableL', '8.5 in', 6, 3, '2.25 in')
+        self.param('PlasticRoofAngle', 'atan(GableL_TreadRise / GableL_StepRun)',
+                   'deg', 'Angle the shingles lie at on the large plastic gable. The chimney follows it', True)
+        # Small gable: treads as long as the large one's, so its height follows from its width.
+        self.plastic_gable_params('GableS', '5.8 in', 4, 2, '@_EaveHeight + @_Steps * sqrt(GableL_TreadLen ^ 2 - @_StepRun ^ 2) + (@_Steps - 1) * @_Riser')
         self.plastic_gable('GableL', 'gable_plastic_8-1_2')
         self.plastic_gable('GableS', 'gable_plastic_small_2notch')
         self.wood_gable()
