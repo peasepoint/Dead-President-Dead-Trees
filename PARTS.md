@@ -7,7 +7,8 @@ A building needs the [roof parts](#roof-parts) plus the logs from **one** of the
 | Jump to | Folder | Parts |
 |---|---|:---:|
 | [Log download table](#the-10-logs) | All four log sets side by side | 40 |
-| [Roof parts](#roof-parts) | [`stl/roof_parts/`](stl/roof_parts) | 12 |
+| [Roof parts](#roof-parts) | [`stl/roof_parts/`](stl/roof_parts) | 10 |
+| [Dazzlers](#dazzlers) | [`stl/dazzlers/`](stl/dazzlers) | 8 |
 | [Flat-End-Round logs](#flat-end-round) | [`stl/flat_end_round/`](stl/flat_end_round) | 10 |
 | [Ball-End-Round logs](#ball-end-round) | [`stl/ball_end_round/`](stl/ball_end_round) | 10 |
 | [Flat-End-Octagonal logs](#flat-end-octagonal) | [`stl/flat_end_octagonal/`](stl/flat_end_octagonal) | 10 |
@@ -42,7 +43,7 @@ Round logs are 3/4 in (19.05 mm) in diameter with a 0.4 mm flat on each side, so
 
 ## Roof parts
 
-[`stl/roof_parts/`](stl/roof_parts): gables, shingles, the chimney, and a door and window. These are smooth, and the same whichever log set you print.
+[`stl/roof_parts/`](stl/roof_parts): gables, shingles and the chimney. These are smooth, and the same whichever log set you print.
 
 | Part | Size | What it is | STL | Still and rotating |
 |---|---|---|---|---|
@@ -56,10 +57,25 @@ Round logs are 3/4 in (19.05 mm) in diameter with a 0.4 mm flat on each side, so
 | **Ridge shingle, 6 in** | 152 x 29 x 3.2 mm | Wider board with a centre groove | [`shingle_ridge_6.stl`](stl/roof_parts/shingle_ridge_6.stl) | <img src="images/roof_parts/shingle_ridge_6.png" width="140" alt="shingle_ridge_6"> <img src="images/roof_parts/shingle_ridge_6.gif" width="140" alt="shingle_ridge_6, rotating"> |
 | **Ridge shingle, 9 in** | 229 x 29 x 3.2 mm | Wider board with a centre groove | [`shingle_ridge_9.stl`](stl/roof_parts/shingle_ridge_9.stl) | <img src="images/roof_parts/shingle_ridge_9.png" width="140" alt="shingle_ridge_9"> <img src="images/roof_parts/shingle_ridge_9.gif" width="140" alt="shingle_ridge_9, rotating"> |
 | **Chimney** | 35 x 25 x 30 mm | Open top, V-cut base that sits astride the ridge of a stepped-gable roof | [`chimney.stl`](stl/roof_parts/chimney.stl) | <img src="images/roof_parts/chimney.png" width="140" alt="chimney"> <img src="images/roof_parts/chimney.gif" width="140" alt="chimney, rotating"> |
-| **Door** | 57 x 47 x 3.2 mm | Stands in a wall opening four courses high. Not a copy of an original part | [`extra_door.stl`](stl/roof_parts/extra_door.stl) | No picture |
-| **Window** | 57 x 38 x 3.2 mm | Stands in a wall opening three courses high. Not a copy of an original part | [`extra_window.stl`](stl/roof_parts/extra_window.stl) | No picture |
 
 The chimney fits the two stepped gables only; the triangle gable's roof is steeper than the chimney's V.
+
+## Dazzlers
+
+[`stl/dazzlers/`](stl/dazzlers): the parts that dress a building up. No building needs them, none is a copy of an original part, and they are the same whichever log set you print. Each one fits the set somewhere: a notch, the chimney, the ridge, a wall opening.
+
+| Part | Size | What it is | STL | Still and rotating |
+|---|---|---|---|---|
+| **Door** | 57 x 47 x 3.2 mm | Stands in a wall opening four courses high | [`door.stl`](stl/dazzlers/door.stl) | <img src="images/dazzlers/door.png" width="140" alt="door"> <img src="images/dazzlers/door.gif" width="140" alt="door, rotating"> |
+| **Window** | 57 x 38 x 3.2 mm | Stands in a wall opening three courses high | [`window.stl`](stl/dazzlers/window.stl) | <img src="images/dazzlers/window.png" width="140" alt="window"> <img src="images/dazzlers/window.gif" width="140" alt="window, rotating"> |
+| **Picket fence** | 114 x 40 x 18.3 mm | As long as a 2-notch log, with the same two notches underneath: it stands on the table or locks across two logs. Nine pickets on 1/2 in centres, so fences butt end to end without breaking step | [`picket_fence.stl`](stl/dazzlers/picket_fence.stl) | <img src="images/dazzlers/picket_fence.png" width="140" alt="picket_fence"> <img src="images/dazzlers/picket_fence.gif" width="140" alt="picket_fence, rotating"> |
+| **Flag on a pole** | 68 x 107 x 18.3 mm | A swallow-tailed flag caught mid-wave, with three raised stripes. Its base has one notch underneath and sits in the top notch of any log | [`flag.stl`](stl/dazzlers/flag.stl) | <img src="images/dazzlers/flag.png" width="140" alt="flag"> <img src="images/dazzlers/flag.gif" width="140" alt="flag, rotating"> |
+| **Rooster weathervane** | 75 x 65 x 25 mm | A rooster riding an arrow. The base has the chimney's V cut and sits astride the ridge the same way | [`weathervane.stl`](stl/dazzlers/weathervane.stl) | <img src="images/dazzlers/weathervane.png" width="140" alt="weathervane"> <img src="images/dazzlers/weathervane.gif" width="140" alt="weathervane, rotating"> |
+| **Chimney smoke** | 42 x 72 x 18.9 mm | A plume of puffs drifting downwind, on a plug that drops into the chimney's open top | [`chimney_smoke.stl`](stl/dazzlers/chimney_smoke.stl) | <img src="images/dazzlers/chimney_smoke.png" width="140" alt="chimney_smoke"> <img src="images/dazzlers/chimney_smoke.gif" width="140" alt="chimney_smoke, rotating"> |
+| **Rain barrel** | 19 x 19 x 35 mm | Twelve staves, four hoops and a sunk lid, the size of the 1 3/8 in solid log, so it stands wherever one does | [`rain_barrel.stl`](stl/dazzlers/rain_barrel.stl) | <img src="images/dazzlers/rain_barrel.png" width="140" alt="rain_barrel"> <img src="images/dazzlers/rain_barrel.gif" width="140" alt="rain_barrel, rotating"> |
+| **Pine tree** | 123 x 84 x 3.2 mm on the bed; 60 x 60 x 84 mm built | Two flat trees in one file that slot together at right angles, the way two logs cross | [`pine_tree.stl`](stl/dazzlers/pine_tree.stl) | <img src="images/dazzlers/pine_tree.png" width="140" alt="pine_tree"> <img src="images/dazzlers/pine_tree.gif" width="140" alt="pine_tree, rotating"> |
+
+All print without supports, as they lie in the file. The fence, flag, weathervane and smoke print on their backs, so the decoration is flush with one face of the thick part that fits the set, not centred on it. Like the chimney, the weathervane fits the two stepped gables only. None of the dazzlers has been printed yet.
 
 ## Flat-End-Round
 

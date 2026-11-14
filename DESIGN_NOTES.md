@@ -6,7 +6,7 @@ How the parts were measured, what is assumed, and how the example buildings are 
 
 1. [Where the measurements come from](#where-the-measurements-come-from)
 2. [Shared log geometry](#shared-log-geometry)
-3. [The five sets](#the-five-sets)
+3. [The six sets](#the-six-sets)
 4. [Wood texture](#wood-texture)
 5. [Measurement notes by part](#measurement-notes-by-part)
 6. [Check against `PARTS_SPEC.md`](#check-against-parts_specmd)
@@ -41,13 +41,14 @@ Where the seller's sheet gives a length, that figure is used. Where a photo and 
 | Course rise | 3/8 in | Two 3/16 in notches overlap |
 | Notch placement | Centred on the listed length | Ends measured 0.33 to 0.44 in, which fits a centred layout within about 1/16 in |
 
-## The five sets
+## The six sets
 
-One folder of roof parts that every building uses, and four log sets to choose between. Every log set has the same 10 logs, the same notch layout and the same 18.25 mm mating width, so the sets mix in one building and each one can build any of the test buildings.
+One folder of roof parts that every building uses, one of optional dazzlers, and four log sets to choose between. Every log set has the same 10 logs, the same notch layout and the same 18.25 mm mating width, so the sets mix in one building and each one can build any of the test buildings.
 
 | Folder | Contents | Built by |
 |---|---|---|
-| [`stl/roof_parts/`](stl/roof_parts) | 3 gables, 6 shingles, the chimney, a door and a window (12 parts). Smooth | `makeParts()`, the parts that are not logs |
+| [`stl/roof_parts/`](stl/roof_parts) | 3 gables, 6 shingles and the chimney (10 parts). Smooth | `makeParts()`, the parts that are not logs or dazzlers |
+| [`stl/dazzlers/`](stl/dazzlers) | The door, the window and six more dress-up parts of my own design (8 parts). Smooth | `makeParts()`, the parts of kind `dazzler`, built in `dazzlers.mjs` |
 | [`stl/flat_end_round/`](stl/flat_end_round) | Round logs, wood grain, flat ends | `makeParts({ texture: true })`, the default |
 | [`stl/ball_end_round/`](stl/ball_end_round) | Round logs, wood grain, rounded ends | `makeParts({ set: 'rounded' })` |
 | [`stl/flat_end_octagonal/`](stl/flat_end_octagonal) | Octagonal logs, wood grain, flat ends | `makeParts({ set: 'octagonal' })` |
@@ -151,7 +152,20 @@ What each part was modelled from and where the sources disagree. Names are the F
 | `shingle_flat_6`, `_9`, `_11` | Flat Shingle, 6, 9 and 11 | 0.8 x 1/8 in boards | Width measured 0.79 to 0.8 in |
 | `shingle_ridge_5-5_8`, `_6`, `_9` | Shingle with Ridge | 1 1/8 in board with a centre groove | Measured 1.13 to 1.17 in wide. Both halves are lit identically, so it is flat, not folded |
 | `chimney` | Second photo only | Open-topped block, 1 3/8 in wide x 1.2 in tall x 1 in deep, inverted-V cut in the base | Photo: about 1.39 x 1.2 in, V about 0.36 in deep with 27 deg sides. Modelled V: 0.35 in, matched to the 27.1 deg roof |
-| `extra_door`, `extra_window` | Not an original part | 1/8 in panels sized to a wall opening | Designed for this project; not used in the test buildings |
+
+### Dazzlers
+
+Dress-up parts designed for this project; none is an original part (`door` and `window` were `extra_door` and `extra_window` in `stl/roof_parts/`). Each borrows a fit that the set already has, and each prints without supports: most are flat outlines of different heights on the bed, the thick layer being the one that fits the set.
+
+| Part | Fits | Modelled as |
+|---|---|---|
+| `door`, `window` | A wall opening four or three courses high | 1/8 in panels, as wide as the gap between two crossing logs less the clearance |
+| `picket_fence` | Two notches 3 in apart, or the table | 4 1/2 in long. A sill 12 mm high and 18.25 mm thick with two gable-style notches underneath; nine 6 mm pickets on 1/2 in centres |
+| `flag` | The top notch of any log, or the table | A 1 1/2 in block, 18.25 mm thick, with one notch underneath; a 5 mm pole; a 2.4 mm flag with 0.8 mm raised stripes |
+| `weathervane` | The ridge of a stepped-gable roof | The chimney's width, depth and V cut under a low block; a 4 mm rooster-and-arrow vane |
+| `chimney_smoke` | The chimney's open top | A plug 0.2 mm clear of the pocket on each side and 10 mm deep (the pocket is 12.7 mm); an 8 mm plume |
+| `rain_barrel` | Wherever a 1 3/8 in solid log stands | A turned shape no wider than a log: 12 staves with 0.35 mm grooves, four 0.5 mm hoops, a lid sunk 1.5 mm |
+| `pine_tree` | The table | Two 1/8 in plates with slots 0.2 mm wider than a plate on each side, one cut from the top and one from the bottom, meeting 34 mm up |
 
 Three dimensions are not visible in any photo and are assumed:
 
@@ -245,7 +259,7 @@ Per-part results, one file per log set: [flat-end round](VERIFY_flat_end_round.m
   - The meaning of "1 1/2 x 1 1/4" on the beveled end.
   - The small gable's height: 1.56 in, derived from the large gable's pitch, against about 1.6 in measured.
 - **One cabin shingle row is marginal.** Its centre of mass is only about 1 mm inside its supports. It is stable on paper, but a light knock could tip it.
-- **The door and window** are not in any photo and are not used in the verified buildings.
+- **The dazzlers** are not in any photo, are not used in the verified buildings and have not been printed.
 
 ## Printing notes
 
@@ -265,7 +279,8 @@ Every part is defined in `parts.mjs`, and the same geometry feeds each script. H
 
 | Script | What it does |
 |---|---|
-| `log_generator.mjs` | Writes the five folders in `stl/` |
+| `log_generator.mjs` | Writes the six folders in `stl/` |
+| `dazzlers.mjs` | Geometry of the dazzlers, called by `parts.mjs` |
 | `assembly.mjs` | Lays the parts out into the six test buildings |
 | `verify.mjs` | Checks the buildings with each log set; writes `VERIFY_<set>.md` |
 | `make_gif.mjs` | Renders `cabin_build.gif` |

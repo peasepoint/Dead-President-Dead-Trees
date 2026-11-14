@@ -1,10 +1,10 @@
 # Fusion designs
 
-Every part in `parts.mjs` as an editable, parametric Autodesk Fusion design: one design per folder in `stl/`. To print without Fusion, use the STLs; see the [main README](../README.md#how-to-print).
+The parts in `parts.mjs` as editable, parametric Autodesk Fusion designs: one design per folder in `stl/`, except the dazzlers, whose design has not been built yet (see below). To print without Fusion, use the STLs; see the [main README](../README.md#how-to-print).
 
 | File | What it is |
 |---|---|
-| `DeadPresidentTreeSections_roof_parts.f3d` | Gables, shingles, chimney, door and window (`stl/roof_parts/`) |
+| `DeadPresidentTreeSections_roof_parts.f3d` | Gables, shingles and chimney (`stl/roof_parts/`). The saved file predates the dazzlers and still holds the door and window, as `extra_door` and `extra_window` |
 | `DeadPresidentTreeSections_smooth.f3d` | The 10 logs, round and plain (`stl/smooth/`) |
 | `DeadPresidentTreeSections_flat_end_round.f3d` | The 10 logs, round, flat ends, with their wood-grain meshes (`stl/flat_end_round/`) |
 | `DeadPresidentTreeSections_flat_end_octagonal.f3d` | The 10 logs, octagonal, flat ends, with their wood-grain meshes (`stl/flat_end_octagonal/`) |
@@ -15,6 +15,10 @@ Every part in `parts.mjs` as an editable, parametric Autodesk Fusion design: one
 Open a design in Fusion with File > Open > Open from my computer.
 
 ![The octagonal log set in Fusion](layout_flat_end_octagonal.png)
+
+## Dazzlers
+
+`build_lincoln_logs.py` has a `dazzlers` set: the door and window as parametric panels, and the other six dazzlers as mesh bodies of their STLs, since they are free-form shapes. That set has not been run in Fusion yet, so there is no `DeadPresidentTreeSections_dazzlers.f3d`, and the roof design has not been rebuilt without the door and window. To build either, set `PART_SET` and run the script.
 
 ## How it is organised
 
@@ -50,7 +54,7 @@ Change one and every part in the design follows.
 | `GableThk` | `MateWidth` | Gable thickness (roof design) |
 | `ShingleThk`, `FlatShingleWidth`, `RidgeShingleWidth` | 0.125, 0.8, 1.125 in | Shingle sizes (roof design) |
 | `RidgeGrooveWidth`, `RidgeGrooveDepth` | 1.6, 0.8 mm | Ridge shingle groove (roof design) |
-| `PanelThk` | 0.125 in | Door and window thickness (roof design) |
+| `PanelThk` | 0.125 in | Door and window thickness (dazzlers design) |
 | `PlasticRoofAngle` | from the large gable (27.1 deg) | The small gable's height and the chimney's V follow it (roof design) |
 
 ## Per-part parameters
@@ -69,7 +73,7 @@ Each part's parameters start with its code.
 | `ShFlat6`, `ShFlat9`, `ShFlat11` | `shingle_flat_*` | `_Length` |
 | `ShRidge5`, `ShRidge6`, `ShRidge9` | `shingle_ridge_*` | `_Length` |
 | `Chimney` | `chimney` | `_Width`, `_Depth`, `_Height`, `_Wall`, `_Pocket` |
-| `Door`, `Window` | `extra_door`, `extra_window` | `_Courses`, plus `_OpeningWidth`, `_OpeningHeight` on the window |
+| `Door`, `Window` | `door`, `window` (dazzlers design) | `_Courses`, plus `_OpeningWidth`, `_OpeningHeight` on the window |
 
 Notes:
 - Notches stay centred on the part: set `_Notches` and `_Length` and the row re-centres.

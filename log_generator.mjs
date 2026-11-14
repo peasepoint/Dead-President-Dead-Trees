@@ -1,6 +1,7 @@
 // Writes every part in parts.mjs as binary STL, in printing orientation, and checks each mesh.
-// Five folders are written under <out>:
-//   roof_parts/          gables, shingles, chimney, door and window: the same for every log set
+// Six folders are written under <out>:
+//   roof_parts/          gables, shingles and chimney: the same for every log set
+//   dazzlers/            door, window and the other dress-up parts: the same for every log set
 //   smooth/              the logs, plain
 //   flat_end_round/      the logs with wood grain and growth rings in their flat ends
 //   flat_end_octagonal/  the logs with an octagonal section, wood grain and flat ends
@@ -16,10 +17,11 @@ const args = Object.fromEntries(process.argv.slice(2).reduce((a, v, i, arr) => (
 const opts = { clearance: +(args.clearance ?? 0.2), flat: +(args.flat ?? 0.8), spliceClearance: +(args['splice-clearance'] ?? 0.3), spliceRound: +(args['splice-round'] ?? 0.8) };
 const outRoot = args.out ?? 'stl';
 const LOG_KINDS = ['log', 'half', 'bevel', 'solid'];
-const isLog = (p) => LOG_KINDS.includes(p.info.kind);
+const isLog = (p) => LOG_KINDS.includes(p.info.kind), isDazzler = (p) => p.info.kind === 'dazzler';
 // folder name -> makeParts options and which of the parts it gets
 export const SETS = {
-  roof_parts: { make: { texture: false }, keep: (p) => !isLog(p) },
+  roof_parts: { make: { texture: false }, keep: (p) => !isLog(p) && !isDazzler(p) },
+  dazzlers: { make: { texture: false }, keep: isDazzler },
   smooth: { make: { texture: false }, keep: isLog },
   flat_end_round: { make: { texture: true }, keep: isLog },
   flat_end_octagonal: { make: { texture: true, set: 'octagonal' }, keep: isLog },
@@ -73,7 +75,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       const { open, vol, lo, size } = checkMesh(p.print);
       if (open || vol <= 0 || Math.abs(lo[2]) > 1e-6) bad++;
       writeSTL(path.join(outDir, `${p.name}.stl`), p.print);
-      console.log(`${p.name.padEnd(30)} ${size.map((s) => s.toFixed(1)).join(' x ').padEnd(22)} mm  open edges ${open}  vol ${vol.toFixed(0)} mm3  bed z ${lo[2].toFixed(3)}  ${p.info.listing ?? '(extra, not in listing)'}`);
+      console.log(`${p.name.padEnd(30)} ${size.map((s) => s.toFixed(1)).join(' x ').padEnd(22)} mm  open edges ${open}  vol ${vol.toFixed(0)} mm3  bed z ${lo[2].toFixed(3)}  ${p.info.listing}`);
     }
   }
   console.log(bad ? `\n${bad} part(s) FAILED mesh checks` : '\nall parts watertight, positive volume, resting on z = 0');

@@ -9,7 +9,7 @@
 ## Contents
 
 - [Quick start](#quick-start)
-- [The parts](#the-parts): [roof parts](#roof-parts) and [four log sets](#log-sets)
+- [The parts](#the-parts): [roof parts](#roof-parts), [four log sets](#log-sets) and [dazzlers](#dazzlers)
 - [How to print](#how-to-print): [get the files](#1-get-the-files), [fit test](#2-print-the-fit-test), [slice](#3-slice), [print a building](#4-print-a-building), [assemble](#5-assemble)
 - [Example buildings](#example-buildings)
 - [Editing the parts](#editing-the-parts)
@@ -33,13 +33,13 @@ Every STL is in millimetres and already lies in its printing orientation. The [p
 | <img src="images/flat_end_round/log_3insert_7-5_8.png" width="150" alt="3-notch log"> | <img src="images/flat_end_round/base_log_7-1_2.png" width="150" alt="Base log"> | <img src="images/roof_parts/gable_plastic_8-1_2.png" width="150" alt="Large stepped gable"> | <img src="images/roof_parts/shingle_ridge_9.png" width="150" alt="Ridge shingle"> | <img src="images/roof_parts/chimney.png" width="150" alt="Chimney"> |
 | 1 to 4 notches, 1 1/2 to 10 5/8 in | 4 1/2 and 7 1/2 in; the base course | Two stepped sizes and a plain triangle | Flat and ridge, 5 5/8 to 11 in | Sits astride the roof ridge |
 
-The files are in five folders under `stl/`. A building needs the roof parts plus the logs from one log set.
+The files are in six folders under `stl/`. A building needs the roof parts plus the logs from one log set. The [dazzlers](#dazzlers) are optional.
 
 ### Roof parts
 
 | Folder | Contents | Looks like |
 |---|---|:---:|
-| [`stl/roof_parts/`](stl/roof_parts) | 3 gables, 6 shingles and the chimney, plus a door and window of my own design (12 parts). Smooth, and the same whichever logs you print. [See them all](PARTS.md#roof-parts) | <img src="images/roof_parts/gable_plastic_8-1_2.gif" width="150" alt="Stepped gable, rotating"> |
+| [`stl/roof_parts/`](stl/roof_parts) | 3 gables, 6 shingles and the chimney (10 parts). Smooth, and the same whichever logs you print. [See them all](PARTS.md#roof-parts) | <img src="images/roof_parts/gable_plastic_8-1_2.gif" width="150" alt="Stepped gable, rotating"> |
 
 ### Log sets
 
@@ -78,6 +78,19 @@ The 270 mm log does not fit a 256 mm bed, so every log set also has it as two ha
 
 - **The dovetail is turned upright.** A base log prints on its flat bottom, so its dovetail is cut straight down through the log, where the full logs' is cut across. Every face of the joint is still a vertical wall on the bed, and the dovetail shows on top of the log, not on its side.
 - **They go together from above.** Lower the tail into the socket. The flat-bottomed pieces join only with each other, not with the full-round ones.
+
+### Dazzlers
+
+The parts that dress a building up: a door and a window, and six more of my own design. None copies an original part and no building needs them, but each one fits the set somewhere.
+
+| Picket fence | Flag | Weathervane | Chimney smoke | Rain barrel | Pine tree |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+| <img src="images/dazzlers/picket_fence.gif" width="120" alt="Picket fence"> | <img src="images/dazzlers/flag.gif" width="120" alt="Flag"> | <img src="images/dazzlers/weathervane.gif" width="120" alt="Weathervane"> | <img src="images/dazzlers/chimney_smoke.gif" width="120" alt="Chimney smoke"> | <img src="images/dazzlers/rain_barrel.gif" width="120" alt="Rain barrel"> | <img src="images/dazzlers/pine_tree.gif" width="120" alt="Pine tree"> |
+| Two notches underneath, like a 2-notch log | Sits in the top notch of any log | Sits astride the ridge | Drops into the chimney | The size of a solid log | Two halves that slot together |
+
+| Folder | Contents |
+|---|---|
+| [`stl/dazzlers/`](stl/dazzlers) | The door, the window and the six above (8 parts). Smooth, and the same whichever logs you print. [See them all](PARTS.md#dazzlers) |
 
 ## How to print
 
@@ -122,7 +135,8 @@ How each part sits on the bed:
 | Octagonal logs | Lying on one face, notches facing sideways |
 | Base logs | Flat side down, notches up |
 | Solid logs | Standing on end |
-| Gables, shingles, door, window | Flat on a face |
+| Gables, shingles | Flat on a face |
+| Dazzlers | Door, window and pine tree flat; fence, flag, weathervane and smoke on their backs; rain barrel standing |
 | Chimney | Upside down: open top on the bed, V-cut facing up |
 
 **Bed size.** Two parts are longer than a 256 mm bed: `log_4insert_10-5_8` (270 mm) and `shingle_flat_11` (279 mm). Turn them diagonally, or use a larger printer. The log also comes as [two halves](#the-two-piece-4-notch-log) of 138 mm. The next longest parts are the 9 in shingles (229 mm) and the 3-notch log (194 mm).
@@ -206,7 +220,7 @@ Requires [Node.js](https://nodejs.org); there is nothing to install. From this f
 node log_generator.mjs
 ```
 
-This rewrites all five `stl/` folders and checks that every mesh is watertight and sits on the bed. Options:
+This rewrites all six `stl/` folders and checks that every mesh is watertight and sits on the bed. Options:
 
 | Option | Default | Meaning |
 |---|---|---|
@@ -214,8 +228,8 @@ This rewrites all five `stl/` folders and checks that every mesh is watertight a
 | `--flat` | `0.8` | Total width taken off round logs, in mm, as an equal flat on each side. The parts that sit in notches are narrower by this much, and the notches follow |
 | `--splice-clearance` | `0.3` | Gap on each face of the dovetail between the pieces of the two-piece log, in mm |
 | `--splice-round` | `0.8` | Radius on the edges of that dovetail, in mm. `0` leaves them square |
-| `--set` | `all` | `all`, or one folder: `roof_parts`, `ball_end_round`, `flat_end_round`, `flat_end_octagonal` or `smooth` |
-| `--out` | `stl` | Parent folder for the five folders |
+| `--set` | `all` | `all`, or one folder: `roof_parts`, `dazzlers`, `ball_end_round`, `flat_end_round`, `flat_end_octagonal` or `smooth` |
+| `--out` | `stl` | Parent folder for the six folders |
 
 For example, for PETG:
 
@@ -232,7 +246,7 @@ The other scripts:
 | `node make_gif.mjs` | Renders `cabin_build.gif` |
 | `node make_renders.mjs` | Renders the stills of the example buildings into `images/examples/` |
 | `node make_landscape_gif.mjs` | Renders `images/examples/cabin_landscape.gif` and a still of the same scene (takes a few minutes) |
-| `node make_part_images.mjs` | Renders a still and a rotating image of each part into `images/<set>/`, for the roof parts and all four log sets. `--set <folder>` renders one set |
+| `node make_part_images.mjs` | Renders a still and a rotating image of each part into `images/<set>/`, for the roof parts, the dazzlers and all four log sets. `--set <folder>` renders one set |
 
 ## Status
 
@@ -240,7 +254,7 @@ The other scripts:
 |---|---|
 | **Checked in software** | In all six buildings no parts overlap, every part is supported and every wall log is locked by its notches, with each of the four log sets |
 | **Test-printed** | The notch fit only. Pairs of 1-notch logs were printed in PLA with notches from 18.65 to 19.65 mm wide; 18.65 mm fit best and is the default ([details](fit_test/README.md)) |
-| **Not checked** | Everything else in the real world. No octagonal or ball-end log, base log, gable, shingle, chimney or whole building has been printed |
+| **Not checked** | Everything else in the real world. No octagonal or ball-end log, base log, gable, shingle, chimney, dazzler or whole building has been printed |
 
 If you print these, the most useful things to report are:
 
