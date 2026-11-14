@@ -1,4 +1,5 @@
-// Geometry for every part in the reference listing (millimetres), plus three non-listed extras.
+// Geometry for every part in the reference listing (millimetres), plus the dazzlers: dress-up parts that are not
+// in any listing (dazzlers.mjs).
 // Used by log_generator.mjs (STL export), assembly.mjs (cabin layouts), verify.mjs and make_gif.mjs.
 //
 // Each part has:  model  = triangles in the assembly frame (see "frames" below)
@@ -10,6 +11,8 @@
 //    (a base log keeps that virtual centre; its flat bottom is at z = -h)
 //  - gables: width along x from 0, thickness centred on y = 0, bottom at z = 0
 //  - shingles: length along x, width along y, thickness along z (groove up)
+import { addDazzlers } from './dazzlers.mjs';
+
 export const IN = 25.4;
 export const D = 0.75 * IN;            // log diameter
 export const R = D / 2;
@@ -525,7 +528,7 @@ export function makeParts({ clearance = 0.2, flat = 0.8, texture = true, set = '
     add(name, { listing: listing + O, kind: 'solid', replaces: [std] }, m, (p) => p);
     parts[name].toModel = (p) => p;
   }
-  if (oct || ball) return parts; // logs-only sets: the gables, shingles, chimney and extras are shared
+  if (oct || ball) return parts; // logs-only sets: the gables, shingles, chimney and dazzlers are shared
 
   // ---- gables: profile in XY, thickness T along Z in the print frame; model = (X, T/2 - Z, Y)
   const T = MATE; // as wide as a log is where it sits in a notch, so a gable fills the crossing log's notch slot the way a log does (thickness not visible in photos)
@@ -609,12 +612,7 @@ export function makeParts({ clearance = 0.2, flat = 0.8, texture = true, set = '
     parts.chimney.toModel = ([X, Y, Z]) => [X - Wc / 2, -(Y - Dc / 2), Hc - Z];
   }
 
-  // ---- extras that are NOT in any reference photo (kept from the earlier design)
-  const gap = CENTERS - D - 2 * clearance, wallH = (n) => (n - 1) * PITCH + D;
-  const extras = {
-    extra_door: plate(gap, wallH(4) - 2 * clearance, 0, IN / 8),
-    extra_window: (() => { const w = gap, hh = wallH(3) - 2 * clearance, ow = 1.125 * IN, oh = 0.625 * IN; return plate(w, hh, 0, IN / 8, { x0: (w - ow) / 2, x1: (w + ow) / 2, y0: (hh - oh) / 2, y1: (hh + oh) / 2 }); })(),
-  };
-  for (const [name, m] of Object.entries(extras)) { add(name, { listing: null, kind: 'extra' }, m, (p) => p); parts[name].toModel = (p) => p; }
+  // ---- dazzlers: the door, the window and the other dress-up parts of my own design (dazzlers.mjs)
+  addDazzlers(parts, { MATE, notchW, clearance, chimney: { ...parts.chimney.info, wall: 0.12 * IN, pocket: 0.5 * IN } });
   return parts;
 }

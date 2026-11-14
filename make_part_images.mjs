@@ -1,9 +1,9 @@
 // Renders, for every listed part in parts.mjs, a still image (<name>.png) and a rotating GIF (<name>.gif), into one
-// folder per set, named like the folders in stl/: images/roof_parts/, images/flat_end_round/, images/flat_end_octagonal/
+// folder per set, named like the folders in stl/: images/roof_parts/, images/dazzlers/, images/flat_end_round/, images/flat_end_octagonal/
 // and images/ball_end_round/. The smooth logs have no pictures of their own.
 // Parts are shown in their assembly orientation (logs lying along their length, gables upright).
 // Software rasteriser, PNG and GIF encoders; no dependencies beyond Node.
-// Usage: node make_part_images.mjs [--set all|roof_parts|flat_end_round|smooth|flat_end_octagonal|ball_end_round]
+// Usage: node make_part_images.mjs [--set all|roof_parts|dazzlers|flat_end_round|smooth|flat_end_octagonal|ball_end_round]
 import fs from 'node:fs';
 import zlib from 'node:zlib';
 import { makeParts } from './parts.mjs';
@@ -108,9 +108,10 @@ function gifEncoder(base) {
 }
 
 // ---------- per part ----------
-const isLog = (p) => ['log', 'half', 'bevel', 'solid'].includes(p.info.kind);
+const isLog = (p) => ['log', 'half', 'bevel', 'solid'].includes(p.info.kind), isDazzler = (p) => p.info.kind === 'dazzler';
 const SETS = {
-  roof_parts: () => Object.values(makeParts()).filter((p) => !isLog(p)),
+  roof_parts: () => Object.values(makeParts()).filter((p) => !isLog(p) && !isDazzler(p)),
+  dazzlers: () => Object.values(makeParts()).filter(isDazzler),
   flat_end_round: () => Object.values(makeParts()).filter(isLog),
   smooth: () => Object.values(makeParts({ texture: false })).filter(isLog),
   flat_end_octagonal: () => Object.values(makeParts({ set: 'octagonal' })),
@@ -143,7 +144,7 @@ for (const p of P) {
   let dLo = rad, dHi = rad * 20;
   for (let it = 0; it < 40; it++) { const m = (dLo + dHi) / 2; if (fits(m)) dHi = m; else dLo = m; }
   const cam = { el, fov, target: [0, 0, 0], dist: dHi };
-  const base = MATS[matFor(p.name)];
+  const base = p.info.color ?? MATS[matFor(p.name)];
   fs.writeFileSync(`${dir}/${p.name}.png`, png(render(tris, base, { ...cam, az: -55 })));
   const g = gifEncoder(base);
   for (let i = 0; i < FRAMES; i++) g.add(render(tris, base, { ...cam, az: -55 + (360 * i) / FRAMES }), 8);
