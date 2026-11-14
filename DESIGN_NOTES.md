@@ -262,7 +262,7 @@ Per-part results, one file per log set: [flat-end round](VERIFY_flat_end_round.m
 
 ## Limits
 
-- **Only the notch fit has been printed.** Pairs of 1-notch logs were printed in PLA (0.4 mm nozzle, 0.2 mm layers) with notches 18.65, 18.85, 19.05, 19.25, 19.45 and 19.65 mm wide. The 18.65 mm pair fit best, with a small amount of play, so that is the default. No narrower notch was tried, and no other part has been printed. Details are in [fit_test/README.md](fit_test/README.md).
+- **Only the notch fit, gables and shingles have been printed.** Pairs of 1-notch logs were printed in PLA (0.4 mm nozzle, 0.2 mm layers) with notches 18.65, 18.85, 19.05, 19.25, 19.45 and 19.65 mm wide. The 18.65 mm pair fit best, with a small amount of play, so that is the default. No narrower notch was tried. Details are in [fit_test/README.md](fit_test/README.md). The gables and shingles were printed in PLA and fit well, the shingles lying edge to edge, one per step. No other part has been printed.
 - **Photo measurements carry about ±0.03 in of error.** These are assumptions:
   - Gable thickness and shingle thickness.
   - Chimney depth and socket.
