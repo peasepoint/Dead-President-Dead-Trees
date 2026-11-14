@@ -2,7 +2,8 @@
 #
 # Run it from Fusion: Utilities > Add-Ins > Scripts and Add-Ins > "+" > pick this folder > Run.
 # It opens a new design and builds the set named by PART_SET below:
-#   'roof_parts'          gables, shingles, chimney, door and window (stl/roof_parts/)
+#   'roof_parts'          gables, shingles and chimney (stl/roof_parts/)
+#   'dazzlers'            door and window, parametric; the other dazzlers as meshes of their STLs (stl/dazzlers/)
 #   'smooth'              the 10 logs, round, plain (stl/smooth/)
 #   'flat_end_round'      the 10 logs, round, flat ends, plus their wood-grain meshes (stl/flat_end_round/)
 #   'flat_end_octagonal'  the 10 logs, octagonal, flat ends, plus their wood-grain meshes (stl/flat_end_octagonal/)
@@ -23,7 +24,7 @@ import adsk.fusion
 import traceback
 
 PART_SET = 'flat_end_round'
-SETS = ('roof_parts', 'smooth', 'flat_end_round', 'flat_end_octagonal', 'ball_end_round')
+SETS = ('roof_parts', 'dazzlers', 'smooth', 'flat_end_round', 'flat_end_octagonal', 'ball_end_round')
 
 P3 = adsk.core.Point3D.create
 VI = adsk.core.ValueInput.createByString
@@ -49,8 +50,12 @@ ROOF_PARAMS = [
     ('RidgeShingleWidth', '1.125 in', 'mm', 'Ridge shingle width'),
     ('RidgeGrooveWidth', '1.6 mm', 'mm', 'Ridge shingle centre groove width'),
     ('RidgeGrooveDepth', '0.8 mm', 'mm', 'Ridge shingle centre groove depth'),
+]
+DAZZLER_PARAMS = [
     ('PanelThk', '0.125 in', 'mm', 'Door and window panel thickness'),
 ]
+# dazzlers that are free-form shapes: each component holds its STL as a mesh body
+DAZZLER_MESHES = ['picket_fence', 'flag', 'weathervane', 'chimney_smoke', 'rain_barrel', 'pine_tree']
 
 # The 10 logs, the same in every log set. code, base name, length, notches, kind, section
 # kind: 'log' (notched, lying), 'half' (lying, notches on top), 'bevel' (lying, one end cut on a slant), 'solid' (standing)
@@ -94,7 +99,9 @@ LAYOUT = {
     'shingle_flat_11': (32, 0), 'shingle_flat_9': (32, 3.5), 'shingle_flat_6': (32, 7),
     'shingle_ridge_9': (32, 11), 'shingle_ridge_6': (32, 15), 'shingle_ridge_5-5_8': (48, 15),
     'gable_plastic_8-1_2': (32, 18.5), 'gable_plastic_small_2notch': (32, 26), 'gable_wood_triangle_4x2': (48, 26),
-    'chimney': (10, 29), 'extra_door': (16, 30), 'extra_window': (24, 30),
+    'chimney': (10, 29),
+    'door': (3, 3), 'window': (10, 3), 'picket_fence': (16, 0), 'flag': (0, 9), 'weathervane': (10, 9),
+    'chimney_smoke': (30, 0), 'rain_barrel': (30, 9), 'pine_tree': (16, 5),
 }
 
 
@@ -258,16 +265,16 @@ class Builder:
         fi.edgeSetInputs.addConstantRadiusEdgeSet(edges, VI('EndRadius'), False)
         fl.add(fi).name = 'Rounded ends'
 
-    def add_mesh(self, comp, name):
-        """The part's STL as a mesh body (wood grain and end rings), at the same coordinates."""
+    def add_mesh(self, comp, name, suffix='_woodgrain', label='Wood-grain mesh'):
+        """The part's STL as a mesh body (wood grain and end rings, or a whole dazzler), at the same coordinates."""
         path = os.path.join(self.stl_dir, name + '.stl')
         bf = comp.features.baseFeatures.add()
-        bf.name = 'Wood-grain mesh'
+        bf.name = label
         bf.startEdit()
         try:
             meshes = comp.meshBodies.add(path, adsk.fusion.MeshUnits.MillimeterMeshUnit, bf)
             for i in range(meshes.count):
-                meshes.item(i).name = name + '_woodgrain'
+                meshes.item(i).name = name + suffix
         finally:
             bf.finishEdit()
 
@@ -486,12 +493,22 @@ class Builder:
         for code, name, length in RIDGE_SHINGLES:
             self.shingle(code, name, length, True)
         self.chimney()
-        self.panel('Door', 'extra_door', 4, False)
-        self.panel('Window', 'extra_window', 3, True)
+        self.group_and_fit()
+        return self.errors
+
+    def build_dazzlers(self):
+        for name, expr, units, comment in LOG_PARAMS + DAZZLER_PARAMS:
+            self.param(name, expr, units, comment, True)
+        self.panel('Door', 'door', 4, False)
+        self.panel('Window', 'window', 3, True)
+        for name in DAZZLER_MESHES:
+            self.part(name, lambda comp, name=name: self.add_mesh(comp, name, '', 'Mesh'))
         self.group_and_fit()
         return self.errors
 
     def build(self):
+        if self.part_set == 'dazzlers':
+            return self.build_dazzlers()
         return self.build_roof() if self.part_set == 'roof_parts' else self.build_logs()
 
 
@@ -637,7 +654,7 @@ class Sk:
 
 def build(app, part_set=PART_SET, stl_dir=None):
     """Build part_set into the active design. stl_dir: where the STLs are (default ../stl/<part_set> next to this file)."""
-    if stl_dir is None and LOG_SETS.get(part_set, (0, 0, False))[2]:
+    if stl_dir is None and (part_set == 'dazzlers' or LOG_SETS.get(part_set, (0, 0, False))[2]):
         stl_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'stl', part_set)
     return Builder(app, part_set, stl_dir).build()
 
