@@ -5,7 +5,7 @@
 //    upright; a part's thick layer is the one that fits the system, and its thin layers are the decoration.
 // Called from makeParts() in parts.mjs. Print frame: outline in X/Y, heights along Z, resting on Z = 0.
 // Model frame (pictures): upright, the outline's Y becomes height.
-import { IN, D, R, NOTCH_D, PITCH, CENTERS, extrudeShell, plate } from './parts.mjs';
+import { IN, D, R, NOTCH_D, CENTERS, extrudeShell } from './parts.mjs';
 
 const TAU = 2 * Math.PI;
 const area2 = (P) => P.reduce((s, p, i) => { const q = P[(i + 1) % P.length]; return s + p[0] * q[1] - q[0] * p[1]; }, 0);
@@ -42,16 +42,91 @@ export function addDazzlers(parts, ctx) {
     parts[name] = { name, info: { ...info, kind: 'dazzler', source: 'own design' }, print, model: model ?? print.map((t) => t.map(toModel)), toModel };
   };
 
-  // ---- door and window: 1/8 in panels that stand in a wall opening (kept from the earlier design)
+  // ---- doors and windows: blocks that fill a wall opening and lock into it.
+  // An opening is a bay of a wall where the logs stop short on one or more courses: a log end on each side, a whole
+  // log below and above. The part is as deep as the wall (MATE, the logs' side flats) and its top and bottom edges
+  // are saddles shaped like the top of an octagonal log, plus the clearance. A round log fits the same saddle (it is
+  // the octagon's inscribed circle), so the part sits on the log below and the log above caps it, and it cannot
+  // move in or out of the wall; the log ends either side stop it sliding along. The saddle's sides are 45 deg, so it
+  // prints without supports with its inside face on the bed and its outside face, which carries the detail, on top.
+  // Widths: an opening is 1 1/2 in wide between a 1 1/2 in log and a 2-notch log, 1.44 in with a 1 5/8 in log on one
+  // side, and 1.37 in with one each side (the watchtower's slits). The door fits the first two and the window all
+  // three, with the clearance each side of the narrowest.
+  // Elevation frame: u across the opening from the left jamb, v up from the centre of the log below, depth z from the
+  // inside face (z = 0) to the outside face (z = MATE); details stand proud of the outside face. Seated on the log
+  // below, the part's lowest point is info.vBase above that log's centre.
   {
-    const gap = CENTERS - D - 2 * clearance, wallH = (n) => (n - 1) * PITCH + D, t = IN / 8;
-    const panel = (name, listing, courses, color, hole) => {
-      const w = gap, hh = wallH(courses) - 2 * clearance;
-      const print = plate(w, hh, 0, t, hole && { x0: (w - hole.w) / 2, x1: (w + hole.w) / 2, y0: (hh - hole.h) / 2, y1: (hh + hole.h) / 2 });
-      parts[name] = { name, info: { listing, kind: 'dazzler', source: 'own design', color, fits: `a wall opening ${courses} courses high` }, print, model: print.map((tr) => tr.map(upright(t))), toModel: upright(t) };
+    const rc = R + clearance, yk = rc * (Math.SQRT2 - 1), half = MATE / 2;
+    // saddle height above the log centre at depth z (y = half - z is the offset from the wall's centre line)
+    const sad = (z) => Math.min(rc, rc * Math.SQRT2 - Math.abs(half - z)) - clearance;      // seated: the flat touches the crown
+    const zk = [0, half - yk, half + yk, MATE];
+    const vb0 = sad(0), rect = (u0, v0, u1, v1) => [[u0, v0], [u1, v0], [u1, v1], [u0, v1]];
+    const circ = (cu, cv, r, n = 28) => Array.from({ length: n }, (_, k) => [cu + r * Math.cos((TAU * k) / n), cv + r * Math.sin((TAU * k) / n)]);
+    // a prism along u (u0..u1) whose cross-section is the polygon P of [v, z] points
+    const prismU = (P, u0, u1) => extrudeShell(outline(P), u0, u1).map((t) => t.map(([v, z, u]) => [u, v, z]));
+    // cross-sections: the whole height between the saddles, or a rail from one saddle to a flat edge at v
+    const both = (span) => [...zk.map((z) => [sad(z), z]), ...[...zk].reverse().map((z) => [span - 2 * clearance - sad(z), z])];
+    const bottomRail = (v) => [...zk.map((z) => [sad(z), z]), [v, MATE], [v, 0]];
+    const topRail = (span, v) => [[v, 0], [v, MATE], ...[...zk].reverse().map((z) => [span - 2 * clearance - sad(z), z])];
+    const face = (P, a, b) => slab(P, MATE + a, MATE + b);                                   // a layer standing a..b proud of the outside face
+    const finish = (name, info, tris, span) => {
+      const print = tris.map((t) => t.map(([x, y, z]) => [x, y - vb0, z])), toModel = upright(MATE);
+      parts[name] = { name, info: { ...info, kind: 'dazzler', source: 'own design', vBase: vb0, span, depth: MATE }, print, model: print.map((t) => t.map(toModel)), toModel };
     };
-    panel('door', 'Door', 4, [150, 62, 44]);
-    panel('window', 'Window', 3, [232, 226, 204], { w: 1.125 * IN, h: 0.625 * IN });
+    const jambs = { door: 1.5 * IN - (1 / 16) * IN - 2 * clearance, window: 1.5 * IN - (1 / 8) * IN - 2 * clearance };
+    // openings: centre to centre of the logs below and above is span = logs high + 1 log diameters
+    const door = (name, listing, logs, color) => {
+      const W = jambs.door, span = (logs + 1) * D, top = span - 2 * clearance - vb0;            // face runs vb0..top at the outside face
+      const fw = 2.4, gap = 0.5, crownB = R;
+      const T = [...prismU(both(span), 0, W)];
+      // frame: two jambs and a head standing 1.6 proud, the head with a drip cap on top of it
+      T.push(...face(rect(0, vb0, fw, top - fw), 0, 1.6), ...face(rect(W - fw, vb0, W, top - fw), 0, 1.6), ...face(rect(0, top - fw, W, top), 0, 1.6));
+      T.push(...face(rect(0, top - 1.2, W, top), 1.6, 2.4));
+      // threshold across the bottom
+      T.push(...face(rect(fw, vb0, W - fw, crownB), 0, 0.9));
+      // leaf: five vertical boards with grooves between them
+      const l0 = fw + gap, l1 = W - fw - gap, n = 5, g = 0.6, bw = (l1 - l0 - (n - 1) * g) / n, lb = crownB, lt = top - fw - gap;
+      for (let k = 0; k < n; k++) T.push(...face(rect(l0 + k * (bw + g), lb, l0 + k * (bw + g) + bw, lt), 0, 0.6));
+      // ledges and a brace in a Z: two ledges across the boards and a diagonal falling towards the hinges
+      const lh = 3.6, vL = lb + 0.16 * (lt - lb), vU = lt - 0.16 * (lt - lb) - lh, bu0 = l0 + 0.6, bu1 = l1 - 0.6, bwH = 4.2;
+      T.push(...face(rect(bu0, vL, bu1, vL + lh), 0.6, 1.4), ...face(rect(bu0, vU, bu1, vU + lh), 0.6, 1.4));
+      T.push(...face([[bu0, vL + lh], [bu0 + bwH, vL + lh], [bu1, vU], [bu1 - bwH, vU]], 0.6, 1.4));
+      // strap hinges on the ledges, from the hinge jamb, each ending in a spear point; a knuckle on the jamb
+      for (const v of [vL, vU]) {
+        const c = v + lh / 2, s0 = bu0, s1 = bu0 + 0.42 * (bu1 - bu0);
+        T.push(...face([[s0, c - 1], [s1 - 2.6, c - 1], [s1 - 2.6, c - 1.5], [s1, c], [s1 - 2.6, c + 1.5], [s1 - 2.6, c + 1], [s0, c + 1]], 1.4, 1.9));
+        for (const du of [0.25, 0.42]) T.push(...face(circ(s0 + du * (bu1 - bu0) - 1.4, c, 0.45, 12), 1.9, 2.2)); // nail heads
+        T.push(...face(rect(0.5, c - 2.4, fw - 0.4, c + 2.4), 1.6, 2.6));
+      }
+      // latch side: a back plate on the boards between the ledges, a knob, and a keyhole plate below it
+      const lc = (vL + lh + vU) / 2, pu = bu1 - 2.8;
+      T.push(...face(rect(pu - 2.2, lc - 4.5, pu + 2.2, lc + 3.2), 0.6, 1.1));
+      T.push(...face(circ(pu, lc + 0.8, 1.9), 1.1, 2.4), ...face(circ(pu, lc + 0.8, 1.4), 2.4, 3.3)); // knob: a boss and a smaller cap, so nothing overhangs
+      T.push(...face([[pu - 0.5, lc - 3.6], [pu + 0.5, lc - 3.6], [pu + 0.5, lc - 2.4], [pu, lc - 1.9], [pu - 0.5, lc - 2.4]], 1.1, 1.4));
+      finish(name, { listing, color, logsHigh: logs, width: W, fits: `a doorway ${logs} logs high: on the log below, under the log above, between two log ends` }, T, span);
+    };
+    door('door', 'Door, board and batten', 2, [150, 62, 44]);
+    door('door_tall', 'Tall Door, board and batten', 3, [150, 62, 44]);
+
+    // window: a sash of six lights, open right through so you can see in; rails top and bottom carry the saddles,
+    // stiles and glazing bars run the full depth so each starts on the bed. Outside: a casing, a head cap and a sill.
+    {
+      const W = jambs.window, span = 2 * D, top = span - 2 * clearance - vb0, s = 2.6, bar = 1.3;
+      const r0 = R + 1.6, r1 = span - 2 * clearance - R - 1.6;                                // rails' inner edges, just inside the crowns
+      const T = [...prismU(bottomRail(r0), 0, W), ...prismU(topRail(span, r1), 0, W)];
+      const full = (P) => slab(P, 0, MATE);
+      T.push(...full(rect(0, r0, s, r1)), ...full(rect(W - s, r0, W, r1)));
+      // three lights across, two high
+      const pw = (W - 2 * s - 2 * bar) / 3, vm = (r0 + r1) / 2;
+      const xb = [s + pw, s + 2 * pw + bar];
+      for (const x of xb) T.push(...full(rect(x, r0, x + bar, r1)));
+      for (const [a, b] of [[s, xb[0]], [xb[0] + bar, xb[1]], [xb[1] + bar, W - s]]) T.push(...full(rect(a, vm - bar / 2, b, vm + bar / 2)));
+      // outside: casing round the sides and head, a cap over the head, and a sill that stands out further below
+      T.push(...face(rect(0, r0, s, r1), 0, 1.2), ...face(rect(W - s, r0, W, r1), 0, 1.2), ...face(rect(0, r1, W, top), 0, 1.2));
+      T.push(...face(rect(0, top - 1.4, W, top), 1.2, 2.2));
+      T.push(...face(rect(0, vb0, W, r0), 0, 1.6), ...face(rect(0, r0 - 1.8, W, r0), 1.6, 2.8));
+      finish('window', { listing: 'Window, six lights', color: [232, 226, 204], logsHigh: 1, width: W, fits: 'a window one log high: on the log below, under the log above, between two log ends' }, T, span);
+    }
   }
 
   // ---- picket fence: as long as a 2-notch log, with the same two notches underneath, so it stands on the table or

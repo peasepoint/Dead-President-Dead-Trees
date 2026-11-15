@@ -74,3 +74,11 @@ shot('tall_house_smooth', itemsFor(B.smooth.house, PALETTES.red), { az: -62, el:
   const hrow = (gap, dy) => [at(ha, -gap, dy), at(hc, x0, dy), at(hb, x0 + step + gap, dy)];
   shot('split_base_log_joint', itemsFor([...hrow(0, 30), ...hrow(14, 0)], PALETTES.classic, [0, 0, 0], 11), { az: -100, el: 52, dist: 250, target: [x0 + step / 2, 15, 7], fov: 30 }, { W: 1600, H: 700, radius: 200, aoR: 3 });
 }
+// 8. the doors and windows (dazzlers) in their openings, as verify.mjs checks them: the cabin's front door, the tall
+// house's tall door and windows, and the watchtower's slit windows
+{
+  const F = buildings(makeParts({ texture: true }), { fixtures: true });
+  shot('cabin_door_woodgrain', itemsFor(F.cabin, PALETTES.classic), { az: -62, el: 12, dist: 230, target: [1.6 * IN, 0, 40], fov: 30 }, { W: 1200, H: 900, radius: 200, aoR: 5 });
+  shot('tall_house_fixtures_woodgrain', itemsFor(F.house, PALETTES.red), { az: -62, el: 15, dist: 640, target: [3 * IN, 3 * IN, 78], fov: 30 });
+  shot('watchtower_fixtures_woodgrain', itemsFor(F.tower, PALETTES.forest), { az: -60, el: 14, dist: 620, target: [1.5 * IN, 1.5 * IN, 88], fov: 30 }, { W: 1100, H: 1400 });
+}

@@ -4,6 +4,7 @@
 //   support      : contacts directly below (other parts or the table); the part's centre of mass must lie inside
 //                  the convex hull of those contacts, or it would tip
 //   interlock    : shift the part 1.5 mm in +x, -x, +y, -y and see whether it collides with a neighbour
+// The buildings include the doors and windows (dazzlers) in their openings: buildings(P, { fixtures: true }).
 // Writes VERIFY_<set>.md and exits non-zero if any interference or unsupported part is found.
 // Usage: node verify.mjs [--res 0.5] [--set flat_end_round|smooth|flat_end_octagonal|ball_end_round]
 // Each log set is checked with the shared roof parts; every set has the same 11 logs.
@@ -103,7 +104,7 @@ function analyse(label, items) {
       for (const v of L) { const w = v + d; if (w < 0 || w >= owner.length) continue; const o = owner[w]; if (o && o !== id) n++; }
       if (n * V3 > 1) blocked.push(lab);
     }
-    rows.push({ name: it.name, volume: L.length * V3, supported: margin > 0, margin, supporters: [...supporters], table: table > 0, blocked });
+    rows.push({ name: it.name, opening: it.opening, volume: L.length * V3, supported: margin > 0, margin, supporters: [...supporters], table: table > 0, blocked });
   });
   const overlaps = [...G.overlap].map(([k, n]) => { const [a, b] = k.split(',').map(Number); return { a: items[a - 1].name, b: items[b - 1].name, mm3: n * V3 }; }).sort((p, q) => q.mm3 - p.mm3);
   return { label, rows, overlaps, oddColumns: G.oddColumns, minZ: G.minZ, seconds: (Date.now() - t0) / 1000 };
@@ -116,7 +117,7 @@ if (!['flat_end_round', 'smooth', ...Object.keys(LOGS_ONLY)].includes(FINISH)) {
 const REPORT = `VERIFY_${FINISH}.md`;
 const P = makeParts({ texture: FINISH !== 'smooth' });
 if (LOGS_ONLY[FINISH]) for (const p of Object.values(makeParts({ set: LOGS_ONLY[FINISH] }))) for (const std of p.info.replaces ?? []) P[std] = p;
-const { cabin, shed, cottage, porch, house, tower } = buildings(P);
+const { cabin, shed, cottage, porch, house, tower } = buildings(P, { fixtures: true }); // with the doors and windows in their openings
 const results = [
   analyse('Cabin (6 x 9 in, large plastic gables, chimney)', cabin),
   analyse('Shed (3 x 6 in, wooden triangle gables)', shed),
@@ -142,7 +143,13 @@ for (const r of results) {
   md += `- Unsupported parts: **${unsupported.length ? unsupported.map((x) => x.name).join(', ') : 'none'}**\n`;
   md += `- Touching the table: ${onTable.join(', ')} (everything else is carried by other parts)\n`;
   md += `- Wall logs locked against all four sideways pushes: **${wallsLocked}/${walls.length}**\n`;
-  md += `- Voxel columns skipped (ray hit an edge): ${r.oddColumns}\n\n`;
+  md += `- Voxel columns skipped (ray hit an edge): ${r.oddColumns}\n`;
+  const fx = r.rows.filter((x) => x.opening);
+  if (fx.length) {
+    md += `- Doors and windows: ${fx.map((x) => `${x.name} (${x.opening.wall}, opening ${x.opening.width.toFixed(2)} mm, ${x.opening.play.toFixed(2)} mm play each side, rests on ${[...new Set(x.supporters)].join(' + ') || 'nothing'}, pushes blocked ${x.blocked.join(' ') || 'none'})`).join('; ')}\n`;
+    console.log(`   fixtures: ${fx.map((x) => `${x.name}/${x.opening.wall} play ${x.opening.play.toFixed(2)} blocked ${x.blocked.join('') || 'none'}`).join(', ')}`);
+  }
+  md += '\n';
   md += '| # | Part | Volume (mm3) | Supported (CoM margin) | Rests on | Pushes blocked |\n|---|---|---|---|---|---|\n';
   r.rows.forEach((x, i) => {
     md += `| ${i + 1} | ${x.name} | ${x.volume.toFixed(0)} | ${x.supported ? 'yes' : '**NO**'} (${isFinite(x.margin) ? x.margin.toFixed(1) + ' mm' : 'no contacts'}) | ${[x.table ? 'table' : null, ...[...new Set(x.supporters)]].filter(Boolean).join(', ')} | ${x.blocked.join(' ') || 'none'} |\n`;

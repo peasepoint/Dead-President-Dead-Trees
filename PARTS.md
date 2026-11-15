@@ -11,7 +11,7 @@ A building needs the [roof parts](#roof-parts) plus the logs from **one** of the
 |---|---|:---:|
 | [Log download table](#the-10-logs) | All four log sets side by side | 40 |
 | [Roof parts](#roof-parts) | [`stl/roof_parts/`](stl/roof_parts) | 10 |
-| [Dazzlers](#dazzlers) | [`stl/dazzlers/`](stl/dazzlers) | 8 |
+| [Dazzlers](#dazzlers) | [`stl/dazzlers/`](stl/dazzlers) | 9 |
 | [Flat-End-Round logs](#flat-end-round) | [`stl/flat_end_round/`](stl/flat_end_round) | 10 |
 | [Ball-End-Round logs](#ball-end-round) | [`stl/ball_end_round/`](stl/ball_end_round) | 10 |
 | [Flat-End-Octagonal logs](#flat-end-octagonal) | [`stl/flat_end_octagonal/`](stl/flat_end_octagonal) | 10 |
@@ -69,8 +69,9 @@ The chimney fits the two stepped gables only; the triangle gable's roof is steep
 
 | Part | Size | What it is | STL | Still and rotating |
 |---|---|---|---|---|
-| **Door** | 57 x 47 x 3.2 mm | Stands in a wall opening four courses high | [`door.stl`](stl/dazzlers/door.stl) | <img src="images/dazzlers/door.png" width="140" alt="door"> <img src="images/dazzlers/door.gif" width="140" alt="door, rotating"> |
-| **Window** | 57 x 38 x 3.2 mm | Stands in a wall opening three courses high | [`window.stl`](stl/dazzlers/window.stl) | <img src="images/dazzlers/window.png" width="140" alt="window"> <img src="images/dazzlers/window.gif" width="140" alt="window, rotating"> |
+| **Door** | 36 x 48 x 21.5 mm | A board-and-batten door: five boards, a Z brace, two strap hinges with nail heads, a knob and a keyhole, in a frame with a drip cap and a threshold. Fills a doorway two logs high (cabin, porch cabin) | [`door.stl`](stl/dazzlers/door.stl) | <img src="images/dazzlers/door.png" width="140" alt="door"> <img src="images/dazzlers/door.gif" width="140" alt="door, rotating"> |
+| **Tall door** | 36 x 67 x 21.5 mm | The same door, for a doorway three logs high (tall house) | [`door_tall.stl`](stl/dazzlers/door_tall.stl) | <img src="images/dazzlers/door_tall.png" width="140" alt="door_tall"> <img src="images/dazzlers/door_tall.gif" width="140" alt="door_tall, rotating"> |
+| **Window** | 34.5 x 29 x 21 mm | Six lights open right through, with a casing, a head cap and a sill. Fills an opening one log high, including the watchtower's narrow slits | [`window.stl`](stl/dazzlers/window.stl) | <img src="images/dazzlers/window.png" width="140" alt="window"> <img src="images/dazzlers/window.gif" width="140" alt="window, rotating"> |
 | **Picket fence** | 114 x 40 x 18.3 mm | As long as a 2-notch log, with the same two notches underneath: it stands on the table or locks across two logs. Nine pickets on 1/2 in centres, so fences butt end to end without breaking step | [`picket_fence.stl`](stl/dazzlers/picket_fence.stl) | <img src="images/dazzlers/picket_fence.png" width="140" alt="picket_fence"> <img src="images/dazzlers/picket_fence.gif" width="140" alt="picket_fence, rotating"> |
 | **Flag on a pole** | 68 x 107 x 18.3 mm | A swallow-tailed flag caught mid-wave, with three raised stripes. Its base has one notch underneath and sits in the top notch of any log | [`flag.stl`](stl/dazzlers/flag.stl) | <img src="images/dazzlers/flag.png" width="140" alt="flag"> <img src="images/dazzlers/flag.gif" width="140" alt="flag, rotating"> |
 | **Rooster weathervane** | 75 x 65 x 25 mm | A rooster riding an arrow. The base has the chimney's V cut and sits astride the ridge the same way | [`weathervane.stl`](stl/dazzlers/weathervane.stl) | <img src="images/dazzlers/weathervane.png" width="140" alt="weathervane"> <img src="images/dazzlers/weathervane.gif" width="140" alt="weathervane, rotating"> |
@@ -78,7 +79,9 @@ The chimney fits the two stepped gables only; the triangle gable's roof is steep
 | **Rain barrel** | 19 x 19 x 35 mm | Twelve staves, four hoops and a sunk lid, the size of the 1 3/8 in solid log, so it stands wherever one does | [`rain_barrel.stl`](stl/dazzlers/rain_barrel.stl) | <img src="images/dazzlers/rain_barrel.png" width="140" alt="rain_barrel"> <img src="images/dazzlers/rain_barrel.gif" width="140" alt="rain_barrel, rotating"> |
 | **Pine tree** | 123 x 84 x 3.2 mm on the bed; 60 x 60 x 84 mm built | Two flat trees in one file that slot together at right angles, the way two logs cross | [`pine_tree.stl`](stl/dazzlers/pine_tree.stl) | <img src="images/dazzlers/pine_tree.png" width="140" alt="pine_tree"> <img src="images/dazzlers/pine_tree.gif" width="140" alt="pine_tree, rotating"> |
 
-All print without supports, as they lie in the file. The fence, flag, weathervane and smoke print on their backs, so the decoration is flush with one face of the thick part that fits the set, not centred on it. Like the chimney, the weathervane fits the two stepped gables only. None of the dazzlers has been printed yet.
+**How the doors and window fit.** Each one is as deep as the wall (18.25 mm). Its top and bottom edges are saddles shaped like the top of an octagonal log, plus the 0.2 mm clearance. A round log fits the same saddle, so the part sits on the log below, the log above caps it, and it can't be pushed in or out of the wall. The log ends either side stop it sliding along. An opening is 38.1 mm wide between a 1 1/2 in log and a 2-notch log, 36.5 mm with a 1 5/8 in log on one side, and 34.9 mm with one on each side (the watchtower's slits). The doors fit the first two and the window fits all three, so the side play is 0.2 to 1.8 mm. Put each one in as you build, before the log above it. They don't fit directly under a gable: a gable's flat bottom fills the space the top saddle rises into.
+
+All print without supports, as they lie in the file. The doors and window print inside face down, with the saddles' 45° sides and the detail on top. The fence, flag, weathervane and smoke print on their backs, so the decoration is flush with one face of the thick part that fits the set, not centred on it. Like the chimney, the weathervane fits the two stepped gables only. None of the dazzlers has been printed yet.
 
 ## Flat-End-Round
 
