@@ -47,6 +47,7 @@ export function itemsFor(parts, pal, shift = [0, 0, 0], seed = 0) {
     let color, spec = 0.05, gloss = 20;
     if (n === 'chimney') { color = pal.chimney; spec = 0.12; gloss = 40; }
     else if (n.startsWith('shingle')) { const k = 0.93 + 0.14 * hash2(i, seed + 7); color = pal.shingle.map((c) => c * k); spec = 0.1; gloss = 30; }
+    else if (it.mat === 'fixture') { color = n.startsWith('door') ? [118, 52, 34] : [236, 230, 210]; spec = 0.08; gloss = 24; }
     else if (n.startsWith('gable')) { color = pal.gable; if (plastic) { spec = 0.15; gloss = 50; } }
     else { const k = 0.88 + 0.24 * hash2(i, seed + 1), w = 0.97 + 0.06 * hash2(i, seed + 2); color = [WOOD[0] * k * w, WOOD[1] * k, WOOD[2] * k / w]; spec = 0.07; gloss = 18; }
     return { pos: pack(it.tris, ([x, y, z]) => [x + shift[0], y + shift[1], z + shift[2]]), mat: { color, spec, gloss } };
