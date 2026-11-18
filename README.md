@@ -85,7 +85,15 @@ The 270 mm log does not fit a 256 mm bed, so every log set also has it as two ha
 
 ### Dazzlers
 
-The parts that dress a building up: a door and a window, and six more of my own design. None copies an original part and no building needs them, but each one fits the set somewhere.
+The parts that dress a building up: two doors and a window, and six more of my own design. None copies an original part and no building needs them, but each one fits the set somewhere.
+
+The doors and the window fill the openings you leave with short logs. Each one is as deep as the wall, and its top and bottom edges are shaped to fit over a log. It sits on the log below, the log above caps it, and the log ends either side keep it in place. They are checked in every doorway and window of the test buildings, with all four log sets.
+
+| Door | Tall door | Window | In place |
+|:---:|:---:|:---:|:---:|
+| <img src="images/dazzlers/door.gif" width="120" alt="Door"> | <img src="images/dazzlers/door_tall.gif" width="120" alt="Tall door"> | <img src="images/dazzlers/window.gif" width="120" alt="Window"> | <img src="images/examples/cabin_door_woodgrain.png" width="160" alt="The door in the cabin's doorway"> |
+| Board and batten with a Z brace, strap hinges and a knob. For a doorway two logs high | The same, for a doorway three logs high | Six lights you can see through, a casing and a sill. For an opening one log high | The cabin's front door |
+
 
 | Picket fence | Flag | Weathervane | Chimney smoke | Rain barrel | Pine tree |
 |:---:|:---:|:---:|:---:|:---:|:---:|
@@ -94,7 +102,7 @@ The parts that dress a building up: a door and a window, and six more of my own 
 
 | Folder | Contents |
 |---|---|
-| [`stl/dazzlers/`](stl/dazzlers) | The door, the window and the six above (8 parts). Smooth, and the same whichever logs you print. [See them all](PARTS.md#dazzlers) |
+| [`stl/dazzlers/`](stl/dazzlers) | The two doors, the window and the six above (9 parts). Smooth, and the same whichever logs you print. [See them all](PARTS.md#dazzlers) |
 
 ## How to print
 
@@ -140,7 +148,7 @@ How each part sits on the bed:
 | Base logs | Flat side down, notches up |
 | Solid logs | Standing on end |
 | Gables, shingles | Flat on a face |
-| Dazzlers | Door, window and pine tree flat; fence, flag, weathervane and smoke on their backs; rain barrel standing |
+| Dazzlers | Doors and window inside face down, detail up; pine tree flat; fence, flag, weathervane and smoke on their backs; rain barrel standing |
 | Chimney | Upside down: open top on the bed, V-cut facing up |
 
 **Bed size.** Two parts are longer than a 256 mm bed: `log_4insert_10-5_8` (270 mm) and `shingle_flat_11` (279 mm). Turn them diagonally, or use a larger printer. The log also comes as [two halves](#the-two-piece-4-notch-log) of 138 mm. The next longest parts are the 9 in shingles (229 mm) and the 3-notch log (194 mm).
@@ -255,7 +263,7 @@ The other scripts:
 
 | | |
 |---|---|
-| **Checked in software** | In all six buildings no parts overlap, every part is supported and every wall log is locked by its notches, with each of the four log sets |
+| **Checked in software** | In all six buildings no parts overlap, every part is supported and every wall log is locked by its notches, with each of the four log sets. The doors and windows are checked in every opening of the test buildings except one: the tall house's front window, which sits directly under a gable |
 | **Test-printed** | The logs, gables and shingles, which fit well. Pairs of 1-notch logs were printed in PLA with notches from 18.65 to 19.65 mm wide; 18.65 mm fit best and is the default ([details](fit_test/README.md)). The gables and shingles fit with the shingles edge to edge, one per step |
 | **Not checked** | Everything else in the real world. No octagonal or ball-end log, base log, chimney, dazzler or whole building has been printed |
 

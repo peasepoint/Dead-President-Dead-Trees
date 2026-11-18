@@ -87,7 +87,7 @@ export function layTreads(treads, width) {
   return { poses, reach: treads.at(-1)[1][0] };
 }
 
-export function buildings(P) {
+export function buildings(P, { fixtures = false } = {}) {
   const mapT = (tris, f) => tris.map((t) => t.map(f));
   const place = (name, f, caption, mat) => ({ name, tris: mapT(P[name].model, f), caption, mat });
   // log along x on course c, wall line y = yw, with notch k at world x = xw
@@ -147,6 +147,36 @@ export function buildings(P) {
   };
   const roofOf = (items) => items.filter((it) => it.name.startsWith('shingle'));
 
+  // ---- doors and windows (dazzlers), added only with { fixtures: true }.
+  // A fixture fills a bay of the wall on line `line` (wall 'front'/'back' runs along x at y = line, 'left'/'right'
+  // along y at x = line; the name says which way its outside faces). `mid` is a point in the bay along the wall,
+  // cb the course of the whole log below the opening. The jambs are found from the logs already placed in the
+  // building: the nearest log end on each side of `mid` at that wall line, between the log below and the log above.
+  // The fixture is centred between them and seated on the log below.
+  const bbox = (it) => it.bb ?? (it.bb = it.tris.reduce((b, t) => { for (const p of t) for (let i = 0; i < 3; i++) { b[0][i] = Math.min(b[0][i], p[i]); b[1][i] = Math.max(b[1][i], p[i]); } return b; }, [[Infinity, Infinity, Infinity], [-Infinity, -Infinity, -Infinity]]));
+  const fixture = (items, name, wall, line, mid, cb, cap) => {
+    const f = P[name].info, along = wall === 'front' || wall === 'back' ? 0 : 1, across = 1 - along;
+    const zb = zc(cb) + R, zt = zc(cb) + f.span - R; // top of the log below, bottom of the log above
+    let a0 = -Infinity, a1 = Infinity;
+    for (const it of items) {
+      if (it.mat !== 'log') continue;
+      const [lo, hi] = bbox(it);
+      if (lo[across] > line + 0.5 || hi[across] < line - 0.5 || hi[2] <= zb + 0.5 || lo[2] >= zt - 0.5) continue;
+      if (hi[along] <= mid) a0 = Math.max(a0, hi[along]); else if (lo[along] >= mid) a1 = Math.min(a1, lo[along]); else throw new Error(`${name}: a log crosses the opening at ${mid}`);
+    }
+    const c = (a0 + a1) / 2, W = f.width, z0 = zc(cb) + f.vBase + 0.02;
+    if (a1 - a0 < W) throw new Error(`${name} (${W.toFixed(2)} mm) does not fit an opening ${(a1 - a0).toFixed(2)} mm wide`);
+    const map = {
+      front: ([x, y, z]) => [c - W / 2 + x, line + y, z0 + z],
+      back: ([x, y, z]) => [c + W / 2 - x, line - y, z0 + z],
+      left: ([x, y, z]) => [line + y, c + W / 2 - x, z0 + z],
+      right: ([x, y, z]) => [line - y, c - W / 2 + x, z0 + z],
+    }[wall];
+    const it = place(name, map, cap ?? (name.startsWith('door') ? 'DOOR' : 'WINDOW'), 'fixture');
+    it.opening = { wall, width: a1 - a0, play: (a1 - a0 - W) / 2 };
+    items.push(it);
+  };
+
   // ---------------- CABIN ----------------
   const cabin = [];
   {
@@ -163,6 +193,7 @@ export function buildings(P) {
       if (c === 4) cabin.push(xLog('log_1insert_1-5_8', c, back, 0, 0, q(c)), xLog('log_2insert_4-1_2', c, back, CENTERS, 0, q(c)));
       else cabin.push(xLog('log_3insert_7-5_8', c, back, 0, 0, q(c)));
     }
+    if (fixtures) { fixture(cabin, 'door', 'front', front, CENTERS / 2, 0); fixture(cabin, 'window', 'back', back, CENTERS / 2, 2); }
     const G = 'gable_plastic_8-1_2', xc = WID / 2;
     cabin.push(gable(G, K, front, xc, 'PLASTIC GABLES'), gable(G, K, back, xc, 'PLASTIC GABLES'));
     cabin.push(...roofRows(G, K, xc, 0, 9));
@@ -220,6 +251,7 @@ export function buildings(P) {
       if (c === 4) porch.push(xLog('log_2insert_4-1_2', c, back, 0), xLog('log_1insert_1-1_2_round', c, back, WID));
       else porch.push(xLog('log_3insert_7-5_8', c, back, 0));
     }
+    if (fixtures) { fixture(porch, 'door', 'front', front, CENTERS / 2, 0); fixture(porch, 'window', 'back', back, 1.5 * CENTERS, 2); }
     const G = 'gable_plastic_8-1_2', xc = WID / 2;
     porch.push(gable(G, K, sill, xc), gable(G, K, back, xc));
     porch.push(...roofRows(G, K, xc, 0, 9));
@@ -254,6 +286,13 @@ export function buildings(P) {
     }
     const G = 'gable_plastic_8-1_2', xc = WID / 2;
     house.push(gable(G, K, front, xc), gable(G, K, back, xc));
+    if (fixtures) {
+      fixture(house, 'door_tall', 'front', front, CENTERS / 2, 0);
+      // not the front window on course 10: a gable caps it, and a gable's flat bottom fills the space the window's top
+      // saddle rises into either side of a round log (verify.mjs finds 776 mm3 of overlap)
+      fixture(house, 'window', 'back', back, CENTERS / 2, 2); fixture(house, 'window', 'back', back, 1.5 * CENTERS, 6);
+      fixture(house, 'window', 'left', 0, CENTERS / 2, 3); fixture(house, 'window', 'right', WID, 1.5 * CENTERS, 5);
+    }
     house.push(...roofRows(G, K, xc, (LEN - P.shingle_flat_9.info.length) / 2, 9));
     house.push(chimney(roofOf(house), xc, 0.7 * LEN));
   }
@@ -275,6 +314,7 @@ export function buildings(P) {
     }
     const G = 'gable_wood_triangle_4x2', xc = WID / 2;
     tower.push(gable(G, K, 0, xc), gable(G, K, LEN, xc));
+    if (fixtures) for (const [wall, line, cb] of [['front', 0, 2], ['front', 0, 8], ['back', LEN, 6], ['left', 0, 3], ['right', WID, 7]]) fixture(tower, 'window', wall, line, CENTERS / 2, cb, 'SLIT WINDOWS');
     tower.push(...roofRows(G, K, xc, (LEN - P.shingle_flat_6.info.length) / 2, 6));
   }
   return { cabin, shed, cottage, porch, house, tower };

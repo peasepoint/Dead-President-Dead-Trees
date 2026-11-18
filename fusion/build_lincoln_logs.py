@@ -3,7 +3,7 @@
 # Run it from Fusion: Utilities > Add-Ins > Scripts and Add-Ins > "+" > pick this folder > Run.
 # It opens a new design and builds the set named by PART_SET below:
 #   'roof_parts'          gables, shingles and chimney (stl/roof_parts/)
-#   'dazzlers'            door and window, parametric; the other dazzlers as meshes of their STLs (stl/dazzlers/)
+#   'dazzlers'            the dazzlers as meshes of their STLs (stl/dazzlers/)
 #   'smooth'              the 10 logs, round, plain (stl/smooth/)
 #   'flat_end_round'      the 10 logs, round, flat ends, plus their wood-grain meshes (stl/flat_end_round/)
 #   'flat_end_octagonal'  the 10 logs, octagonal, flat ends, plus their wood-grain meshes (stl/flat_end_octagonal/)
@@ -51,11 +51,9 @@ ROOF_PARAMS = [
     ('RidgeGrooveWidth', '1.6 mm', 'mm', 'Ridge shingle centre groove width'),
     ('RidgeGrooveDepth', '0.8 mm', 'mm', 'Ridge shingle centre groove depth'),
 ]
-DAZZLER_PARAMS = [
-    ('PanelThk', '0.125 in', 'mm', 'Door and window panel thickness'),
-]
-# dazzlers that are free-form shapes: each component holds its STL as a mesh body
-DAZZLER_MESHES = ['picket_fence', 'flag', 'weathervane', 'chimney_smoke', 'rain_barrel', 'pine_tree']
+# the dazzlers are free-form shapes (the doors and windows have log-shaped saddles and layered detail): each component
+# holds its STL as a mesh body
+DAZZLER_MESHES = ['door', 'door_tall', 'window', 'picket_fence', 'flag', 'weathervane', 'chimney_smoke', 'rain_barrel', 'pine_tree']
 
 # The 10 logs, the same in every log set. code, base name, length, notches, kind, section
 # kind: 'log' (notched, lying), 'half' (lying, notches on top), 'bevel' (lying, one end cut on a slant), 'solid' (standing)
@@ -100,7 +98,7 @@ LAYOUT = {
     'shingle_ridge_9': (32, 11), 'shingle_ridge_6': (32, 15), 'shingle_ridge_5-5_8': (48, 15),
     'gable_plastic_8-1_2': (32, 18.5), 'gable_plastic_small_2notch': (32, 26), 'gable_wood_triangle_4x2': (48, 26),
     'chimney': (10, 29),
-    'door': (3, 3), 'window': (10, 3), 'picket_fence': (16, 0), 'flag': (0, 9), 'weathervane': (10, 9),
+    'door': (3, 3), 'door_tall': (6.5, 3), 'window': (10, 3), 'picket_fence': (16, 0), 'flag': (0, 9), 'weathervane': (10, 9),
     'chimney_smoke': (30, 0), 'rain_barrel': (30, 9), 'pine_tree': (16, 5),
 }
 
@@ -438,24 +436,6 @@ class Builder:
 
         self.part('chimney', build)
 
-    def panel(self, code, name, courses, opening):
-        self.param(f'{code}_Courses', str(courses), '', 'Log courses the panel spans', True)
-        self.param(f'{code}_Width', 'NotchCenters - LogDia - 2 * Clearance', 'mm', 'Width (fits the gap between crossing logs)')
-        self.param(f'{code}_Height', f'({code}_Courses - 1) * CourseRise + LogDia - 2 * Clearance', 'mm', 'Height')
-        if opening:
-            self.param(f'{code}_OpeningWidth', '1.125 in', 'mm', 'Opening width', True)
-            self.param(f'{code}_OpeningHeight', '0.625 in', 'mm', 'Opening height', True)
-
-        def build(comp):
-            s = Sk(self, comp, 'xy', 'Outline')
-            s.rect((neg(f'{code}_Width / 2'), neg(f'{code}_Height / 2')), (f'{code}_Width / 2', f'{code}_Height / 2'))
-            if opening:
-                s.rect((neg(f'{code}_OpeningWidth / 2'), neg(f'{code}_OpeningHeight / 2')),
-                       (f'{code}_OpeningWidth / 2', f'{code}_OpeningHeight / 2'))
-            self.extrude(comp, [s.biggest()], 'PanelThk', NEW, 'Panel')
-
-        self.part(name, build)
-
     def group_and_fit(self):
         # One timeline group per part, added last-to-first so earlier indices stay valid.
         try:
@@ -497,10 +477,8 @@ class Builder:
         return self.errors
 
     def build_dazzlers(self):
-        for name, expr, units, comment in LOG_PARAMS + DAZZLER_PARAMS:
+        for name, expr, units, comment in LOG_PARAMS:
             self.param(name, expr, units, comment, True)
-        self.panel('Door', 'door', 4, False)
-        self.panel('Window', 'window', 3, True)
         for name in DAZZLER_MESHES:
             self.part(name, lambda comp, name=name: self.add_mesh(comp, name, '', 'Mesh'))
         self.group_and_fit()

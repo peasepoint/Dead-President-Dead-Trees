@@ -18,7 +18,7 @@ Open a design in Fusion with File > Open > Open from my computer.
 
 ## Dazzlers
 
-`build_lincoln_logs.py` has a `dazzlers` set: the door and window as parametric panels, and the other six dazzlers as mesh bodies of their STLs, since they are free-form shapes. That set has not been run in Fusion yet, so there is no `DeadPresidentTreeSections_dazzlers.f3d`, and the roof design has not been rebuilt without the door and window. To build either, set `PART_SET` and run the script.
+`build_lincoln_logs.py` has a `dazzlers` set: every dazzler as a mesh body of its STL, since they are free-form shapes (the door, tall door and window were parametric 1/8 in panels until they gained log-shaped saddles and layered detail). That set has not been run in Fusion yet, so there is no `DeadPresidentTreeSections_dazzlers.f3d`, and the roof design has not been rebuilt without the door and window. To build either, set `PART_SET` and run the script.
 
 ## How it is organised
 
@@ -54,7 +54,6 @@ Change one and every part in the design follows.
 | `GableThk` | `MateWidth` | Gable thickness (roof design) |
 | `ShingleThk`, `FlatShingleWidth`, `RidgeShingleWidth` | 0.125 in, 18.5 mm, 1.125 in | Shingle sizes (roof design) |
 | `RidgeGrooveWidth`, `RidgeGrooveDepth` | 1.6, 0.8 mm | Ridge shingle groove (roof design) |
-| `PanelThk` | 0.125 in | Door and window thickness (dazzlers design) |
 | `PlasticRoofAngle` | from the large gable (24.0 deg) | The angle the shingles lie at; the chimney's V follows it (roof design) |
 
 ## Per-part parameters
@@ -73,7 +72,6 @@ Each part's parameters start with its code.
 | `ShFlat6`, `ShFlat9`, `ShFlat11` | `shingle_flat_*` | `_Length` |
 | `ShRidge5`, `ShRidge6`, `ShRidge9` | `shingle_ridge_*` | `_Length` |
 | `Chimney` | `chimney` | `_Width`, `_Depth`, `_Height`, `_Wall`, `_Pocket` |
-| `Door`, `Window` | `door`, `window` (dazzlers design) | `_Courses`, plus `_OpeningWidth`, `_OpeningHeight` on the window |
 
 Notes:
 - Notches stay centred on the part: set `_Notches` and `_Length` and the row re-centres.

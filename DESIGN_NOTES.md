@@ -48,7 +48,7 @@ One folder of roof parts that every building uses, one of optional dazzlers, and
 | Folder | Contents | Built by |
 |---|---|---|
 | [`stl/roof_parts/`](stl/roof_parts) | 3 gables, 6 shingles and the chimney (10 parts). Smooth | `makeParts()`, the parts that are not logs or dazzlers |
-| [`stl/dazzlers/`](stl/dazzlers) | The door, the window and six more dress-up parts of my own design (8 parts). Smooth | `makeParts()`, the parts of kind `dazzler`, built in `dazzlers.mjs` |
+| [`stl/dazzlers/`](stl/dazzlers) | Two doors, a window and six more dress-up parts of my own design (9 parts). Smooth | `makeParts()`, the parts of kind `dazzler`, built in `dazzlers.mjs` |
 | [`stl/flat_end_round/`](stl/flat_end_round) | Round logs, wood grain, flat ends | `makeParts({ texture: true })`, the default |
 | [`stl/ball_end_round/`](stl/ball_end_round) | Round logs, wood grain, rounded ends | `makeParts({ set: 'rounded' })` |
 | [`stl/flat_end_octagonal/`](stl/flat_end_octagonal) | Octagonal logs, wood grain, flat ends | `makeParts({ set: 'octagonal' })` |
@@ -164,7 +164,7 @@ Dress-up parts designed for this project; none is an original part (`door` and `
 
 | Part | Fits | Modelled as |
 |---|---|---|
-| `door`, `window` | A wall opening four or three courses high | 1/8 in panels, as wide as the gap between two crossing logs less the clearance |
+| `door`, `door_tall`, `window` | A doorway two or three logs high, or a window opening one log high, between two log ends | Blocks 18.25 mm deep with octagon-shaped saddles top and bottom (0.2 mm clearance, 45° sides). Doors 36.1 mm wide (the 36.5 mm opening beside a 1 5/8 in log, less clearance); window 34.5 mm (the 34.9 mm watchtower slit). Detail stands up to 3.3 mm proud of the outside face. Checked in 15 openings of the test buildings by `verify.mjs` |
 | `picket_fence` | Two notches 3 in apart, or the table | 4 1/2 in long. A sill 12 mm high and 18.25 mm thick with two gable-style notches underneath; nine 6 mm pickets on 1/2 in centres |
 | `flag` | The top notch of any log, or the table | A 1 1/2 in block, 18.25 mm thick, with one notch underneath; a 5 mm pole; a 2.4 mm flag with 0.8 mm raised stripes |
 | `weathervane` | The ridge of a stepped-gable roof | The chimney's width, depth and V cut under a low block; a 4 mm rooster-and-arrow vane |
@@ -275,7 +275,7 @@ Per-part results, one file per log set: [flat-end round](VERIFY_flat_end_round.m
   - The small gable's height: 1.60 in, derived from the large gable's step length, against about 1.6 in measured.
   - The flat shingle's width, 18.5 mm, and the 0.8 mm riser. Six shingles must fit between the lip and the peak of the large gable, which caps the width at about 18.7 mm (0.74 in). An original slat may be up to 3/4 in wide; one that wide would ride on the risers instead of sitting in a step.
 - **Shingle ends bear on half a gable.** The 9 in and 6 in shingles are exactly as long as the wall-centre spacing they cover, so each end rests on half the gable's thickness. Photos show the original slats reaching the gable's outer face, and the reference lists a 9 3/4 in slat (9 in plus a 3/4 in gable), which is not modelled.
-- **The dazzlers** are not in any photo, are not used in the verified buildings and have not been printed.
+- **The dazzlers** are not in any photo and have not been printed. The doors and window are the only ones in the verified buildings: `verify.mjs` adds them to every doorway and window except the tall house's front window, which a gable caps.
 
 ## Printing notes
 
