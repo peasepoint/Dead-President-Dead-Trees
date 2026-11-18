@@ -52,7 +52,7 @@ Rows run from the back of the bed to the front, two parts in each:
 | Rows | Part | Sets, in order |
 |---|---|---|
 | 1 to 4 | `log_2insert_4-1_2` (2 notches, 4 1/2 in) | Ball-End-Round, Flat-End-Round, Flat-End-Octagonal, Smooth |
-| 5 to 8 | `base_log_4-1_2` (4 1/2 in) | Ball-End-Round, Flat-End-Round, Flat-End-Octagonal, Smooth |
+| 5 to 8 | `base_log_4-1_2` (4 1/2 in, a half log 9.5 mm tall) | Ball-End-Round, Flat-End-Round, Flat-End-Octagonal, Smooth |
 
 The print settings are chosen to save filament:
 
@@ -66,7 +66,9 @@ The print settings are chosen to save filament:
 | Supports | None |
 | Brim | Auto |
 
-Bambu Studio's CLI estimates about 5 h 19 min and about 166 g. With the fit test's 3 walls, 25% grid infill and 5 top layers the same plate comes to about 6 h and about 246 g. The plate has been sliced but not yet printed.
+**The base logs on this plate are the half logs,** split along the axis as in the original toy (9.5 mm tall). The plate first held the earlier 14.3 mm base logs; their meshes were swapped for the current STLs, each still at its place on the bed, and the plate was sliced again. The eight logs were already current and are unchanged.
+
+Bambu Studio's CLI estimates about 4 h 45 min and about 147 g (with the earlier base logs: 5 h 19 min and 166 g). With the fit test's 3 walls, 25% grid infill and 5 top layers the earlier plate came to about 6 h and about 246 g. The plate has been sliced but not yet printed.
 
 ## Standing and lying comparison (earlier)
 
