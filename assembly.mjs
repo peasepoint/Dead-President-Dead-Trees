@@ -4,9 +4,9 @@
 //  COTTAGE, PORCH CABIN, TALL HOUSE, WATCHTOWER: described where they are built below.
 // Wall rules (as in the brand's own builds): end walls (along x) take the even courses, side walls (along y) the odd
 // courses; course 0 of the end walls is base logs, so every building sits flat on the table.
-import { h, R, PITCH, CENTERS } from './parts.mjs';
+import { R, PITCH, CENTERS } from './parts.mjs';
 
-export const zc = (c) => h + c * PITCH; // centre height of course c (course 0 = base logs, flat bottom on z = 0)
+export const zc = (c) => c * PITCH; // centre height of course c (course 0 = base logs: split along the axis, which lies on z = 0)
 
 // ---- where a rigid shingle comes to rest on a gable's top edge (2D, gable-local x/z, left slope rising to +x) ----
 // profile: polyline of the left half of the top edge, eave to peak (vertical risers allowed).

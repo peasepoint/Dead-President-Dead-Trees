@@ -45,7 +45,7 @@ Both columns appear in listings. The 7/16 column matches more measured originals
 Notes:
 - #-numbers come from the Playskool *Log Cabin* sheet (1996: #1, #3, #4, #5) and the K'NEX *Discovery* 00902 sheet (1999: #1, #3, #5, #8, #11). Lengths were matched by scaling the sheets' parts drawings against each other (e.g. #4 draws at 1.64x #3, close to 7.5/4.5; #11 at 2.3x, close to 10.5/4.5). The sheets give no lengths.
 - K'NEX numbers come from the 2019 *On The Trail* 00821 and *Fun On The Farm* 00858 parts legends. The flat-log mapping is read from the legend drawings and should be checked against a real part.
-- Base-log height: measured at about 0.53 in from photos (`RESEARCH.md`). A base log ripped exactly through the centre would be 3/8 in, so the originals are cut above centre.
+- Base-log height: 3/8 in, a log ripped exactly through the centre. The photos in the sources below show half logs, and two of them make one whole log. (An earlier reading of the photos gave about 0.53 in, which put the cut above centre; that reading was wrong.)
 
 ## 3. Roof, gable and accessory pieces
 
