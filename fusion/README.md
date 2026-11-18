@@ -49,7 +49,7 @@ Change one and every part in the design follows.
 | `MateWidth` | `LogDia - PrintFlat` | Width of a log, base log or gable where it sits in a notch (18.25 mm) |
 | `NotchWidth` | `MateWidth + 2 * Clearance` | Notch width (18.65 mm) |
 | `CourseRise` | `LogDia - 2 * NotchDepth` | Height gained per crossing course |
-| `BaseLogHeight` | `LogDia / 2` | Base-log height: a log split in half along its axis |
+| `BaseLogHeight` | `LogDia / 2` | Base-log height: a log split in half along its axis. The notches are cut `NotchDepth` down from it |
 | `EndRadius` | 4 mm | Radius of the rounded ends (ball-end design only) |
 | `GableThk` | `MateWidth` | Gable thickness (roof design) |
 | `ShingleThk`, `FlatShingleWidth`, `RidgeShingleWidth` | 0.125 in, 18.5 mm, 1.125 in | Shingle sizes (roof design) |
@@ -85,7 +85,7 @@ Notes:
 - **Round log:** a `LogDia` circle centred `LogDia / 2 - PrintFlat / 2` above the bed, extruded along X, with everything below Z = 0 and above `MateWidth` cut away: two equal flats.
 - **Octagon:** a `LogDia` square with its four long edges chamfered by `LogDia * (1 - sqrt(2) / 2)`, a regular octagon `LogDia` across the flats, then cut to the same two flats.
 - **Notches:** everything beyond the notch floors (`|Y| > LogDia / 2 - NotchDepth`) is cut away over `NotchWidth` round each notch centre, giving square walls, and the cut is patterned along the log.
-- **Base log:** the section centred `BaseLogHeight - LogDia / 2` above the bed (on it: the cut runs through the axis), cut flat at Z = 0 and to `MateWidth` across, with notches in the top.
+- **Base log:** a log split along its axis: the section centred on the bed line, cut flat at Z = 0 and to `MateWidth` across, with notches in the top.
 - **Rounded ends:** a fillet of `EndRadius` on the end edges, made before the flats are cut. On a base log the bottom edge is left sharp, so it stays flat on the bed; on the beveled end only the square end is rounded. The STLs use a three-step taper instead (`ROUNDED_ENDS` in `parts.mjs`), which removes a little more, so a ball-end solid is about 0.5 to 4.6% larger than its mesh.
 
 ## Checked against the STLs

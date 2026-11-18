@@ -320,7 +320,8 @@ class Builder:
                 if rounded:
                     self.round_ends(comp, body, lambda a, b: abs(a.z - b.z) < 1e-6 and (abs(a.z) < 1e-6 or abs(a.z - Lv) < 1e-6))
             else:  # base log: a log split along its axis, flat side on the bed, notches on top, an equal side flat each side
-                body = self.lying_body(comp, sec, L, 'BaseLogHeight - LogDia / 2', neg('LogDia / 2'))
+                # split along its axis, so the section is centred on the bed line (a 0 mm dimension would be rejected)
+                body = self.lying_body(comp, sec, L, 0, neg('LogDia / 2'))
                 if rounded:
                     # all but the bottom edge, so the flat side stays on the bed
                     self.round_ends(comp, body, lambda a, b: x_end(a, b) and b.z > 1e-6)
