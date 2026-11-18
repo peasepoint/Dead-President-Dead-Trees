@@ -41,7 +41,7 @@ LOG_PARAMS = [
     ('MateWidth', 'LogDia - PrintFlat', 'mm', 'Width of a log, base log or gable where it sits in a notch'),
     ('NotchWidth', 'MateWidth + 2 * Clearance', 'mm', 'Notch width (mating width plus clearance on each side)'),
     ('CourseRise', 'LogDia - 2 * NotchDepth', 'mm', 'Height gained per crossing course'),
-    ('BaseLogHeight', 'LogDia - NotchDepth', 'mm', 'Base-log height (flat sits at the notch floor)'),
+    ('BaseLogHeight', 'LogDia / 2', 'mm', 'Base-log height (a log split in half along its axis)'),
 ]
 ROOF_PARAMS = [
     ('GableThk', 'MateWidth', 'mm', 'Gable thickness (fills a notch like a log)'),
@@ -319,12 +319,13 @@ class Builder:
                     body = self.extrude(comp, s.profiles(), L, NEW, 'Log').bodies.item(0)
                 if rounded:
                     self.round_ends(comp, body, lambda a, b: abs(a.z - b.z) < 1e-6 and (abs(a.z) < 1e-6 or abs(a.z - Lv) < 1e-6))
-            else:  # base log: flat side on the bed, notches on top, an equal side flat each side
-                body = self.lying_body(comp, sec, L, 'BaseLogHeight - LogDia / 2', neg('NotchDepth'))
+            else:  # base log: a log split along its axis, flat side on the bed, notches on top, an equal side flat each side
+                # split along its axis, so the section is centred on the bed line (a 0 mm dimension would be rejected)
+                body = self.lying_body(comp, sec, L, 0, neg('LogDia / 2'))
                 if rounded:
                     # all but the bottom edge, so the flat side stays on the bed
                     self.round_ends(comp, body, lambda a, b: x_end(a, b) and b.z > 1e-6)
-                self.trim(comp, L, 'Bed and side flats', [((neg(big), neg('NotchDepth + 1 mm')), (big, 0)),
+                self.trim(comp, L, 'Bed and side flats', [((neg(big), neg('LogDia / 2 + 1 mm')), (big, 0)),
                                                          (('MateWidth / 2', neg('1 mm')), (big, 'LogDia + 1 mm')),
                                                          ((neg('MateWidth / 2'), neg('1 mm')), (neg(big), 'LogDia + 1 mm'))])
                 n = Sk(self, comp, 'xz', 'Notch')

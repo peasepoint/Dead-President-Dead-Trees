@@ -184,7 +184,7 @@ How many of each part the six [example buildings](#example-buildings) need. Logs
 
 ### 5. Assemble
 
-1. Lay two **base logs** flat side down as the end walls. They are the only parts that touch the table.
+1. Lay two **base logs** flat side down as the end walls. A base log is a log split in half, so the side-wall logs that cross it next reach the table too.
 2. Cross two side-wall logs over them, notch into notch.
 3. Keep alternating end walls and side walls. Each course adds 3/8 in. Use the short 1- and 2-notch logs to leave gaps for a door or window.
 4. Set a gable where the next end-wall log would go, its bottom notches over the side-wall logs.

@@ -17,7 +17,7 @@ Gathered with Tavily searches in November 2026. The extraction of four model pag
 - A seller's [Poshmark listing](https://poshmark.com/listing/Lincoln-Log-Pieces-697ff0d8e9c77d6090234e27) of a mixed lot has 11 photos, including an inventory sheet. Lengths in inches: 1-insert log 1 5/8, 2-insert 4 1/2 and 6, 3-insert 7 3/4, 4-insert 10 5/8, half logs 4 1/2 and 7 1/2, triangle gable 4 x 2, beveled ends 1 1/2 x 1 1/4 and 4 3/4, plastic gable 2 1/4 x 8 1/2, shingles (slats) 6, 9 and 11 plus ridge shingles 5 5/8 to 9. The 1- and 4-insert lengths match a 3 in notch centre and 7/16 in shoulders exactly.
 - Measured from the photos with a pixel grid (scale from the mat's 1 in grid and the 3 in notch spacing):
   - **Logs:** 3/4 in diameter with 3/4 in notches on 3 in centres; ends 0.33 to 0.44 in.
-  - **Half logs:** flat-bottomed, about 0.53 in tall, notches on top.
+  - **Half logs:** a log split in half along its axis (3/8 in tall), flat-bottomed, notches on top; two make a whole log. (First read from the pixel grid as about 0.53 in; a closer look shows half logs.)
   - **"Hex" 1-insert:** faceted end with flats top and bottom.
   - **Beveled End 4 3/4:** a 2-insert log with rounded ends; the small beveled pieces are cut at about 39 deg.
   - **Wooden triangle:** about 4 7/8 x 2 in, straight 39 deg slopes, two bottom notches 3 in apart.
